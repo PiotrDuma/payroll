@@ -1,4 +1,4 @@
-package com.github.PiotrDuma.payroll.domain.employee.classification;
+package com.github.PiotrDuma.payroll.domain.payment.classification;
 
 import java.math.BigDecimal;
 

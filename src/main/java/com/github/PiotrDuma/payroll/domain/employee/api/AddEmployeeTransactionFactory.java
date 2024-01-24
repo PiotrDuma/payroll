@@ -1,9 +1,9 @@
 package com.github.PiotrDuma.payroll.domain.employee.api;
 
 import com.github.PiotrDuma.payroll.common.Address;
-import com.github.PiotrDuma.payroll.domain.employee.classification.CommissionRate;
-import com.github.PiotrDuma.payroll.domain.employee.classification.HourlyRate;
-import com.github.PiotrDuma.payroll.domain.employee.classification.Salary;
+import com.github.PiotrDuma.payroll.domain.payment.classification.CommissionRate;
+import com.github.PiotrDuma.payroll.domain.payment.classification.HourlyRate;
+import com.github.PiotrDuma.payroll.domain.payment.classification.Salary;
 
 public interface AddEmployeeTransactionFactory {
   AddEmployeeTransaction initSalariedEmployeeTransaction(Address address, EmployeeName name, Salary salary);
