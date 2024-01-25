@@ -33,11 +33,20 @@ class SalaryTest {
   @Test
   void shouldThrowWhenSalaryIsNull(){
     String message = "Salary cannot empty";
-    Salary salary = new Salary(null);
+    BigDecimal value = null;
+    Salary salary = new Salary(value);
     Set<ConstraintViolation<Salary>> violations = validator.validate(salary);
 
     assertEquals(1, violations.size());
     assertTrue(violations.stream().findFirst().isPresent());
     assertEquals(message, violations.stream().findFirst().get().getMessage());
+  }
+
+  @Test
+  void shouldReturnTrueWhenObjectsAreEquals(){
+    Salary salary1 = new Salary(123);
+    Salary salary2 = new Salary(123);
+
+    assertTrue(salary1.equals(salary2));
   }
 }
