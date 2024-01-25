@@ -33,7 +33,7 @@ class SalariedClassificationTest {
   }
 
   @Test
-  void shouldThrowCalculationWhenSalaryIsNull() throws Exception{
+  void shouldThrowGetClassificationWhenSalaryIsNull() throws Exception{
     String message = "Classification must contain salary object";
     Salary salary = null;
 
