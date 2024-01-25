@@ -31,4 +31,8 @@ public class HourlyRate{
   public BigDecimal getHourlyRate() {
     return hourlyRate;
   }
+
+  public boolean equals(HourlyRate o) {
+    return this.getHourlyRate().doubleValue() == o.getHourlyRate().doubleValue();
+  }
 }
