@@ -1,6 +1,7 @@
 package com.github.PiotrDuma.payroll.domain.payment.classification.hourly;
 
 import com.github.PiotrDuma.payroll.common.Salary;
+import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyRate;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.Hours;
@@ -32,12 +33,12 @@ class HourlyClassificationEntity implements PaymentClassification, TimeCardProvi
         .reduce(BigDecimal.ZERO, BigDecimal::add));
   }
 
-  public void addOrUpdateTimeCard(LocalDate date, Hours hours) {
+  public void addOrUpdateTimeCard(EmployeeId employeeId, LocalDate date, Hours hours) {
     this.timeCards.stream()
         .filter(card -> card.getDate().equals(date))
         .findFirst()
         .ifPresentOrElse(card -> card.setHours(hours),
-            () -> this.timeCards.add(new TimeCard(date, hours)));
+            () -> this.timeCards.add(new TimeCard(employeeId, date, hours)));
   }
 
   public Set<TimeCard> getTimeCards() {
