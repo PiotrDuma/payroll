@@ -17,4 +17,12 @@ public class SalesReceipt {
     this.date = date;
     this.amount = amount;
   }
+
+  public LocalDate getDate() {
+    return date;
+  }
+
+  public Amount getAmount() {
+    return amount;
+  }
 }

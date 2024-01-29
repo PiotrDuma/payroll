@@ -7,6 +7,7 @@ import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.SalesReceiptProvider;
 import com.github.PiotrDuma.payroll.domain.payment.schedule.PaymentPeriod;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,7 +25,15 @@ class CommissionedClassificationEntity implements PaymentClassification, SalesRe
 
   @Override
   public Salary calculatePay(PaymentPeriod paymentPeriod) {
-    return null;
+    BigDecimal sum = this.salesReceipts.stream()
+        .filter(e -> e.getDate().isAfter(paymentPeriod.startPeriod()) &&
+            e.getDate().isBefore(paymentPeriod.endPeriod()))
+        .map(SalesReceipt::getAmount)
+        .map(Amount::getAmount)
+        .reduce(BigDecimal.ZERO, BigDecimal::add)
+        .multiply(BigDecimal.valueOf(this.commissionRate.getCommissionRate() * 0.01))
+        .add(this.salary.getSalary());
+    return new Salary(sum);
   }
 
   @Override
