@@ -1,5 +1,8 @@
 package com.github.PiotrDuma.payroll.domain.payment.schedule;
 
-public interface PaymentSchedule {
+import java.time.LocalDate;
 
+public interface PaymentSchedule {
+  boolean isPayday(LocalDate today);
+  PaymentPeriod getPaymentPeriod(LocalDate today);
 }
