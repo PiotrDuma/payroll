@@ -20,6 +20,10 @@ abstract class AbstractPaymentSchedule implements PaymentSchedule {
     return period;
   }
 
+  protected LocalDate getLastPayDate() {
+    return lastPayDate;
+  }
+
   protected void checkDateValidation(LocalDate today){
     if(today.isBefore(this.lastPayDate)){
       throw new IllegalArgumentException(INVALID_DATE);
