@@ -1,5 +1,6 @@
 package com.github.PiotrDuma.payroll.domain.payment.classification.commission;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.github.PiotrDuma.payroll.common.Salary;
@@ -24,6 +25,24 @@ class CommissionedClassificationEntityTest {
   @BeforeEach
   void setUp(){
     this.service = new AddCommissionedClassification();
+  }
+
+  @Test
+  void shouldAddSalesReceiptToObject(){
+    EmployeeId employeeId = new EmployeeId(UUID.randomUUID());
+    Salary salary = new Salary(1000);
+    CommissionRate commissionRate = new CommissionRate(15.);
+    Amount amount = new Amount(10000);
+
+    CommissionedClassificationEntity classification =
+        (CommissionedClassificationEntity)this.service.getClassification(salary, commissionRate);
+
+
+    classification.addSalesReceipt(employeeId, DATE, amount);
+    classification.addSalesReceipt(employeeId, DATE, amount);
+    classification.addSalesReceipt(employeeId, DATE, amount);
+
+    assertEquals(3, classification.getSalesReceipts().size());
   }
 
   @Test

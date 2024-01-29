@@ -11,6 +11,6 @@ public class AddCommissionedClassification implements CommissionedClassification
 
   @Override
   public PaymentClassification getClassification(Salary salary, CommissionRate commissionRate) {
-    return new CommissionedClassificationEntity();
+    return new CommissionedClassificationEntity(salary, commissionRate);
   }
 }
