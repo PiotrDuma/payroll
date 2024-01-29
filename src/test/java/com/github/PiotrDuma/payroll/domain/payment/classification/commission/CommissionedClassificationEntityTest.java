@@ -10,7 +10,7 @@ import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionedClassification;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.SalesReceiptProvider;
-import com.github.PiotrDuma.payroll.domain.payment.schedule.PaymentPeriod;
+import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentPeriod;
 import java.time.LocalDate;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;

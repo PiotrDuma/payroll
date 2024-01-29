@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.github.PiotrDuma.payroll.common.Salary;
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
 import com.github.PiotrDuma.payroll.domain.payment.classification.salary.api.SalariedClassification;
-import com.github.PiotrDuma.payroll.domain.payment.schedule.PaymentPeriod;
+import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentPeriod;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;

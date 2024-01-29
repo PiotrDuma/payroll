@@ -3,7 +3,6 @@ package com.github.PiotrDuma.payroll.domain.payment.classification.salary;
 import com.github.PiotrDuma.payroll.common.Salary;
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
 import com.github.PiotrDuma.payroll.domain.payment.classification.salary.api.SalariedClassification;
-import com.github.PiotrDuma.payroll.domain.payment.schedule.PaymentPeriod;
 import org.springframework.stereotype.Service;
 
 @Service

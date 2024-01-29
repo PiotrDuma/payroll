@@ -1,4 +1,4 @@
-package com.github.PiotrDuma.payroll.domain.payment.schedule;
+package com.github.PiotrDuma.payroll.domain.payment.schedule.api;
 
 import java.time.LocalDate;
 

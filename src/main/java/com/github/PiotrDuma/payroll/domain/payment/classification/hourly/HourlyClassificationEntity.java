@@ -6,7 +6,7 @@ import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassif
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyRate;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.Hours;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.TimeCardProvider;
-import com.github.PiotrDuma.payroll.domain.payment.schedule.PaymentPeriod;
+import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentPeriod;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
