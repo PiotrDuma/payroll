@@ -7,7 +7,7 @@ import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api
 import org.springframework.stereotype.Service;
 
 @Service
-public class AddCommissionedClassification implements CommissionedClassification {
+class AddCommissionedClassification implements CommissionedClassification {
 
   @Override
   public PaymentClassification getClassification(Salary salary, CommissionRate commissionRate) {

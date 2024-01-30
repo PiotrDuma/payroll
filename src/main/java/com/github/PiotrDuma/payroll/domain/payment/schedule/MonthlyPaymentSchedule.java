@@ -2,7 +2,7 @@ package com.github.PiotrDuma.payroll.domain.payment.schedule;
 
 import java.time.LocalDate;
 
-public class MonthlyPaymentSchedule extends AbstractPaymentSchedule{
+class MonthlyPaymentSchedule extends AbstractPaymentSchedule{
 
   public MonthlyPaymentSchedule(LocalDate created) {
     super(created);

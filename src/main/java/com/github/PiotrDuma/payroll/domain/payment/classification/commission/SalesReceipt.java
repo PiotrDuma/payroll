@@ -5,7 +5,7 @@ import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class SalesReceipt {
+class SalesReceipt {
   private final UUID id;
   private EmployeeId employeeId;
   private LocalDate date;
