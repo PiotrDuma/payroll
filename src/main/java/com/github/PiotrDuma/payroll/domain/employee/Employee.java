@@ -5,7 +5,7 @@ import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
 import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentSchedule;
-import com.github.PiotrDuma.payroll.domain.payment.method.PaymentMethod;
+import com.github.PiotrDuma.payroll.domain.payment.method.api.PaymentMethod;
 import java.util.UUID;
 
 class Employee {

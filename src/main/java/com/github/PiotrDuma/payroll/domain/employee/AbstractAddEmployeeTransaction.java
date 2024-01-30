@@ -5,7 +5,7 @@ import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
 import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentSchedule;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransaction;
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
-import com.github.PiotrDuma.payroll.domain.payment.method.PaymentMethod;
+import com.github.PiotrDuma.payroll.domain.payment.method.api.PaymentMethod;
 
 abstract class AbstractAddEmployeeTransaction implements AddEmployeeTransaction {
   protected final EmployeeRepository employeeRepository;
