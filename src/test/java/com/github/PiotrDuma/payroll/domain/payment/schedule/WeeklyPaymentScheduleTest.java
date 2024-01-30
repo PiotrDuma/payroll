@@ -25,46 +25,59 @@ class WeeklyPaymentScheduleTest {
   }
 
   @Test
-  void shouldReturnValidDatePeriod(){
-    LocalDate endOfPeriod = CREATED.plusDays(1); //PAYDAY: 1999-12-31, friday
-    PaymentPeriod expected = new PaymentPeriod(CREATED.plusDays(1), endOfPeriod); // both 1999-12-31
-    WeeklyPaymentSchedule schedule = new WeeklyPaymentSchedule(CREATED);
+  void shouldReturnOneDayPeriodWhenCreatedInPayDay(){
+    LocalDate firstFriday = CREATED.plusDays(1); //PAYDAY: 1999-12-31, friday
+    PaymentPeriod expected = new PaymentPeriod(firstFriday, firstFriday); // both 1999-12-31
+    WeeklyPaymentSchedule schedule = new WeeklyPaymentSchedule(firstFriday);
 
-    PaymentPeriod result = schedule.establishPaymentPeriod(endOfPeriod);
+    PaymentPeriod result = schedule.establishPaymentPeriod(firstFriday);
 
     assertEquals(expected, result);
-    assertEquals(endOfPeriod, schedule.getLastPayDate());
+    assertEquals(firstFriday.plusDays(1), schedule.getFirstDayOfNextPaymentPeriod());
+  }
+
+  @Test
+  void shouldReturnTwoDaysPeriodWhenCreatedTheDayBeforePayDay(){
+    LocalDate firstFriday = CREATED.plusDays(1); //PAYDAY: 1999-12-31, friday
+    PaymentPeriod expected = new PaymentPeriod(CREATED, firstFriday); //1999-12-30 - 1999-12-31
+    WeeklyPaymentSchedule schedule = new WeeklyPaymentSchedule(CREATED);
+
+    PaymentPeriod result = schedule.establishPaymentPeriod(firstFriday);
+
+    assertEquals(expected, result);
+    assertEquals(firstFriday.plusDays(1), schedule.getFirstDayOfNextPaymentPeriod());
   }
 
   @Test
   void shouldReturnValidDatePeriodWeekAfterLastPayment(){
-    LocalDate endOfPeriod = CREATED.plusDays(1); //PAYDAY: 1999-12-31, friday
-    LocalDate nextWeek = CREATED.plusDays(8); //PAYDAY: 2000-01-07, friday
-    PaymentPeriod expectedFirstPeriod = new PaymentPeriod(CREATED.plusDays(1), endOfPeriod); // both 1999-12-31
-    PaymentPeriod expectedSecondPeriod = new PaymentPeriod(endOfPeriod.plusDays(1), nextWeek); //1999-01-01 - 2000-01-07
+    LocalDate firstFriday = CREATED.plusDays(1); //PAYDAY: 1999-12-31, friday
+    LocalDate secondFriday = CREATED.plusDays(8); //PAYDAY: 2000-01-07, friday
+    PaymentPeriod expectedFirstPeriod = new PaymentPeriod(CREATED, firstFriday);//1999-12-30 - 1999-12-31
+    PaymentPeriod expectedSecondPeriod = new PaymentPeriod(firstFriday.plusDays(1), secondFriday);//1999-01-01 - 2000-01-07
     WeeklyPaymentSchedule schedule = new WeeklyPaymentSchedule(CREATED);
 
-    assertTrue(schedule.isPayday(endOfPeriod));
-    PaymentPeriod result1 = schedule.establishPaymentPeriod(endOfPeriod);
-    assertFalse(schedule.isPayday(nextWeek.minusDays(2))); //wednesday
-    assertTrue(schedule.isPayday(nextWeek));
-    PaymentPeriod result2 = schedule.establishPaymentPeriod(nextWeek);
+    assertTrue(schedule.isPayday(firstFriday));
+    PaymentPeriod firstPeriod = schedule.establishPaymentPeriod(firstFriday);
+    assertFalse(schedule.isPayday(secondFriday.minusDays(2))); //wednesday
+    assertTrue(schedule.isPayday(secondFriday));
+    PaymentPeriod secondPeriod = schedule.establishPaymentPeriod(secondFriday);
 
-    assertEquals(expectedFirstPeriod, result1);
-    assertEquals(expectedSecondPeriod, result2);
-    assertEquals(nextWeek, schedule.getLastPayDate());
+    assertEquals(expectedFirstPeriod, firstPeriod);
+    assertEquals(expectedSecondPeriod, secondPeriod);
+    assertEquals(secondFriday.plusDays(1), schedule.getFirstDayOfNextPaymentPeriod());
   }
 
   @Test
   void shouldReturnValidDatePeriodWhenLastWeekWasNotCounted(){ //Unlikely scenario
-    LocalDate endOfPeriod = CREATED.plusDays(8); //PAYDAY: 1999-12-31, friday
-    PaymentPeriod expected = new PaymentPeriod(CREATED.plusDays(1), endOfPeriod); // both 1999-12-31
+    LocalDate secondFriday = CREATED.plusDays(8); //PAYDAY: 2000-01-07, friday
+    PaymentPeriod expected = new PaymentPeriod(CREATED, secondFriday); //1999-12-30 - 2000-01-07
     WeeklyPaymentSchedule schedule = new WeeklyPaymentSchedule(CREATED);
 
-    PaymentPeriod result = schedule.establishPaymentPeriod(endOfPeriod);
+    assertTrue(schedule.isPayday(secondFriday));
+    PaymentPeriod result = schedule.establishPaymentPeriod(secondFriday);
 
     assertEquals(expected, result);
-    assertEquals(endOfPeriod, schedule.getLastPayDate());
+    assertEquals(secondFriday.plusDays(1), schedule.getFirstDayOfNextPaymentPeriod());
   }
 
   @Test
