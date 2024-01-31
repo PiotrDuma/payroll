@@ -1,6 +1,7 @@
 package com.github.PiotrDuma.payroll.domain.payment.method;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -24,12 +25,12 @@ class MailPaymentMethodTest {
   void setup() {
     logWatcher = new ListAppender<>();
     logWatcher.start();
-    ((Logger) LoggerFactory.getLogger(HoldPaymentMethod.class)).addAppender(logWatcher);
+    ((Logger) LoggerFactory.getLogger(MailPaymentMethod.class)).addAppender(logWatcher);
   }
 
   @AfterEach
   void teardown() {
-    ((Logger) LoggerFactory.getLogger(HoldPaymentMethod.class)).detachAndStopAllAppenders();
+    ((Logger) LoggerFactory.getLogger(MailPaymentMethod.class)).detachAndStopAllAppenders();
   }
 
   @Test
@@ -41,10 +42,11 @@ class MailPaymentMethodTest {
 
   @Test
   void executePaymentShouldLog(){
-    String expectedMessage1 = "Proceed mail payment with address: random address";
+    String expectedMessage1 = "Proceed mail payment with address: " + ADDRESS.toString();
     MailPaymentMethod paymentMethod = new MailPaymentMethod(ADDRESS);
     LocalDate date = LocalDate.of(2000, 1, 1);
     Salary salary = new Salary(2000);
+
     paymentMethod.executePayment(date, salary);
     assertTrue(paymentMethod.getPayments().stream().findFirst().isPresent());
     UUID id = paymentMethod.getPayments().stream().findFirst().get().id();

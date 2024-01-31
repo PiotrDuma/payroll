@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 class MailPaymentMethod implements PaymentMethod {
-  Logger log = LoggerFactory.getLogger(HoldPaymentMethod.class);
+  Logger log = LoggerFactory.getLogger(MailPaymentMethod.class);
 
   private UUID id;
   private Address address;
