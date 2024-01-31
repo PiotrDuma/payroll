@@ -6,9 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
-import com.github.PiotrDuma.payroll.common.Address;
 import com.github.PiotrDuma.payroll.common.Salary;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.payment.method.api.PaymentDto;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -18,8 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 
 class HoldPaymentMethodTest {
-  private static final Address ADDRESS = new Address("random address");
-
   private ListAppender<ILoggingEvent> logWatcher;
 
   @BeforeEach
@@ -35,18 +31,12 @@ class HoldPaymentMethodTest {
   }
 
   @Test
-  void shouldInitObjectWithValidValues(){
-    HoldPaymentMethod holdPaymentMethod = new HoldPaymentMethod(ADDRESS);
-
-    assertEquals(ADDRESS, holdPaymentMethod.getAddress());
-  }
-
-  @Test
   void executePaymentShouldLog(){
-    String expectedMessage1 = "Proceed hold payment with address: random address";
-    HoldPaymentMethod holdPaymentMethod = new HoldPaymentMethod(ADDRESS);
+    String expectedMessage1 = "Proceed hold payment method: salary provided to another department";
+    HoldPaymentMethod holdPaymentMethod = new HoldPaymentMethod();
     LocalDate date = LocalDate.of(2000, 1, 1);
     Salary salary = new Salary(2000);
+
     holdPaymentMethod.executePayment(date, salary);
     assertTrue(holdPaymentMethod.getPayments().stream().findFirst().isPresent());
     UUID id = holdPaymentMethod.getPayments().stream().findFirst().get().id();
@@ -60,7 +50,7 @@ class HoldPaymentMethodTest {
 
   @Test
   void executePaymentShouldAddNewPayment(){
-    HoldPaymentMethod holdPaymentMethod = new HoldPaymentMethod(ADDRESS);
+    HoldPaymentMethod holdPaymentMethod = new HoldPaymentMethod();
     LocalDate date = LocalDate.of(2000, 1, 1);
     Salary salary = new Salary(2000);
     holdPaymentMethod.executePayment(date, salary);
