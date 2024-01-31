@@ -9,7 +9,7 @@ import com.github.PiotrDuma.payroll.domain.payment.method.api.PaymentMethodFacto
 import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentSchedule;
 import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentScheduleFactory;
 
-public class AddHourlyEmployeeTransaction extends AbstractAddEmployeeTransaction{
+class AddHourlyEmployeeTransaction extends AbstractAddEmployeeTransaction{
   private final HourlyClassification classification;
   private final PaymentScheduleFactory scheduleFactory;
   private final HourlyRate hourlyRate;
