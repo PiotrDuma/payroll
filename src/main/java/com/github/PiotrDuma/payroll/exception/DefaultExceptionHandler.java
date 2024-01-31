@@ -3,6 +3,7 @@ package com.github.PiotrDuma.payroll.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -38,6 +39,17 @@ class DefaultExceptionHandler {
                 LocalDateTime.now(clock)
         );
         return new ResponseEntity<>(exceptionDto, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    private ResponseEntity<ExceptionDto> handleValidationException(Exception ex, HttpServletRequest request) {
+        ExceptionDto exceptionDto = new ExceptionDto(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now(clock)
+        );
+        return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({Exception.class})
