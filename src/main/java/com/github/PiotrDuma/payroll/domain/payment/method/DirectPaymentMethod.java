@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DirectPaymentMethod implements PaymentMethod {
+class DirectPaymentMethod implements PaymentMethod {
   Logger log = LoggerFactory.getLogger(DirectPaymentMethod.class);
 
   private UUID id;
