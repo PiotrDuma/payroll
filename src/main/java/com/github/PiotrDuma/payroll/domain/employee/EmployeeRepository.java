@@ -1,5 +1,8 @@
 package com.github.PiotrDuma.payroll.domain.employee;
 
+import java.util.List;
+
 interface EmployeeRepository {
-  void save(Employee employee);
+  Employee save(Employee employee);
+  List<Employee> findAll();
 }
