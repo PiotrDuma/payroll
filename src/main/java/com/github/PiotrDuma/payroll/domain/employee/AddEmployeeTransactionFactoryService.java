@@ -7,6 +7,7 @@ import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransactionFa
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionedClassification;
+import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyClassification;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyRate;
 import com.github.PiotrDuma.payroll.domain.payment.classification.salary.api.SalariedClassification;
 import com.github.PiotrDuma.payroll.domain.payment.method.api.PaymentMethodFactory;
@@ -19,7 +20,7 @@ class AddEmployeeTransactionFactoryService implements AddEmployeeTransactionFact
   private final EmployeeRepository repository;
   private final SalariedClassification salariedClassification;
   private final CommissionedClassification commissionedClassification;
-  private final SalariedClassification hourlyClassification;
+  private final HourlyClassification hourlyClassification;
   private final PaymentScheduleFactory scheduleFactory;
   private final PaymentMethodFactory methodFactory;
 
@@ -27,7 +28,8 @@ class AddEmployeeTransactionFactoryService implements AddEmployeeTransactionFact
   public AddEmployeeTransactionFactoryService(EmployeeRepository repository,
       SalariedClassification salariedClassification,
       CommissionedClassification commissionedClassification,
-      SalariedClassification hourlyClassification, PaymentScheduleFactory scheduleFactory,
+      HourlyClassification hourlyClassification,
+      PaymentScheduleFactory scheduleFactory,
       PaymentMethodFactory methodFactory) {
     this.repository = repository;
     this.salariedClassification = salariedClassification;
@@ -47,7 +49,8 @@ class AddEmployeeTransactionFactoryService implements AddEmployeeTransactionFact
   @Override
   public AddEmployeeTransaction initHourlyEmployeeTransaction(Address address, EmployeeName name,
       HourlyRate hourlyRate) {
-    return null;
+    return new AddHourlyEmployeeTransaction(repository, hourlyClassification, scheduleFactory,
+        methodFactory, address, name, hourlyRate);
   }
 
   @Override
