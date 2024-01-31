@@ -25,4 +25,9 @@ public class BankAccount {
   public String getNumber() {
     return number;
   }
+
+  @Override
+  public String toString() {
+    return this.number.toString();
+  }
 }
