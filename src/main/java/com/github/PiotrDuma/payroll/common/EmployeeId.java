@@ -1,4 +1,4 @@
-package com.github.PiotrDuma.payroll.domain.employee.api;
+package com.github.PiotrDuma.payroll.common;
 
 import java.util.UUID;
 
@@ -11,5 +11,10 @@ public class EmployeeId {
 
   public UUID getId() {
     return id;
+  }
+
+  @Override
+  public String toString() {
+    return this.id.toString();
   }
 }

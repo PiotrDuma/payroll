@@ -6,6 +6,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.github.PiotrDuma.payroll.common.Address;
+import com.github.PiotrDuma.payroll.common.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyClassification;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyRate;
@@ -42,7 +43,7 @@ class AddHourlyEmployeeTransactionTest {
 
   @Test
   void transactionShouldAddObjectToRepository(){
-    transaction.execute();
+    EmployeeId expectedId = transaction.execute();
 
     assertEquals(1, repo.findAll().size());
     assertTrue(this.repo.findAll().stream().findFirst().isPresent());
@@ -50,6 +51,7 @@ class AddHourlyEmployeeTransactionTest {
 
     assertEquals(ADDRESS, employee.getAddress());
     assertEquals(NAME, employee.getName());
+    assertEquals(expectedId, employee.getId());
   }
 
   @Test

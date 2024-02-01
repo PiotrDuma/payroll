@@ -1,6 +1,6 @@
 package com.github.PiotrDuma.payroll.domain.payment.classification.commission.api;
 
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeId;
+import com.github.PiotrDuma.payroll.common.EmployeeId;
 import java.time.LocalDate;
 
 public interface SalesReceiptProvider {

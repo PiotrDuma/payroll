@@ -1,6 +1,6 @@
 package com.github.PiotrDuma.payroll.domain.employee;
 
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeId;
+import com.github.PiotrDuma.payroll.common.EmployeeId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

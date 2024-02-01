@@ -1,6 +1,7 @@
 package com.github.PiotrDuma.payroll.domain.employee;
 
 import com.github.PiotrDuma.payroll.common.Address;
+import com.github.PiotrDuma.payroll.common.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
 import com.github.PiotrDuma.payroll.domain.payment.method.api.PaymentMethodFactory;
 import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentSchedule;
@@ -28,7 +29,7 @@ abstract class AbstractAddEmployeeTransaction implements AddEmployeeTransaction 
 
   public abstract PaymentClassification getClassification();
   public abstract PaymentSchedule getPaymentSchedule();
-  public void execute(){
+  public EmployeeId execute(){
     this.classification = getClassification();
     this.schedule = getPaymentSchedule();
     Employee employee = new Employee(name, address);
@@ -36,6 +37,7 @@ abstract class AbstractAddEmployeeTransaction implements AddEmployeeTransaction 
     employee.setSchedule(this.schedule);
     employee.setPaymentMethod(methodFactory.getHoldPaymentMethod());
     this.employeeRepository.save(employee);
+    return employee.getId();
   }
 
   public Address getAddress() {

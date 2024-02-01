@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.github.PiotrDuma.payroll.common.Salary;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeId;
+import com.github.PiotrDuma.payroll.common.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.Amount;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;

@@ -3,7 +3,7 @@ package com.github.PiotrDuma.payroll.domain.payment.classification.hourly;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.github.PiotrDuma.payroll.common.Salary;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeId;
+import com.github.PiotrDuma.payroll.common.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyClassification;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyRate;
