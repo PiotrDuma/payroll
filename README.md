@@ -2,7 +2,7 @@
 
 ## Run project
 
-Make sure you have installed git, JAVA17 and Maven. You have to make them recognize in your system properties.
+Make sure you have installed [git](https://git-scm.com/), [Java17 JDK](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) and [Maven](https://maven.apache.org/download.cgi). You have to make them recognized in your system variables.
 
 1. Download project from repository 
 ```
