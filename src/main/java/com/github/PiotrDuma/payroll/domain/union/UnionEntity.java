@@ -29,7 +29,7 @@ class UnionEntity {
     return members;
   }
 
-  public void setMembers(EmployeeId memberId) {
+  public void addMember(EmployeeId memberId) {
     this.members.add(memberId);
   }
 

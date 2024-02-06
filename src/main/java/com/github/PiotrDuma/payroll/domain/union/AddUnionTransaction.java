@@ -20,4 +20,8 @@ class AddUnionTransaction implements UnionTransaction{
     log.debug("Transaction executed: add Union: id: "+ unionEntity.getId().toString());
     return unionEntity.toDto();
   }
+
+  protected String getUnionName() {
+    return unionName;
+  }
 }
