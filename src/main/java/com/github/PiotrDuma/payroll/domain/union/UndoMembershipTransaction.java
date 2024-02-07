@@ -24,14 +24,22 @@ class UndoMembershipTransaction implements UnionTransaction {
 
   @Override
   public Object execute() {
-    UnionEntity union = this.repository.findById(unionID)
-        .orElseThrow(() -> new ResourceNotFoundException("Union not found"));
-    if(!union.isMember(employeeId)){
-      throw new ResourceNotFoundException("Employee "+ employeeId + " is not affiliated with this union");
-    }
+    UnionEntity union = getUnion();
+    checkEmployeeMembership(union);
     union.removeMembership(employeeId);
     repository.save(union);
     log.debug("Transaction executed: employee: " + employeeId + " removed from union: "+ unionID);
     return union;
+  }
+
+  private void checkEmployeeMembership(UnionEntity union) {
+    if(!union.isMember(employeeId)){
+      throw new ResourceNotFoundException("Employee "+ employeeId + " is not affiliated with this union");
+    }
+  }
+
+  private UnionEntity getUnion() {
+    return this.repository.findById(unionID)
+        .orElseThrow(() -> new ResourceNotFoundException("Union not found"));
   }
 }

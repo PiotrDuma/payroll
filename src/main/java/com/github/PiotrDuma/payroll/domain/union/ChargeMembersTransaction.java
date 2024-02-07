@@ -1,32 +1,34 @@
 package com.github.PiotrDuma.payroll.domain.union;
 
+import com.github.PiotrDuma.payroll.common.Amount;
 import com.github.PiotrDuma.payroll.common.EmployeeId;
 import com.github.PiotrDuma.payroll.exception.ResourceNotFoundException;
+import java.time.LocalDate;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class RecordMembershipTransaction implements UnionTransaction{
-  private static final Logger log = LoggerFactory.getLogger(RecordMembershipTransaction.class);
+class ChargeMembersTransaction implements UnionTransaction {
+  private static final Logger log = LoggerFactory.getLogger(ChargeMembersTransaction.class);
 
   private final UnionAffiliationRepository repository;
   private final UUID unionID;
-  private final EmployeeId employeeId;
+  private final Amount amount;
+  private final LocalDate date;
 
-  public RecordMembershipTransaction(UnionAffiliationRepository repository, UUID unionID,
-      EmployeeId employeeId) {
+  public ChargeMembersTransaction(UnionAffiliationRepository repository, UUID unionID,
+      Amount amount, LocalDate date) {
     this.repository = repository;
     this.unionID = unionID;
-    this.employeeId = employeeId;
+    this.amount = amount;
+    this.date = date;
   }
 
   @Override
   public Object execute() {
     UnionEntity union = getUnion();
-    union.addMember(employeeId);
-    repository.save(union);
-    log.debug("Transaction executed: employee: " + employeeId + " recorded as member of union: "+ unionID);
-    return union;
+    //TODO: implement charges entity
+    return null;
   }
 
   private UnionEntity getUnion() {
@@ -38,7 +40,11 @@ class RecordMembershipTransaction implements UnionTransaction{
     return unionID;
   }
 
-  protected EmployeeId getEmployeeId() {
-    return employeeId;
+  protected Amount getAmount() {
+    return amount;
+  }
+
+  protected LocalDate getDate() {
+    return date;
   }
 }

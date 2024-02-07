@@ -3,7 +3,9 @@ package com.github.PiotrDuma.payroll.domain.union;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.github.PiotrDuma.payroll.common.Amount;
 import com.github.PiotrDuma.payroll.common.EmployeeId;
+import java.time.LocalDate;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,5 +43,21 @@ class UnionAffiliationTransactionFactoryTest {
     assertTrue(result instanceof RecordMembershipTransaction);
     assertEquals(unionID, ((RecordMembershipTransaction) result).getUnionID());
     assertEquals(employeeId, ((RecordMembershipTransaction) result).getEmployeeId());
+  }
+
+  @Test
+  void shouldReturnChargeMembersTransaction(){
+    UUID unionID = UUID.randomUUID();
+    Amount amount = new Amount(123);
+    LocalDate date = LocalDate.of(2000, 1, 2);
+
+    int transactionCode = UnionTransaction.CHARGE_MEMBERS;
+
+    UnionTransaction result = this.factory.create(transactionCode, unionID, amount, date);
+
+    assertTrue(result instanceof ChargeMembersTransaction);
+    assertEquals(unionID, ((ChargeMembersTransaction) result).getUnionID());
+    assertEquals(amount, ((ChargeMembersTransaction) result).getAmount());
+    assertEquals(date, ((ChargeMembersTransaction) result).getDate());
   }
 }
