@@ -6,7 +6,7 @@ import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassif
 import com.github.PiotrDuma.payroll.common.Amount;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.SalesReceiptProvider;
-import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentPeriod;
+import com.github.PiotrDuma.payroll.common.PaymentPeriod;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.LinkedList;

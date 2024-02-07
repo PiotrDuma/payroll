@@ -9,7 +9,7 @@ import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.Hou
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyRate;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.Hours;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.TimeCardProvider;
-import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentPeriod;
+import com.github.PiotrDuma.payroll.common.PaymentPeriod;
 import java.time.LocalDate;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;

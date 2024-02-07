@@ -2,7 +2,7 @@ package com.github.PiotrDuma.payroll.domain.payment.schedule;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentPeriod;
+import com.github.PiotrDuma.payroll.common.PaymentPeriod;
 import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentSchedule;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;

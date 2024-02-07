@@ -1,6 +1,6 @@
 package com.github.PiotrDuma.payroll.domain.payment.schedule.api;
 
-import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentPeriod;
+import com.github.PiotrDuma.payroll.common.PaymentPeriod;
 import java.time.LocalDate;
 
 public interface PaymentSchedule {
