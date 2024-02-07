@@ -3,6 +3,7 @@ package com.github.PiotrDuma.payroll.domain.payment.classification.commission.ap
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.github.PiotrDuma.payroll.common.Amount;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

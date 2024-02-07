@@ -1,4 +1,4 @@
-package com.github.PiotrDuma.payroll.domain.payment.classification.commission.api;
+package com.github.PiotrDuma.payroll.common;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;

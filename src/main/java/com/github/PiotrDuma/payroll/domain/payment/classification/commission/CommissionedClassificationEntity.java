@@ -3,7 +3,7 @@ package com.github.PiotrDuma.payroll.domain.payment.classification.commission;
 import com.github.PiotrDuma.payroll.common.Salary;
 import com.github.PiotrDuma.payroll.common.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
-import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.Amount;
+import com.github.PiotrDuma.payroll.common.Amount;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.SalesReceiptProvider;
 import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentPeriod;
