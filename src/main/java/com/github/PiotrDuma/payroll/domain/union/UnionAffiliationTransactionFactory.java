@@ -2,6 +2,7 @@ package com.github.PiotrDuma.payroll.domain.union;
 
 import com.github.PiotrDuma.payroll.common.Amount;
 import com.github.PiotrDuma.payroll.common.EmployeeId;
+import com.github.PiotrDuma.payroll.common.PaymentPeriod;
 import java.time.LocalDate;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,8 @@ class UnionAffiliationTransactionFactory {
           new UndoMembershipTransaction(repository, (UUID)params[0], (EmployeeId)params[1]);
       case UnionTransaction.CHARGE_MEMBERS -> new ChargeMembersTransaction(repository,
           (UUID)params[0], (Amount)params[1], (LocalDate)params[2]);
-      //TODO: extend by new transactions.
+      case UnionTransaction.COUNT_CHARGES -> new CountMembershipChargesTransaction(repository,
+          (EmployeeId)params[0], (PaymentPeriod)params[1]);
       default -> null;
     };
   }
