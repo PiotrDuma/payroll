@@ -19,6 +19,8 @@ class UnionAffiliationTransactionFactory {
       case UnionTransaction.ADD_UNION -> new AddUnionTransaction(repository, (String)params[0]);
       case UnionTransaction.RECORD_MEMBERSHIP ->
           new RecordMembershipTransaction(repository, (UUID)params[0], (EmployeeId)params[1]);
+      case UnionTransaction.UNDO_MEMBERSHIP ->
+          new UndoMembershipTransaction(repository, (UUID)params[0], (EmployeeId)params[1]);
       //TODO: extend by new transactions.
       default -> null;
     };

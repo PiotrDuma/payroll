@@ -9,31 +9,44 @@ import java.util.UUID;
 class UnionEntity {
   private final UUID id;
   private String name;
+  // @ElementCollection
   private Set<EmployeeId> members;
 
-  public UnionEntity(String name) {
+  protected UnionEntity(String name) {
     this.id = UUID.randomUUID();
     this.name = name;
     this.members = new HashSet<>();
   }
 
-  public UUID getId() {
+  protected UUID getId() {
     return id;
   }
 
-  public String getName() {
+  protected String getName() {
     return name;
   }
 
-  public Set<EmployeeId> getMembers() {
+  protected boolean removeMembership(EmployeeId employeeId){
+    try{
+      return this.members.remove(employeeId);
+    }catch(Exception e){
+      throw new RuntimeException("Union membership delete exception");
+    }
+  }
+
+  protected Set<EmployeeId> getMembers() {
     return members;
   }
 
-  public void addMember(EmployeeId memberId) {
+  protected void addMember(EmployeeId memberId) {
     this.members.add(memberId);
   }
 
-  public UnionDto toDto(){
+  protected boolean isMember(EmployeeId employeeId){
+    return this.members.contains(employeeId);
+  }
+
+  protected UnionDto toDto(){
     return new UnionDto(this.id, this.name);
   }
 }

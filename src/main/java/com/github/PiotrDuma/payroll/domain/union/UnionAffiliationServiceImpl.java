@@ -26,4 +26,10 @@ class UnionAffiliationServiceImpl implements UnionAffiliationService {
     transactionFactory.create(UnionTransaction.RECORD_MEMBERSHIP, unionId, employeeId)
         .execute();
   }
+
+  @Override
+  public void undoMembershipAffiliation(UUID unionId, EmployeeId employeeId) {
+    transactionFactory.create(UnionTransaction.UNDO_MEMBERSHIP, unionId, employeeId)
+        .execute();
+  }
 }
