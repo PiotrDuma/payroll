@@ -27,8 +27,9 @@ class ChargeMembersTransaction implements UnionTransaction {
   @Override
   public Object execute() {
     UnionEntity union = getUnion();
-    //TODO: implement charges entity
-    return null;
+    UnionCharge charge = union.addMembersCharge(amount, date);
+    this.repository.save(union);
+    return charge;
   }
 
   private UnionEntity getUnion() {
