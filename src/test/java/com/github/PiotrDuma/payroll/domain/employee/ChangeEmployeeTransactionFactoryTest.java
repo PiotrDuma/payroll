@@ -2,6 +2,7 @@ package com.github.PiotrDuma.payroll.domain.employee;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.github.PiotrDuma.payroll.common.Address;
 import com.github.PiotrDuma.payroll.common.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionedClassification;
@@ -41,6 +42,18 @@ class ChangeEmployeeTransactionFactoryTest {
 
     assertTrue(result instanceof ChangeNameTransaction);
     assertEquals(name, ((ChangeNameTransaction) result).getName());
-    assertEquals(EMPLOYEE_ID, ((ChangeNameTransaction) result).getId());
+    assertEquals(EMPLOYEE_ID, ((ChangeNameTransaction) result).getEmployeeId());
+  }
+
+  @Test
+  void shouldReturnChangeAddressTransaction(){
+    Address address = new Address("ADDRESS");
+    int transactionCode = ChangeEmployeeTransaction.ADDRESS;
+
+    ChangeEmployeeTransaction result = this.factory.create(transactionCode, EMPLOYEE_ID, address);
+
+    assertTrue(result instanceof ChangeAddressTransaction);
+    assertEquals(address, ((ChangeAddressTransaction) result).getAddress());
+    assertEquals(EMPLOYEE_ID, ((ChangeAddressTransaction) result).getEmployeeId());
   }
 }

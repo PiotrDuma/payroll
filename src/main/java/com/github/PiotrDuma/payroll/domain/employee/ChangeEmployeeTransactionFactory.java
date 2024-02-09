@@ -1,5 +1,6 @@
 package com.github.PiotrDuma.payroll.domain.employee;
 
+import com.github.PiotrDuma.payroll.common.Address;
 import com.github.PiotrDuma.payroll.common.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionedClassification;
@@ -35,6 +36,8 @@ class ChangeEmployeeTransactionFactory {
     return switch(transactionCode){
         case ChangeEmployeeTransaction.NAME ->
             new ChangeNameTransaction(repo, (EmployeeId)params[0], (EmployeeName)params[1]);
+        case ChangeEmployeeTransaction.ADDRESS ->
+            new ChangeAddressTransaction(repo, (EmployeeId)params[0], (Address)params[1]);
       default -> null;
     };
   }
