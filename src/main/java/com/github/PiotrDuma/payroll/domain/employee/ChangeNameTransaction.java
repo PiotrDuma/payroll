@@ -33,5 +33,11 @@ class ChangeNameTransaction implements ChangeEmployeeTransaction{
     return employee.get();
   }
 
+  protected EmployeeId getId() {
+    return id;
+  }
 
+  protected EmployeeName getName() {
+    return name;
+  }
 }
