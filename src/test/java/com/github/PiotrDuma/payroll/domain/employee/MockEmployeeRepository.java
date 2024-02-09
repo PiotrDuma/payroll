@@ -4,6 +4,7 @@ import com.github.PiotrDuma.payroll.common.EmployeeId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 class MockEmployeeRepository implements EmployeeRepository{
   private final Map<EmployeeId, Employee> repo;
@@ -20,5 +21,10 @@ class MockEmployeeRepository implements EmployeeRepository{
   @Override
   public List<Employee> findAll() {
     return repo.values().stream().toList();
+  }
+
+  @Override
+  public Optional<Employee> findById(EmployeeId employeeId) {
+    throw new RuntimeException("METHOD NOT IMPLEMENTED");
   }
 }
