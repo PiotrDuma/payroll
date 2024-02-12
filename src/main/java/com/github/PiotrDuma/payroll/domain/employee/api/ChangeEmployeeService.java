@@ -27,6 +27,14 @@ public interface ChangeEmployeeService {
    * @param salary  monthly wage value object
    */
   void changeSalariedClassificationTransaction(EmployeeId employeeId, Salary salary);
+
+  /**
+   * This method sets commissioned classification calculation and biweekly schedule payment.
+   *
+   * @param employeeId employee UUID value object
+   * @param salary  monthly wage value object
+   * @param rate percent of commission rate bonus
+   */
   void changeCommissionedClassificationTransaction(EmployeeId employeeId, Salary salary, CommissionRate rate);
 
   void changeHoldPaymentMethodTransaction(EmployeeId employeeId, Bank bank, BankAccount account);

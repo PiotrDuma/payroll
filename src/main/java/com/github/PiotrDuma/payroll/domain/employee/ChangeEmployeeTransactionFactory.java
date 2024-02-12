@@ -4,6 +4,7 @@ import com.github.PiotrDuma.payroll.common.Address;
 import com.github.PiotrDuma.payroll.common.EmployeeId;
 import com.github.PiotrDuma.payroll.common.Salary;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
+import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionedClassification;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyClassification;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyRate;
@@ -46,6 +47,9 @@ class ChangeEmployeeTransactionFactory {
       case ChangeEmployeeTransaction.SALARIED_CLASSIFICATION ->
           new ChangeSalariedClassificationTransaction(repo, salariedClassification, scheduleFactory,
               (EmployeeId)params[0], (Salary)params[1]);
+      case ChangeEmployeeTransaction.COMMISSIONED_CLASSIFICATION ->
+          new ChangeCommissionedClassificationTransaction(repo, commissionedClassification,
+              scheduleFactory, (EmployeeId)params[0], (Salary)params[1], (CommissionRate)params[2]);
       default -> null;
     };
   }

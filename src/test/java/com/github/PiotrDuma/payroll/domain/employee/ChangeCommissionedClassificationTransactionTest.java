@@ -12,7 +12,8 @@ import com.github.PiotrDuma.payroll.common.Address;
 import com.github.PiotrDuma.payroll.common.Salary;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
-import com.github.PiotrDuma.payroll.domain.payment.classification.salary.api.SalariedClassification;
+import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
+import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionedClassification;
 import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentSchedule;
 import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentScheduleFactory;
 import com.github.PiotrDuma.payroll.exception.ResourceNotFoundException;
@@ -24,22 +25,23 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class ChangeSalariedClassificationTransactionTest {
+class ChangeCommissionedClassificationTransactionTest {
   private static final Salary SALARY = new Salary(1234);
+  private static final CommissionRate COMMISSION_RATE = new CommissionRate(12.5);
   @Mock
   private EmployeeRepository repo;
   @Mock
-  private SalariedClassification salariedClassification;
+  private CommissionedClassification classification;
   @Mock
   private PaymentScheduleFactory scheduleFactory;
   private Employee employee;
-  private ChangeSalariedClassificationTransaction transaction;
+  private ChangeCommissionedClassificationTransaction transaction;
 
   @BeforeEach
   void setUp(){
     this.employee = new Employee(new EmployeeName("NAME"), new Address("ADDRESS"));
-    this.transaction = new ChangeSalariedClassificationTransaction(repo, salariedClassification,
-        scheduleFactory, employee.getId(), SALARY);
+    this.transaction = new ChangeCommissionedClassificationTransaction(repo, classification,
+        scheduleFactory, employee.getId(), SALARY, COMMISSION_RATE);
   }
 
   @Test
@@ -48,8 +50,8 @@ class ChangeSalariedClassificationTransactionTest {
     PaymentSchedule newSchedule = mock(PaymentSchedule.class);
 
     when(this.repo.findById(any())).thenReturn(Optional.of(employee));
-    when(this.scheduleFactory.getMonthlySchedule()).thenReturn(newSchedule);
-    when(this.salariedClassification.getClassification(SALARY)).thenReturn(newClassification);
+    when(this.scheduleFactory.getBiweeklySchedule()).thenReturn(newSchedule);
+    when(this.classification.getClassification(SALARY, COMMISSION_RATE)).thenReturn(newClassification);
     when(this.repo.save(any())).thenReturn(this.employee);
 
     Employee result = (Employee) this.transaction.execute();
