@@ -19,6 +19,13 @@ public interface ChangeEmployeeService {
    * @param hourlyRate hourly revenue value object
    */
   void changeHourlyClassificationTransaction(EmployeeId employeeId, HourlyRate hourlyRate);
+
+  /**
+   * This method sets salaried classification calculation and monthly schedule payment.
+   *
+   * @param employeeId employee UUID value object
+   * @param salary  monthly wage value object
+   */
   void changeSalariedClassificationTransaction(EmployeeId employeeId, Salary salary);
   void changeCommissionedClassificationTransaction(EmployeeId employeeId, Salary salary, CommissionRate rate);
 
