@@ -56,6 +56,8 @@ class ChangeEmployeeTransactionFactory {
           new ChangeHoldMethodTransaction(repo, methodFactory, (EmployeeId)params[0]);
       case ChangeEmployeeTransaction.DIRECT_PAYMENT -> new ChangeDirectMethodTransaction(repo,
           methodFactory, (EmployeeId)params[0], (Bank)params[1], (BankAccount)params[2]);
+      case ChangeEmployeeTransaction.MAIL_PAYMENT -> new ChangeMailMethodTransaction(repo,
+          methodFactory, (EmployeeId)params[0], (Address)params[1]);
       default -> null;
     };
   }
