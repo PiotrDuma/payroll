@@ -34,4 +34,12 @@ class ChangeCommissionedClassificationTransaction extends AbstractChangeEmployee
     employee.setSchedule(schedule);
     return getRepository().save(employee);
   }
+
+  protected Salary getSalary() {
+    return salary;
+  }
+
+  protected CommissionRate getCommissionRate() {
+    return commissionRate;
+  }
 }

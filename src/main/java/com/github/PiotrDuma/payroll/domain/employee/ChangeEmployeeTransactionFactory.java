@@ -39,10 +39,10 @@ class ChangeEmployeeTransactionFactory {
 
   public ChangeEmployeeTransaction create(int transactionCode, Object... params){
     return switch(transactionCode){
-        case ChangeEmployeeTransaction.NAME ->
-            new ChangeNameTransaction(repo, (EmployeeId)params[0], (EmployeeName)params[1]);
-        case ChangeEmployeeTransaction.ADDRESS ->
-            new ChangeAddressTransaction(repo, (EmployeeId)params[0], (Address)params[1]);
+      case ChangeEmployeeTransaction.NAME ->
+          new ChangeNameTransaction(repo, (EmployeeId)params[0], (EmployeeName)params[1]);
+      case ChangeEmployeeTransaction.ADDRESS ->
+          new ChangeAddressTransaction(repo, (EmployeeId)params[0], (Address)params[1]);
       case ChangeEmployeeTransaction.HOURLY_CLASSIFICATION ->
           new ChangeHourlyClassificationTransaction(repo, hourlyClassification, scheduleFactory,
               (EmployeeId)params[0], (HourlyRate)params[1]);

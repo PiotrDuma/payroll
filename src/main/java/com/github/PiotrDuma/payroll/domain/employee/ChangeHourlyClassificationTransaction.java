@@ -31,4 +31,8 @@ class ChangeHourlyClassificationTransaction extends AbstractChangeEmployeeTransa
     employee.setSchedule(schedule);
     return getRepository().save(employee);
   }
+
+  protected HourlyRate getHourlyRate() {
+    return hourlyRate;
+  }
 }

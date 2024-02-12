@@ -23,4 +23,8 @@ class ChangeMailMethodTransaction extends AbstractChangeEmployeeTransaction
     employee.setPaymentMethod(method);
     return getRepository().save(employee);
   }
+
+  protected Address getAddress() {
+    return address;
+  }
 }

@@ -30,4 +30,8 @@ class ChangeSalariedClassificationTransaction extends AbstractChangeEmployeeTran
     employee.setSchedule(schedule);
     return getRepository().save(employee);
   }
+
+  protected Salary getSalary() {
+    return salary;
+  }
 }

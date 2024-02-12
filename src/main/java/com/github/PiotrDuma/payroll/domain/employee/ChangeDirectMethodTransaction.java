@@ -26,4 +26,12 @@ class ChangeDirectMethodTransaction extends AbstractChangeEmployeeTransaction
     employee.setPaymentMethod(method);
     return getRepository().save(employee);
   }
+
+  protected Bank getBank() {
+    return bank;
+  }
+
+  protected BankAccount getBankAccount() {
+    return bankAccount;
+  }
 }
