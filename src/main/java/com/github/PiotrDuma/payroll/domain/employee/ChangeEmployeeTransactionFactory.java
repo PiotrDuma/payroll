@@ -1,6 +1,8 @@
 package com.github.PiotrDuma.payroll.domain.employee;
 
 import com.github.PiotrDuma.payroll.common.Address;
+import com.github.PiotrDuma.payroll.common.Bank;
+import com.github.PiotrDuma.payroll.common.BankAccount;
 import com.github.PiotrDuma.payroll.common.EmployeeId;
 import com.github.PiotrDuma.payroll.common.Salary;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
@@ -52,6 +54,8 @@ class ChangeEmployeeTransactionFactory {
               scheduleFactory, (EmployeeId)params[0], (Salary)params[1], (CommissionRate)params[2]);
       case ChangeEmployeeTransaction.HOLD_PAYMENT ->
           new ChangeHoldMethodTransaction(repo, methodFactory, (EmployeeId)params[0]);
+      case ChangeEmployeeTransaction.DIRECT_PAYMENT -> new ChangeDirectMethodTransaction(repo,
+          methodFactory, (EmployeeId)params[0], (Bank)params[1], (BankAccount)params[2]);
       default -> null;
     };
   }
