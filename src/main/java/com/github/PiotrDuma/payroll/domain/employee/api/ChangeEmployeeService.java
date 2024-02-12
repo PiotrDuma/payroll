@@ -37,7 +37,7 @@ public interface ChangeEmployeeService {
    */
   void changeCommissionedClassificationTransaction(EmployeeId employeeId, Salary salary, CommissionRate rate);
 
-  void changeHoldPaymentMethodTransaction(EmployeeId employeeId, Bank bank, BankAccount account);
-  void changeDirectPaymentMethodTransaction(EmployeeId employeeId);
-  void changeHMailPaymentMethodTransaction(EmployeeId employeeId, Address address);
+  void changeHoldPaymentMethodTransaction(EmployeeId employeeId);
+  void changeDirectPaymentMethodTransaction(EmployeeId employeeId, Bank bank, BankAccount account);
+  void changeMailPaymentMethodTransaction(EmployeeId employeeId, Address address);
 }

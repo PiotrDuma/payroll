@@ -50,6 +50,8 @@ class ChangeEmployeeTransactionFactory {
       case ChangeEmployeeTransaction.COMMISSIONED_CLASSIFICATION ->
           new ChangeCommissionedClassificationTransaction(repo, commissionedClassification,
               scheduleFactory, (EmployeeId)params[0], (Salary)params[1], (CommissionRate)params[2]);
+      case ChangeEmployeeTransaction.HOLD_PAYMENT ->
+          new ChangeHoldMethodTransaction(repo, methodFactory, (EmployeeId)params[0]);
       default -> null;
     };
   }
