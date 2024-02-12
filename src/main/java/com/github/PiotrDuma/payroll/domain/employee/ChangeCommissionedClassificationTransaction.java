@@ -8,7 +8,7 @@ import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api
 import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentSchedule;
 import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentScheduleFactory;
 
-public class ChangeCommissionedClassificationTransaction extends AbstractChangeEmployeeTransaction
+class ChangeCommissionedClassificationTransaction extends AbstractChangeEmployeeTransaction
     implements ChangeEmployeeTransaction {
   private final CommissionedClassification classification;
   private final PaymentScheduleFactory scheduleFactory;
