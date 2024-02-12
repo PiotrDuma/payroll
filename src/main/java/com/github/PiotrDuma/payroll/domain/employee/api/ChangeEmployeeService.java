@@ -12,6 +12,12 @@ public interface ChangeEmployeeService {
   void changeNameTransaction(EmployeeId employeeId, EmployeeName name);
   void changeAddressTransaction(EmployeeId employeeId, Address address);
 
+  /**
+   * This method sets hourly classification salary calculation and weekly schedule payment.
+   *
+   * @param employeeId employee UUID value object
+   * @param hourlyRate hourly revenue value object
+   */
   void changeHourlyClassificationTransaction(EmployeeId employeeId, HourlyRate hourlyRate);
   void changeSalariedClassificationTransaction(EmployeeId employeeId, Salary salary);
   void changeCommissionedClassificationTransaction(EmployeeId employeeId, Salary salary, CommissionRate rate);
