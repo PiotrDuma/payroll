@@ -11,16 +11,16 @@ class EmployeeRepositoryImpl implements EmployeeRepository{
 
   @Override
   public Employee save(Employee employee) {
-    return null;
+    throw new RuntimeException("EmployeeRepository class not implemented");
   }
 
   @Override
   public List<Employee> findAll() {
-    return null;
+    throw new RuntimeException("EmployeeRepository class not implemented");
   }
 
   @Override
   public Optional<Employee> findById(EmployeeId employeeId) {
-    return Optional.empty();
+    throw new RuntimeException("EmployeeRepository class not implemented");
   }
 }
