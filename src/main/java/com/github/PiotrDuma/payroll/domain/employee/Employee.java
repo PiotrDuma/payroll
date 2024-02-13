@@ -8,8 +8,11 @@ import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassif
 import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentSchedule;
 import com.github.PiotrDuma.payroll.domain.payment.method.api.PaymentMethod;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class Employee implements EmployeeResponse {
+  private static final Logger log = LoggerFactory.getLogger(Employee.class);
   private final EmployeeId id;
   private EmployeeName name;
   private Address address;
@@ -21,9 +24,9 @@ class Employee implements EmployeeResponse {
     this.id = new EmployeeId(UUID.randomUUID());
     this.name = name;
     this.address = address;
-    this.schedule = null; //TODO: set system default strategy
-    this.paymentClassification = null; //TODO: set system default strategy
-    this.paymentMethod = null; //TODO: set system default strategy
+    this.schedule = null;
+    this.paymentClassification = null;
+    this.paymentMethod = null;
   }
 
   public EmployeeId getId() {
@@ -47,6 +50,10 @@ class Employee implements EmployeeResponse {
   }
 
   public PaymentSchedule getSchedule() {
+    if(this.schedule == null){
+      log.error("Employee schedule reference: null");
+      throw new RuntimeException("Missing employee's schedule method");
+    }
     return schedule;
   }
 
@@ -55,6 +62,10 @@ class Employee implements EmployeeResponse {
   }
 
   public PaymentClassification getPaymentClassification() {
+    if(this.paymentClassification == null){
+      log.error("Employee classification method reference: null");
+      throw new RuntimeException("Missing employee's payment classification method");
+    }
     return paymentClassification;
   }
 
@@ -63,6 +74,10 @@ class Employee implements EmployeeResponse {
   }
 
   public PaymentMethod getPaymentMethod() {
+    if(this.paymentMethod == null){
+      log.error("Employee payment method reference: null");
+      throw new RuntimeException("Missing employee's payment method");
+    }
     return paymentMethod;
   }
 
