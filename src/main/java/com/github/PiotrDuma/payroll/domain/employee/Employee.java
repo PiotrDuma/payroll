@@ -3,12 +3,13 @@ package com.github.PiotrDuma.payroll.domain.employee;
 import com.github.PiotrDuma.payroll.common.Address;
 import com.github.PiotrDuma.payroll.common.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
+import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
 import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentSchedule;
 import com.github.PiotrDuma.payroll.domain.payment.method.api.PaymentMethod;
 import java.util.UUID;
 
-class Employee {
+class Employee implements EmployeeResponse {
   private final EmployeeId id;
   private EmployeeName name;
   private Address address;
