@@ -1,4 +1,4 @@
-package com.github.PiotrDuma.payroll.services.transaction;
+package com.github.PiotrDuma.payroll.domain.employee.api;
 
 import com.github.PiotrDuma.payroll.common.EmployeeId;
 
