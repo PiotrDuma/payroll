@@ -16,6 +16,7 @@ import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentScheduleF
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -32,25 +33,25 @@ class AddCommissionedEmployeeTransactionTest {
   private PaymentMethodFactory methodFactory;
   @Mock
   private CommissionedClassification classification;
-
+  @Mock
   private EmployeeRepository repo;
 
   private AddCommissionedEmployeeTransaction transaction;
 
   @BeforeEach
   void setUp(){
-    this.repo = new MockEmployeeRepository();
     this.transaction = new AddCommissionedEmployeeTransaction(repo, classification, scheduleFactory,
         methodFactory, ADDRESS, NAME, SALARY, COMMISSION_RATE);
   }
 
   @Test
   void transactionShouldAddObjectToRepository(){
+    ArgumentCaptor<Employee> captor = ArgumentCaptor.forClass(Employee.class);
+
     EmployeeId expectedId = transaction.execute();
 
-    assertEquals(1, repo.findAll().size());
-    assertTrue(this.repo.findAll().stream().findFirst().isPresent());
-    Employee employee = this.repo.findAll().stream().findFirst().get();
+    verify(this.repo, times(1)).save(captor.capture());
+    Employee employee = captor.getValue();
 
     assertEquals(ADDRESS, employee.getAddress());
     assertEquals(NAME, employee.getName());
@@ -61,7 +62,6 @@ class AddCommissionedEmployeeTransactionTest {
   void transactionShouldCallHourlyClassificationService(){
     transaction.execute();
 
-    assertEquals(1, repo.findAll().size());
     verify(this.classification, times(1)).getClassification(SALARY, COMMISSION_RATE);
   }
 
@@ -69,7 +69,6 @@ class AddCommissionedEmployeeTransactionTest {
   void transactionShouldCallMonthlyMethodInScheduleFactory(){
     transaction.execute();
 
-    assertEquals(1, repo.findAll().size());
     verify(this.scheduleFactory, times(1)).getBiweeklySchedule();
   }
 
@@ -77,7 +76,6 @@ class AddCommissionedEmployeeTransactionTest {
   void transactionShouldCallHoldMethodInPaymentMethodFactory(){
     transaction.execute();
 
-    assertEquals(1, repo.findAll().size());
     verify(this.methodFactory, times(1)).getHoldPaymentMethod();
   }
 }
