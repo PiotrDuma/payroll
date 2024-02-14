@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 class PaydayTransactionService implements PaydayTransaction {
   private static final Logger log = LoggerFactory.getLogger(PaydayTransactionService.class);
+  private static final String MESSAGE = "%s: PAYDAY EXECUTED";
   private final ReceiveEmployee receiveEmployee;
   private final UnionAffiliationService unionService;
   private final Clock clock;
@@ -44,5 +45,6 @@ class PaydayTransactionService implements PaydayTransaction {
           e.getPaymentMethod().executePayment(today, paycheck.getNetSalary());
           this.paycheckRepository.save(paycheck);
         });
+    log.info(String.format(MESSAGE, today.toString()));
   }
 }
