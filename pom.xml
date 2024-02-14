@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.github.PiotrDuma</groupId>
 	<artifactId>payroll</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>SNAPSHOT_1.0</version>
 	<name>payroll</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
