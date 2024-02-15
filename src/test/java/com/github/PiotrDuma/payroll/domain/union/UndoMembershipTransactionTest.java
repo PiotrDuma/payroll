@@ -7,7 +7,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.github.PiotrDuma.payroll.common.EmployeeId;
+import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.exception.ResourceNotFoundException;
 import java.util.HashSet;
 import java.util.Optional;

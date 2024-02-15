@@ -1,6 +1,6 @@
 package com.github.PiotrDuma.payroll.domain.union;
 
-import com.github.PiotrDuma.payroll.common.EmployeeId;
+import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.exception.ResourceNotFoundException;
 import java.util.UUID;
 import org.slf4j.Logger;

@@ -1,6 +1,6 @@
 package com.github.PiotrDuma.payroll.domain.employee;
 
-import com.github.PiotrDuma.payroll.common.EmployeeId;
+import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Repository;

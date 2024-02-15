@@ -6,10 +6,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.github.PiotrDuma.payroll.common.Address;
-import com.github.PiotrDuma.payroll.common.EmployeeId;
+import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.common.Salary;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
 import com.github.PiotrDuma.payroll.domain.payment.classification.salary.api.SalariedClassification;

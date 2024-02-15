@@ -8,7 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.github.PiotrDuma.payroll.common.Amount;
+import com.github.PiotrDuma.payroll.common.amount.Amount;
 import com.github.PiotrDuma.payroll.exception.ResourceNotFoundException;
 import java.time.LocalDate;
 import java.util.Optional;

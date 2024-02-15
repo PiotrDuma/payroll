@@ -2,8 +2,8 @@ package com.github.PiotrDuma.payroll.services.payday;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.github.PiotrDuma.payroll.common.Amount;
-import com.github.PiotrDuma.payroll.common.EmployeeId;
+import com.github.PiotrDuma.payroll.common.amount.Amount;
+import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.common.Salary;
 import java.math.BigDecimal;
 import java.time.LocalDate;

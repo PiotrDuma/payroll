@@ -1,7 +1,7 @@
 package com.github.PiotrDuma.payroll.domain.payment.classification.commission;
 
-import com.github.PiotrDuma.payroll.common.EmployeeId;
-import com.github.PiotrDuma.payroll.common.Amount;
+import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
+import com.github.PiotrDuma.payroll.common.amount.Amount;
 import java.time.LocalDate;
 import java.util.UUID;
 

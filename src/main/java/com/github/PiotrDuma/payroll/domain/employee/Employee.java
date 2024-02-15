@@ -1,7 +1,7 @@
 package com.github.PiotrDuma.payroll.domain.employee;
 
 import com.github.PiotrDuma.payroll.common.Address;
-import com.github.PiotrDuma.payroll.common.EmployeeId;
+import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;

@@ -1,7 +1,7 @@
 package com.github.PiotrDuma.payroll.domain.union;
 
-import com.github.PiotrDuma.payroll.common.Amount;
-import com.github.PiotrDuma.payroll.common.EmployeeId;
+import com.github.PiotrDuma.payroll.common.amount.Amount;
+import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.common.PaymentPeriod;
 import java.math.BigDecimal;
 import org.slf4j.Logger;

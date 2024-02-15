@@ -3,8 +3,8 @@ package com.github.PiotrDuma.payroll.domain.union;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.github.PiotrDuma.payroll.common.Amount;
-import com.github.PiotrDuma.payroll.common.EmployeeId;
+import com.github.PiotrDuma.payroll.common.amount.Amount;
+import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.common.PaymentPeriod;
 import java.time.LocalDate;
 import java.util.UUID;

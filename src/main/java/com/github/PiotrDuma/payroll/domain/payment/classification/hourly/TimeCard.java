@@ -1,6 +1,6 @@
 package com.github.PiotrDuma.payroll.domain.payment.classification.hourly;
 
-import com.github.PiotrDuma.payroll.common.EmployeeId;
+import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.Hours;
 import java.time.LocalDate;
 

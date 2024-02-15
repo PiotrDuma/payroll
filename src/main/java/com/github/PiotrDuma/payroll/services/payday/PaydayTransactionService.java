@@ -1,6 +1,6 @@
 package com.github.PiotrDuma.payroll.services.payday;
 
-import com.github.PiotrDuma.payroll.common.Amount;
+import com.github.PiotrDuma.payroll.common.amount.Amount;
 import com.github.PiotrDuma.payroll.common.PaymentPeriod;
 import com.github.PiotrDuma.payroll.common.Salary;
 import com.github.PiotrDuma.payroll.domain.employee.api.ReceiveEmployee;

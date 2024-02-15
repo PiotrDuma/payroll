@@ -2,10 +2,9 @@ package com.github.PiotrDuma.payroll.domain.union;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
-import com.github.PiotrDuma.payroll.common.Amount;
-import com.github.PiotrDuma.payroll.common.EmployeeId;
+import com.github.PiotrDuma.payroll.common.amount.Amount;
+import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import java.time.LocalDate;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
