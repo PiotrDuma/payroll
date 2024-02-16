@@ -1,4 +1,4 @@
-package com.github.PiotrDuma.payroll.common;
+package com.github.PiotrDuma.payroll.common.salary;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;

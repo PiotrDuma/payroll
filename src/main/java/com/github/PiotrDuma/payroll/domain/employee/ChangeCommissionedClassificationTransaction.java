@@ -1,7 +1,7 @@
 package com.github.PiotrDuma.payroll.domain.employee;
 
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
-import com.github.PiotrDuma.payroll.common.Salary;
+import com.github.PiotrDuma.payroll.common.salary.Salary;
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionedClassification;

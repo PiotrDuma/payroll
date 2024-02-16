@@ -4,7 +4,7 @@ import com.github.PiotrDuma.payroll.common.address.Address;
 import com.github.PiotrDuma.payroll.common.bank.Bank;
 import com.github.PiotrDuma.payroll.common.BankAccount.BankAccount;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
-import com.github.PiotrDuma.payroll.common.Salary;
+import com.github.PiotrDuma.payroll.common.salary.Salary;
 import com.github.PiotrDuma.payroll.domain.employee.api.ChangeEmployeeService;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;

@@ -3,7 +3,7 @@ package com.github.PiotrDuma.payroll.domain.payment.classification.commission;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.github.PiotrDuma.payroll.common.Salary;
+import com.github.PiotrDuma.payroll.common.salary.Salary;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
 import com.github.PiotrDuma.payroll.common.amount.Amount;

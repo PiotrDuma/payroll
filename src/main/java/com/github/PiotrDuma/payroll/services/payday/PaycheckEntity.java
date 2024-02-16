@@ -2,7 +2,7 @@ package com.github.PiotrDuma.payroll.services.payday;
 
 import com.github.PiotrDuma.payroll.common.amount.Amount;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
-import com.github.PiotrDuma.payroll.common.Salary;
+import com.github.PiotrDuma.payroll.common.salary.Salary;
 import java.time.LocalDate;
 
 class PaycheckEntity {

@@ -2,7 +2,7 @@ package com.github.PiotrDuma.payroll.domain.payment.method;
 
 import com.github.PiotrDuma.payroll.common.bank.Bank;
 import com.github.PiotrDuma.payroll.common.BankAccount.BankAccount;
-import com.github.PiotrDuma.payroll.common.Salary;
+import com.github.PiotrDuma.payroll.common.salary.Salary;
 import com.github.PiotrDuma.payroll.domain.payment.method.api.PaymentDto;
 import com.github.PiotrDuma.payroll.domain.payment.method.api.PaymentMethod;
 import java.time.LocalDate;

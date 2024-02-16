@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.github.PiotrDuma.payroll.common.amount.Amount;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
-import com.github.PiotrDuma.payroll.common.Salary;
+import com.github.PiotrDuma.payroll.common.salary.Salary;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;

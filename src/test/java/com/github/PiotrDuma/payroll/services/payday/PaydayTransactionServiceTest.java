@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 
 import com.github.PiotrDuma.payroll.common.amount.Amount;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
-import com.github.PiotrDuma.payroll.common.Salary;
+import com.github.PiotrDuma.payroll.common.salary.Salary;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
 import com.github.PiotrDuma.payroll.domain.employee.api.ReceiveEmployee;
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;

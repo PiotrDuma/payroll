@@ -1,6 +1,6 @@
 package com.github.PiotrDuma.payroll.domain.payment.method;
 
-import com.github.PiotrDuma.payroll.common.Salary;
+import com.github.PiotrDuma.payroll.common.salary.Salary;
 import com.github.PiotrDuma.payroll.domain.payment.method.api.PaymentDto;
 import java.time.LocalDate;
 import java.util.UUID;
