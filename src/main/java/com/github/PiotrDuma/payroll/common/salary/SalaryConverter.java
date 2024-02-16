@@ -1,6 +1,5 @@
-package com.github.PiotrDuma.payroll.common;
+package com.github.PiotrDuma.payroll.common.salary;
 
-import com.github.PiotrDuma.payroll.common.salary.Salary;
 import jakarta.persistence.AttributeConverter;
 import java.math.BigDecimal;
 import org.slf4j.Logger;
