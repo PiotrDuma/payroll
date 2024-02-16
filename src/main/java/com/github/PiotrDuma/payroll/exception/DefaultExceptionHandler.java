@@ -52,6 +52,17 @@ class DefaultExceptionHandler {
         return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(InvalidArgumentException.class)
+    private ResponseEntity<ExceptionDto> handleArgumentException(Exception ex, HttpServletRequest request) {
+        ExceptionDto exceptionDto = new ExceptionDto(
+            request.getRequestURI(),
+            ex.getMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now(clock)
+        );
+        return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler({Exception.class})
     private ResponseEntity<ExceptionDto> handleDefaultException(HttpServletRequest request) {
         ExceptionDto exceptionDto = new ExceptionDto(

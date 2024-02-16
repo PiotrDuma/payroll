@@ -102,6 +102,27 @@ class DefaultExceptionHandlerTest {
         assertEquals(JsonFormatter.getRawString(expected), result);
     }
 
+    @Test
+    void shouldHandleInvalidArgumentException() throws Exception{
+        String exceptionMessage = "invalid argument";
+        String expected = """
+        {
+            "requestURL": "/test/badRequest",
+            "errorMessage": "invalid argument",
+            "statusCode": 400,
+            "timestamp": "2024-01-02T03:40:50.906435344"
+        }
+        """;
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/test/badRequest"))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType("application/json"))
+            .andExpect(result -> assertTrue(result.getResolvedException() instanceof InvalidArgumentException))
+            .andExpect(result -> assertEquals(exceptionMessage, Objects.requireNonNull(result.getResolvedException()).getMessage()))
+            .andReturn();
+        String result = mvcResult.getResponse().getContentAsString();
+        assertEquals(JsonFormatter.getRawString(expected), result);
+    }
 
     @TestConfiguration
     @Import(PayrollApplication.class)

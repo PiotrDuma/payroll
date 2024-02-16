@@ -1,5 +1,6 @@
 package com.github.PiotrDuma.payroll.exception;
 
+import com.sun.nio.sctp.IllegalReceiveException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,5 +22,10 @@ class ExceptionControllerMock {
     @RequestMapping("/test/resource")
     public void callResourceNotFoundException() throws RuntimeException{
         throw new ResourceNotFoundException("Something is not found");
+    }
+
+    @RequestMapping("/test/badRequest")
+    public void callInvalidArgumentException() throws RuntimeException{
+        throw new InvalidArgumentException("invalid argument");
     }
 }

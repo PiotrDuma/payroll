@@ -10,7 +10,7 @@ public class SalaryConverter implements AttributeConverter<Salary, BigDecimal> {
 
   @Override
   public BigDecimal convertToDatabaseColumn(Salary attribute) {
-    log.info("Convert Salary value object to BigDecimal")
+    log.info("Convert Salary value object to BigDecimal");
     return attribute.getSalary();
   }
 
