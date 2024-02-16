@@ -1,6 +1,6 @@
 package com.github.PiotrDuma.payroll.domain.payment.method;
 
-import com.github.PiotrDuma.payroll.common.Address;
+import com.github.PiotrDuma.payroll.common.address.Address;
 import com.github.PiotrDuma.payroll.common.Salary;
 import com.github.PiotrDuma.payroll.domain.payment.method.api.PaymentDto;
 import com.github.PiotrDuma.payroll.domain.payment.method.api.PaymentMethod;

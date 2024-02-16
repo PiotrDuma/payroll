@@ -1,4 +1,4 @@
-package com.github.PiotrDuma.payroll.common;
+package com.github.PiotrDuma.payroll.common.address;
 
 public class Address {
   private String address;

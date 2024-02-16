@@ -2,7 +2,7 @@ package com.github.PiotrDuma.payroll.domain.employee;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.github.PiotrDuma.payroll.common.Address;
+import com.github.PiotrDuma.payroll.common.address.Address;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
 import org.junit.jupiter.api.Test;
 

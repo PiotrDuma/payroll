@@ -8,7 +8,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.github.PiotrDuma.payroll.common.Address;
+import com.github.PiotrDuma.payroll.common.address.Address;
 import com.github.PiotrDuma.payroll.common.Bank;
 import com.github.PiotrDuma.payroll.common.BankAccount;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
