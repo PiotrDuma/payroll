@@ -9,7 +9,7 @@ public class BankAccountConverter implements AttributeConverter<BankAccount, Str
 
   @Override
   public String convertToDatabaseColumn(BankAccount attribute) {
-    log.info("Convert BankAccoun value object to String");
+    log.info("Convert BankAccount value object to String");
     return attribute.getNumber();
   }
 
