@@ -3,7 +3,7 @@ package com.github.PiotrDuma.payroll.domain.employee;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.github.PiotrDuma.payroll.common.address.Address;
-import com.github.PiotrDuma.payroll.common.Bank;
+import com.github.PiotrDuma.payroll.common.bank.Bank;
 import com.github.PiotrDuma.payroll.common.BankAccount;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.common.Salary;
