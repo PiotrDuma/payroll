@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.util.UUID;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name = "union_charge")
@@ -18,7 +19,7 @@ class UnionCharge {
   private UUID id;
   @Convert(converter = AmountConverter.class)
   private Amount amount;
-
+  @DateTimeFormat(pattern = "yyyy/MM/dd")
   private LocalDate date;
 
   protected UnionCharge() {
