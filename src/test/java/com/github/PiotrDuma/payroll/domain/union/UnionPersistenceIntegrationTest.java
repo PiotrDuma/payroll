@@ -18,7 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 @DataJpaTest
 @Tag("IntegrationTest")
 @ActiveProfiles("test")
-public class UnionPersistenceIntegrationTest {
+class UnionPersistenceIntegrationTest {
 
   @Autowired
   private UnionAffiliationRepository repo;

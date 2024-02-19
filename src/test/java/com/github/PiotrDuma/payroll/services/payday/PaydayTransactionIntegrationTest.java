@@ -17,7 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 @Tag("IntegrationTest")
 @ActiveProfiles("test")
-class PaydayTransactionIntegrationTest {
+class PaydayTransactionIntegrationTest { //TODO: implement transaction integration test.
   private static final ZonedDateTime NOW = ZonedDateTime.of(2000, 1, 1,
       16, 5, 12, 0, ZoneId.of("UTC"));
   @Autowired
