@@ -16,25 +16,13 @@ import org.slf4j.LoggerFactory;
 class HoldPaymentMethod extends AbstractPaymentMethod implements PaymentMethod {
   private static final Logger log = LoggerFactory.getLogger(HoldPaymentMethod.class);
 
-//  private List<PaymentEntity> payments;
-
-
   protected HoldPaymentMethod() {
-//    this.payments = new LinkedList<>();
   }
 
   @Override
   public void executePayment(LocalDate date, Salary salary) {
-//    PaymentEntity payment = new PaymentEntity(date, salary);
     log.info("Proceed hold payment method: salary provided to another department");
-//    this.payments.add(payment);
-//    log.info("Payment "+ payment.getId().toString() + " executed");
   }
 
-//  public List<PaymentDto> getPayments() {
-//    return payments.stream()
-//        .map(PaymentEntity::toPaymentDto)
-//        .collect(Collectors.toList());
-//  }
 
 }

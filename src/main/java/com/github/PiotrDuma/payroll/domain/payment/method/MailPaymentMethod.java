@@ -21,31 +21,18 @@ class MailPaymentMethod extends AbstractPaymentMethod implements PaymentMethod {
   @Column(name = "address")
   @Convert(converter = AddressConverter.class)
   private Address address;
-//  private List<PaymentEntity> payments;
-
 
   protected MailPaymentMethod() {
   }
 
   protected MailPaymentMethod(Address address) {
     this.address = address;
-//    this.payments = new LinkedList<>();
   }
 
   @Override
   public void executePayment(LocalDate date, Salary salary) {
-//    PaymentEntity payment = new PaymentEntity(date, salary);
     log.info("Proceed mail payment with address: " + address.toString());
-//    this.payments.add(payment);
-//    log.info("Payment "+ payment.getId().toString() + " executed");
   }
-
-//  public List<PaymentDto> getPayments() {
-//    return payments.stream()
-//        .map(PaymentEntity::toPaymentDto)
-//        .collect(Collectors.toList());
-//  }
-
 
   public Address getAddress() {
     return address;

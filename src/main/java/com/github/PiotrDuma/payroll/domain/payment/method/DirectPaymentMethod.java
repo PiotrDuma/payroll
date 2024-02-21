@@ -26,7 +26,6 @@ class DirectPaymentMethod extends AbstractPaymentMethod implements PaymentMethod
   @Column(name = "account")
   @Convert(converter = BankAccountConverter.class)
   private BankAccount bankAccount;
-//  private List<PaymentEntity> payments;
 
 
   protected DirectPaymentMethod() {
@@ -35,23 +34,13 @@ class DirectPaymentMethod extends AbstractPaymentMethod implements PaymentMethod
   protected DirectPaymentMethod(Bank bank, BankAccount bankAccount) {
     this.bank = bank;
     this.bankAccount = bankAccount;
-//    this.payments = new LinkedList<>();
   }
 
   @Override
   public void executePayment(LocalDate date, Salary salary) {
-//    PaymentEntity payment = new PaymentEntity(date, salary);
     log.info("Proceed direct payment to "+ this.bank.toString() +
         " with account number: " + this.bankAccount.toString());
-//    this.payments.add(payment);
-//    log.info("Payment "+ payment.getId().toString() + " executed");
   }
-
-//  public List<PaymentDto> getPayments() {
-//    return payments.stream()
-//        .map(PaymentEntity::toPaymentDto)
-//        .collect(Collectors.toList());
-//  }
 
   public Bank getBank() {
     return bank;
