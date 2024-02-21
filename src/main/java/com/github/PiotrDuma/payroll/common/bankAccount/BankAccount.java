@@ -1,4 +1,4 @@
-package com.github.PiotrDuma.payroll.common.BankAccount;
+package com.github.PiotrDuma.payroll.common.bankAccount;
 
 
 import jakarta.validation.constraints.NotNull;

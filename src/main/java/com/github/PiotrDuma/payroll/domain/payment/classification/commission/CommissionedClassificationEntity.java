@@ -1,23 +1,44 @@
 package com.github.PiotrDuma.payroll.domain.payment.classification.commission;
 
-import com.github.PiotrDuma.payroll.common.salary.Salary;
-import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
-import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
+import com.github.PiotrDuma.payroll.common.PaymentPeriod;
 import com.github.PiotrDuma.payroll.common.amount.Amount;
+import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
+import com.github.PiotrDuma.payroll.common.salary.Salary;
+import com.github.PiotrDuma.payroll.common.salary.SalaryConverter;
+import com.github.PiotrDuma.payroll.domain.payment.classification.AbstractPaymentClassification;
+import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.SalesReceiptProvider;
-import com.github.PiotrDuma.payroll.common.PaymentPeriod;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
-class CommissionedClassificationEntity implements PaymentClassification, SalesReceiptProvider{
-  private final List<SalesReceipt> salesReceipts;
+@Entity
+@Table(name = "commissioned_classification")
+class CommissionedClassificationEntity extends AbstractPaymentClassification
+    implements PaymentClassification, SalesReceiptProvider{
+  @Column(name = "salary")
+  @Convert(converter = SalaryConverter.class)
   private Salary salary;
+  @Column(name = "commission_rate")
+  @Convert(converter = CommissionRateConverter.class)
   private CommissionRate commissionRate;
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<SalesReceipt> salesReceipts;
 
-  public CommissionedClassificationEntity(Salary salary, CommissionRate commissionRate) {
+  protected CommissionedClassificationEntity() {
+  }
+
+  protected CommissionedClassificationEntity(Salary salary, CommissionRate commissionRate) {
     this.salesReceipts = new LinkedList<>();
     this.salary = salary;
     this.commissionRate = commissionRate;

@@ -2,7 +2,7 @@ package com.github.PiotrDuma.payroll.domain.employee;
 
 import com.github.PiotrDuma.payroll.common.address.Address;
 import com.github.PiotrDuma.payroll.common.bank.Bank;
-import com.github.PiotrDuma.payroll.common.BankAccount.BankAccount;
+import com.github.PiotrDuma.payroll.common.bankAccount.BankAccount;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.common.salary.Salary;
 import com.github.PiotrDuma.payroll.domain.employee.api.ChangeEmployeeService;

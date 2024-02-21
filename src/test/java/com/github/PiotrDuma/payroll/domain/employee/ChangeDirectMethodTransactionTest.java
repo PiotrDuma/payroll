@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 
 import com.github.PiotrDuma.payroll.common.address.Address;
 import com.github.PiotrDuma.payroll.common.bank.Bank;
-import com.github.PiotrDuma.payroll.common.BankAccount.BankAccount;
+import com.github.PiotrDuma.payroll.common.bankAccount.BankAccount;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
 import com.github.PiotrDuma.payroll.domain.payment.method.api.PaymentMethod;
 import com.github.PiotrDuma.payroll.domain.payment.method.api.PaymentMethodFactory;

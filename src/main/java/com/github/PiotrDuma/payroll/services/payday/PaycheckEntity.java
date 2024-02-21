@@ -21,14 +21,19 @@ class PaycheckEntity {
   @Id
   @Column(name = "id", updatable = false, nullable = false)
   private UUID id;
+  @Column(name = "employee_id")
   @Convert(converter = EmployeeIdConverter.class)
   private EmployeeId employeeId;
+  @Column(name = "salary")
   @Convert(converter = SalaryConverter.class)
   private Salary salary;
+  @Column(name = "union_due")
   @Convert(converter = AmountConverter.class)
   private Amount unionDues;
+  @Column(name = "net_salary")
   @Convert(converter = SalaryConverter.class)
   private Salary netSalary;
+  @Column(name = "date")
   @DateTimeFormat(pattern = "yyyy/MM/dd")
   private LocalDate date;
 

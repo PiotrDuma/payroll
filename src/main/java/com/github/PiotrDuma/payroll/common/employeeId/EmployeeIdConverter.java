@@ -6,7 +6,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Converter(autoApply = true)
+//@Converter(autoApply = true)
 public class EmployeeIdConverter implements AttributeConverter<EmployeeId, UUID> {
   private static final Logger log = LoggerFactory.getLogger(EmployeeIdConverter.class);
 

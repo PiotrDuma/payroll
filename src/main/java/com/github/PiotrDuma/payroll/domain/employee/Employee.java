@@ -1,27 +1,57 @@
 package com.github.PiotrDuma.payroll.domain.employee;
 
 import com.github.PiotrDuma.payroll.common.address.Address;
+import com.github.PiotrDuma.payroll.common.address.AddressConverter;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
+import com.github.PiotrDuma.payroll.common.employeeId.EmployeeIdConverter;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
+import com.github.PiotrDuma.payroll.domain.payment.classification.AbstractPaymentClassification;
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
-import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentSchedule;
+import com.github.PiotrDuma.payroll.domain.payment.method.AbstractPaymentMethod;
 import com.github.PiotrDuma.payroll.domain.payment.method.api.PaymentMethod;
+import com.github.PiotrDuma.payroll.domain.payment.schedule.AbstractPaymentScheduleEntity;
+import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentSchedule;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Entity
+@Table(name = "employee")
 class Employee implements EmployeeResponse {
   private static final Logger log = LoggerFactory.getLogger(Employee.class);
-  private final EmployeeId id;
+
+  @Id
+  @Column(name = "id", updatable = false, nullable = false)
+//  @Convert(converter = EmployeeIdConverter.class)
+  private UUID id;
+//  private EmployeeId id;
+  @Convert(converter = EmployeeNameConverter.class)
   private EmployeeName name;
+  @Convert(converter = AddressConverter.class)
   private Address address;
+  @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true,
+      targetEntity = AbstractPaymentScheduleEntity.class)
   private PaymentSchedule schedule;
+  @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true,
+      targetEntity = AbstractPaymentClassification.class)
   private PaymentClassification paymentClassification;
+  @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true,
+      targetEntity = AbstractPaymentMethod.class)
   private PaymentMethod paymentMethod;
 
-  public Employee(EmployeeName name, Address address) {
-    this.id = new EmployeeId(UUID.randomUUID());
+  protected Employee() {
+  }
+
+  protected Employee(EmployeeName name, Address address) {
+    this.id = UUID.randomUUID();
     this.name = name;
     this.address = address;
     this.schedule = null;
@@ -30,7 +60,7 @@ class Employee implements EmployeeResponse {
   }
 
   public EmployeeId getId() {
-    return id;
+    return new EmployeeId(this.id);
   }
 
   public EmployeeName getName() {
