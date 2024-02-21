@@ -20,7 +20,7 @@ class HoldPaymentMethod extends AbstractPaymentMethod implements PaymentMethod {
   }
 
   @Override
-  public void executePayment(LocalDate date, Salary salary) {
+  public void executePayment(Salary salary) {
     log.info("Proceed hold payment method: salary provided to another department");
   }
 

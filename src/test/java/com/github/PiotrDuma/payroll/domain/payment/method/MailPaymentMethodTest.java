@@ -8,7 +8,6 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import com.github.PiotrDuma.payroll.common.address.Address;
 import com.github.PiotrDuma.payroll.common.salary.Salary;
-import java.time.LocalDate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,10 +41,9 @@ class MailPaymentMethodTest {
   void executePaymentShouldLog(){
     String expectedMessage1 = "Proceed mail payment with address: " + ADDRESS.toString();
     MailPaymentMethod paymentMethod = new MailPaymentMethod(ADDRESS);
-    LocalDate date = LocalDate.of(2000, 1, 1);
     Salary salary = new Salary(2000);
 
-    paymentMethod.executePayment(date, salary);
+    paymentMethod.executePayment(salary);
 
     int size = logWatcher.list.size();
     assertTrue(logWatcher.list.get(size - 1).getFormattedMessage().contains(expectedMessage1));

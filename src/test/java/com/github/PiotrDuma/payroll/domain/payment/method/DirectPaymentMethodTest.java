@@ -9,7 +9,6 @@ import ch.qos.logback.core.read.ListAppender;
 import com.github.PiotrDuma.payroll.common.bank.Bank;
 import com.github.PiotrDuma.payroll.common.bankAccount.BankAccount;
 import com.github.PiotrDuma.payroll.common.salary.Salary;
-import java.time.LocalDate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,10 +45,9 @@ class DirectPaymentMethodTest {
     String expectedMessage1 = "Proceed direct payment to "+ BANK.toString() +
         " with account number: " + BANK_ACCOUNT.toString();
     DirectPaymentMethod paymentMethod = new DirectPaymentMethod(BANK, BANK_ACCOUNT);
-    LocalDate date = LocalDate.of(2000, 1, 1);
     Salary salary = new Salary(2000);
 
-    paymentMethod.executePayment(date, salary);
+    paymentMethod.executePayment(salary);
 
     int size = logWatcher.list.size();
     assertTrue(logWatcher.list.get(size - 1).getFormattedMessage().contains(expectedMessage1));

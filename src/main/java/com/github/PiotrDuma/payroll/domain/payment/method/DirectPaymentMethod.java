@@ -27,7 +27,6 @@ class DirectPaymentMethod extends AbstractPaymentMethod implements PaymentMethod
   @Convert(converter = BankAccountConverter.class)
   private BankAccount bankAccount;
 
-
   protected DirectPaymentMethod() {
   }
 
@@ -37,7 +36,7 @@ class DirectPaymentMethod extends AbstractPaymentMethod implements PaymentMethod
   }
 
   @Override
-  public void executePayment(LocalDate date, Salary salary) {
+  public void executePayment(Salary salary) {
     log.info("Proceed direct payment to "+ this.bank.toString() +
         " with account number: " + this.bankAccount.toString());
   }

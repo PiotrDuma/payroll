@@ -30,7 +30,7 @@ class MailPaymentMethod extends AbstractPaymentMethod implements PaymentMethod {
   }
 
   @Override
-  public void executePayment(LocalDate date, Salary salary) {
+  public void executePayment(Salary salary) {
     log.info("Proceed mail payment with address: " + address.toString());
   }
 

@@ -42,7 +42,7 @@ class PaydayTransactionService implements PaydayTransaction {
           Salary salary = e.getPaymentClassification().calculatePay(paymentPeriod);
           Amount unionDues = unionService.countMembershipCharges(e.getId(), paymentPeriod);
           PaycheckEntity paycheck = new PaycheckEntity(e.getId(), salary, unionDues, today);
-          e.getPaymentMethod().executePayment(today, paycheck.getNetSalary());
+          e.getPaymentMethod().executePayment(paycheck.getNetSalary());
           this.paycheckRepository.save(paycheck);
         });
     log.info(String.format(MESSAGE, today.toString()));

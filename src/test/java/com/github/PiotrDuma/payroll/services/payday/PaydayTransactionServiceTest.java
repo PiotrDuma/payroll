@@ -86,7 +86,7 @@ class PaydayTransactionServiceTest {
     this.service.execute();
     ArgumentCaptor<PaycheckEntity> captor = ArgumentCaptor.forClass(PaycheckEntity.class);
 
-    verify(employee.getPaymentMethod(), times(1)).executePayment(any(), any());
+    verify(employee.getPaymentMethod(), times(1)).executePayment(any());
     verify(this.paycheckRepository, times(1)).save(captor.capture());
 
     PaycheckEntity result = captor.getValue();
@@ -107,7 +107,7 @@ class PaydayTransactionServiceTest {
 
     this.service.execute();
 
-    verify(employee1.getPaymentMethod(), times(1)).executePayment(any(), any());
+    verify(employee1.getPaymentMethod(), times(1)).executePayment(any());
     verify(this.paycheckRepository, times(1)).save(any());
   }
 
@@ -126,9 +126,9 @@ class PaydayTransactionServiceTest {
 
     this.service.execute();
 
-    verify(employee1.getPaymentMethod(), times(1)).executePayment(any(), any());
-    verify(employee3.getPaymentMethod(), times(1)).executePayment(any(), any());
-    verify(employee4.getPaymentMethod(), times(1)).executePayment(any(), any());
+    verify(employee1.getPaymentMethod(), times(1)).executePayment(any());
+    verify(employee3.getPaymentMethod(), times(1)).executePayment(any());
+    verify(employee4.getPaymentMethod(), times(1)).executePayment(any());
     verify(this.paycheckRepository, times(3)).save(any());
   }
 
