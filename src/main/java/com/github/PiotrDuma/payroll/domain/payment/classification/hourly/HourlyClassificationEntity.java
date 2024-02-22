@@ -60,6 +60,10 @@ class HourlyClassificationEntity extends AbstractPaymentClassification
             () -> this.timeCards.add(new TimeCard(employeeId, date, hours)));
   }
 
+  public HourlyRate getHourlyRate() {
+    return hourlyRate;
+  }
+
   public Set<TimeCard> getTimeCards() {
     return timeCards;
   }

@@ -28,8 +28,12 @@ public class Amount{
     return value;
   }
 
-  public boolean equals(Amount obj) {
-    return this.value.doubleValue()==obj.getAmount().doubleValue();
+  @Override
+  public boolean equals(Object obj) {
+    if(!(obj instanceof Amount o)){
+      return false;
+    }
+    return o.getAmount().compareTo(this.value) == 0;
   }
 
   @Override

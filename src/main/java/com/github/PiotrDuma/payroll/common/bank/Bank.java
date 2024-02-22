@@ -17,6 +17,14 @@ public class Bank {
 
   @Override
   public String toString() {
-    return this.name.toString();
+    return this.name;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if(!(obj instanceof Bank o)){
+      return false;
+    }
+    return o.getName().equals(this.name);
   }
 }

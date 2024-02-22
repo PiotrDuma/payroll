@@ -28,15 +28,11 @@ public class CommissionRate {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
+  public boolean equals(Object obj) {
+    if(!(obj instanceof CommissionRate o)){
       return false;
     }
-    CommissionRate that = (CommissionRate) o;
-    return Double.compare(that.commissionRate, commissionRate) == 0;
+    return Double.compare(o.getCommissionRate(), commissionRate) == 0;
   }
 
   @Override

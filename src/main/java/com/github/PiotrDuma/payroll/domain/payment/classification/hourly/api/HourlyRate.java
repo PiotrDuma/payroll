@@ -32,7 +32,16 @@ public class HourlyRate{
     return hourlyRate;
   }
 
-  public boolean equals(HourlyRate o) {
-    return this.getHourlyRate().doubleValue() == o.getHourlyRate().doubleValue();
+  @Override
+  public boolean equals(Object obj) {
+    if(!(obj instanceof HourlyRate o)){
+      return false;
+    }
+    return o.getHourlyRate().compareTo(hourlyRate)==0;
+  }
+
+  @Override
+  public String toString() {
+    return hourlyRate.toString();
   }
 }

@@ -30,4 +30,12 @@ public class BankAccount {
   public String toString() {
     return this.number.toString();
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    if(!(obj instanceof BankAccount o)){
+      return false;
+    }
+    return o.getNumber().equals(this.number);
+  }
 }
