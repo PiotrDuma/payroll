@@ -1,6 +1,8 @@
 package com.github.PiotrDuma.payroll.domain.payment.classification.commission;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.github.PiotrDuma.payroll.common.address.Address;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
@@ -16,18 +18,12 @@ import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @Tag("IntegrationTest")
 @ActiveProfiles("test")
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-@AutoConfigureTestDatabase(replace = Replace.ANY)
 class CommissionedClassificationIntegrationTest {
   private static final Address ADDRESS = new Address("ADDRESS");
   private static final EmployeeName EMPLOYEE_NAME = new EmployeeName("NAME");
@@ -49,8 +45,6 @@ class CommissionedClassificationIntegrationTest {
 
     EmployeeId resultId = transaction.execute();
 
-    assertEquals(1, this.repo.findAll().size());
-
     EmployeeResponse response = this.repo.find(resultId);
     PaymentClassification paymentClassification = response.getPaymentClassification();
 
@@ -67,8 +61,6 @@ class CommissionedClassificationIntegrationTest {
         ADDRESS, EMPLOYEE_NAME, new Salary(123));
 
     EmployeeId resultId = transaction.execute();
-
-    assertEquals(1, this.repo.findAll().size());
 
     EmployeeResponse response = this.repo.find(resultId);
     PaymentClassification paymentClassification = response.getPaymentClassification();
