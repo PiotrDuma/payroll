@@ -1,4 +1,4 @@
-package com.github.PiotrDuma.payroll.domain.payment.classification.commission;
+package com.github.PiotrDuma.payroll.domain.payment.classification.salary;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -14,7 +14,7 @@ import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
 import com.github.PiotrDuma.payroll.domain.employee.api.ReceiveEmployee;
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
-import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
+import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyRate;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +24,10 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 @Tag("IntegrationTest")
 @ActiveProfiles("test")
-class CommissionedClassificationIntegrationTest {
+class SalariedClassificationIntegrationTest {
   private static final Address ADDRESS = new Address("ADDRESS");
   private static final EmployeeName EMPLOYEE_NAME = new EmployeeName("NAME");
   private static final Salary SALARY = new Salary(1234);
-  private static final CommissionRate COMMISSION_RATE = new CommissionRate(12);
   @Autowired
   private AddEmployeeTransactionFactory addEmployeeFactory;
 
@@ -39,42 +38,41 @@ class CommissionedClassificationIntegrationTest {
   private ReceiveEmployee repo;
 
   @Test
-  void addEmployeeFactoryShouldSetCommissionedClassification(){
-    AddEmployeeTransaction transaction = this.addEmployeeFactory.initCommissionedEmployeeTransaction(
-        ADDRESS, EMPLOYEE_NAME, SALARY, COMMISSION_RATE);
+  void addEmployeeFactoryShouldSetSalariedClassification(){
+    AddEmployeeTransaction transaction = this.addEmployeeFactory.initSalariedEmployeeTransaction(
+        ADDRESS, EMPLOYEE_NAME, SALARY);
 
     EmployeeId resultId = transaction.execute();
 
     EmployeeResponse response = this.repo.find(resultId);
     PaymentClassification paymentClassification = response.getPaymentClassification();
 
-    assertTrue(paymentClassification instanceof CommissionedClassificationEntity);
-    CommissionedClassificationEntity entity = (CommissionedClassificationEntity) paymentClassification;
+    assertTrue(paymentClassification instanceof SalariedClassificationEntity);
+    SalariedClassificationEntity entity = (SalariedClassificationEntity) paymentClassification;
 
     assertEquals(SALARY, entity.getSalary());
-    assertEquals(COMMISSION_RATE, entity.getCommissionRate());
   }
 
   @Test
-  void changeEmployeeServiceShouldSetCommissionedClassification(){
-    AddEmployeeTransaction transaction = this.addEmployeeFactory.initSalariedEmployeeTransaction(
-        ADDRESS, EMPLOYEE_NAME, new Salary(123));
+  void changeEmployeeServiceShouldSetSalariedClassification(){
+    HourlyRate rate = new HourlyRate(12);
+    AddEmployeeTransaction transaction = this.addEmployeeFactory.initHourlyEmployeeTransaction(
+        ADDRESS, EMPLOYEE_NAME, rate);
 
     EmployeeId resultId = transaction.execute();
 
     EmployeeResponse response = this.repo.find(resultId);
     PaymentClassification paymentClassification = response.getPaymentClassification();
-    assertFalse(paymentClassification instanceof CommissionedClassificationEntity);
+    assertFalse(paymentClassification instanceof SalariedClassificationEntity);
 
-    this.changeEmployeeService.changeCommissionedClassificationTransaction(resultId, SALARY, COMMISSION_RATE);
+    this.changeEmployeeService.changeSalariedClassificationTransaction(resultId, SALARY);
 
     EmployeeResponse response2 = this.repo.find(resultId);
     PaymentClassification paymentClassification2 = response2.getPaymentClassification();
-    assertTrue(paymentClassification2 instanceof CommissionedClassificationEntity);
+    assertTrue(paymentClassification2 instanceof SalariedClassificationEntity);
 
-    CommissionedClassificationEntity entity = (CommissionedClassificationEntity) paymentClassification2;
+    SalariedClassificationEntity entity = (SalariedClassificationEntity) paymentClassification2;
 
     assertEquals(SALARY, entity.getSalary());
-    assertEquals(COMMISSION_RATE, entity.getCommissionRate());
   }
 }

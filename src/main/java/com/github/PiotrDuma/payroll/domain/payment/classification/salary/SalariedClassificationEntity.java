@@ -34,4 +34,7 @@ class SalariedClassificationEntity extends AbstractPaymentClassification impleme
     return salary;
   }
 
+  public Salary getSalary() {
+    return salary;
+  }
 }
