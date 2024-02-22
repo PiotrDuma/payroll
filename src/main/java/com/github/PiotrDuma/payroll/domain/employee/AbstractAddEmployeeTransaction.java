@@ -45,7 +45,7 @@ abstract class AbstractAddEmployeeTransaction implements AddEmployeeTransaction 
   }
 
   private void checkIfExists(EmployeeId employeeId){
-    if(!employeeRepository.findById(employeeId).isEmpty()){
+    if(employeeRepository.findById(employeeId).isPresent()){
       log.error("AbstractAddEmployeeTransaction: Persistence error, UUID is not unique");
       throw new RuntimeException("Unique ID persistence error during saving new Employee");
     }

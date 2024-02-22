@@ -10,4 +10,17 @@ public class EmployeeName {
   public String getName() {
     return name;
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    if(!(obj instanceof EmployeeName o)){
+      return false;
+    }
+    return o.getName().equals(name);
+  }
+
+  @Override
+  public String toString() {
+    return name;
+  }
 }

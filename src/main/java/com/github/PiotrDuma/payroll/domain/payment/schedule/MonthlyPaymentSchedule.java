@@ -1,10 +1,16 @@
 package com.github.PiotrDuma.payroll.domain.payment.schedule;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import java.time.LocalDate;
 
+@Entity
+@DiscriminatorValue("monthly")
 class MonthlyPaymentSchedule extends AbstractPaymentSchedule{
+  protected MonthlyPaymentSchedule() {
+  }
 
-  public MonthlyPaymentSchedule(LocalDate created) {
+  protected MonthlyPaymentSchedule(LocalDate created) {
     super(created);
   }
 

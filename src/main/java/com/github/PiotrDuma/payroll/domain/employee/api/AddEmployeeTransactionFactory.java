@@ -8,5 +8,5 @@ import com.github.PiotrDuma.payroll.common.salary.Salary;
 public interface AddEmployeeTransactionFactory {
   AddEmployeeTransaction initSalariedEmployeeTransaction(Address address, EmployeeName name, Salary salary);
   AddEmployeeTransaction initHourlyEmployeeTransaction(Address address, EmployeeName name, HourlyRate hourlyRate);
-  AddEmployeeTransaction initSalariedEmployeeTransaction(Address address, EmployeeName name, Salary salary, CommissionRate commissionRate);
+  AddEmployeeTransaction initCommissionedEmployeeTransaction(Address address, EmployeeName name, Salary salary, CommissionRate commissionRate);
 }

@@ -12,6 +12,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -29,7 +30,7 @@ class HourlyClassificationEntity extends AbstractPaymentClassification
   @Column(name = "hourly_rate")
   @Convert(converter = HourlyRateConverter.class)
   private HourlyRate hourlyRate;
-  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   private Set<TimeCard> timeCards;
 
   protected HourlyClassificationEntity() {

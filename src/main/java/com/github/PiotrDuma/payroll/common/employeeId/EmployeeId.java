@@ -1,9 +1,13 @@
 package com.github.PiotrDuma.payroll.common.employeeId;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class EmployeeId {
-  private final UUID id;
+public class EmployeeId implements Serializable {
+  private UUID id;
+
+  public EmployeeId() {
+  }
 
   public EmployeeId(UUID id) {
     this.id = id;

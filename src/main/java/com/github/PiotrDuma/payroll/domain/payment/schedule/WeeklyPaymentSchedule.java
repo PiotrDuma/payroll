@@ -1,11 +1,17 @@
 package com.github.PiotrDuma.payroll.domain.payment.schedule;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
+@Entity
+@DiscriminatorValue("weekly")
 class WeeklyPaymentSchedule extends AbstractPaymentSchedule {
+  protected WeeklyPaymentSchedule() {
+  }
 
-  public WeeklyPaymentSchedule(LocalDate created) {
+  protected WeeklyPaymentSchedule(LocalDate created) {
     super(created);
   }
 

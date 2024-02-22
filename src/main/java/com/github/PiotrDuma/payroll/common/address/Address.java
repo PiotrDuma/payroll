@@ -19,4 +19,12 @@ public class Address {
   public String toString() {
     return address;
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    if(!(obj instanceof Address o)){
+      return false;
+    }
+    return o.getAddress().equals(address);
+  }
 }

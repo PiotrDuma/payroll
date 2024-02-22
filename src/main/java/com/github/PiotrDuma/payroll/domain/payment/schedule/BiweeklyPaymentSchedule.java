@@ -1,10 +1,17 @@
 package com.github.PiotrDuma.payroll.domain.payment.schedule;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
+@Entity
+@DiscriminatorValue("biweekly")
 class BiweeklyPaymentSchedule extends AbstractPaymentSchedule{
-  public BiweeklyPaymentSchedule(LocalDate created) {
+  protected BiweeklyPaymentSchedule() {
+  }
+
+  protected BiweeklyPaymentSchedule(LocalDate created) {
     super(created);
   }
 

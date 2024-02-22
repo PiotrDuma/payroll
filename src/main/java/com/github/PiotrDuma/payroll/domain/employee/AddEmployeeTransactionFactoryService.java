@@ -54,7 +54,7 @@ class AddEmployeeTransactionFactoryService implements AddEmployeeTransactionFact
   }
 
   @Override
-  public AddEmployeeTransaction initSalariedEmployeeTransaction(Address address, EmployeeName name,
+  public AddEmployeeTransaction initCommissionedEmployeeTransaction(Address address, EmployeeName name,
       Salary salary, CommissionRate commissionRate) {
     return new AddCommissionedEmployeeTransaction(repository, commissionedClassification,
         scheduleFactory, methodFactory, address, name, salary, commissionRate);

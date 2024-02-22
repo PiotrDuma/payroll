@@ -17,12 +17,15 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+@IdClass(EmployeeId.class)
 @Entity
 @Table(name = "employee")
 class Employee implements EmployeeResponse {
@@ -60,6 +63,7 @@ class Employee implements EmployeeResponse {
   }
 
   public EmployeeId getId() {
+//    return id;
     return new EmployeeId(this.id);
   }
 
