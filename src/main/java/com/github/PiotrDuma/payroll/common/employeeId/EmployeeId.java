@@ -22,10 +22,10 @@ public class EmployeeId implements Serializable {
     return this.id.toString();
   }
 
-  @Override
-  public int hashCode() {
-    return super.hashCode();
-  }
+//  @Override
+//  public int hashCode() {
+//    return super.hashCode();
+//  }
 
   @Override
   public boolean equals(Object obj) {

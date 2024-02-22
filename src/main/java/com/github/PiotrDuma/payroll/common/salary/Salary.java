@@ -28,8 +28,12 @@ public class Salary {
     return salary;
   }
 
-  public boolean equals(Salary obj) {
-    return this.salary.doubleValue()==obj.getSalary().doubleValue();
+  @Override
+  public boolean equals(Object obj) {
+    if(!(obj instanceof Salary o)){
+      return false;
+    }
+    return o.getSalary().compareTo(this.salary) == 0;
   }
 
   @Override

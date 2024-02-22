@@ -10,12 +10,18 @@ import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.Hou
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @Tag("IntegrationTest")
 @ActiveProfiles("test")
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@AutoConfigureTestDatabase(replace = Replace.ANY)
 class AddEmployeeTransactionIntegrationTest {
   private static final Address ADDRESS = new Address("ADDRESS");
   private static final EmployeeName EMPLOYEE_NAME = new EmployeeName("NAME");

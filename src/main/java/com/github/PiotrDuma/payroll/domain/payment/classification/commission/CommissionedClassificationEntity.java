@@ -62,6 +62,14 @@ class CommissionedClassificationEntity extends AbstractPaymentClassification
     this.salesReceipts.add(new SalesReceipt(employeeId, date, amount));
   }
 
+  public Salary getSalary() {
+    return salary;
+  }
+
+  public CommissionRate getCommissionRate() {
+    return commissionRate;
+  }
+
   protected List<SalesReceipt> getSalesReceipts(){
     return this.salesReceipts;
   }
