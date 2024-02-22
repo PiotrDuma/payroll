@@ -1,6 +1,7 @@
 package com.github.PiotrDuma.payroll.common.employeeId;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 
 public class EmployeeId implements Serializable {
@@ -22,10 +23,10 @@ public class EmployeeId implements Serializable {
     return this.id.toString();
   }
 
-//  @Override
-//  public int hashCode() {
-//    return super.hashCode();
-//  }
+  @Override
+  public int hashCode() {
+    return Objects.hash(id);
+  }
 
   @Override
   public boolean equals(Object obj) {
