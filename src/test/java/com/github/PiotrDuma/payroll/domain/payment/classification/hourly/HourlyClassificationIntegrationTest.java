@@ -2,6 +2,7 @@ package com.github.PiotrDuma.payroll.domain.payment.classification.hourly;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.github.PiotrDuma.payroll.common.address.Address;
@@ -15,6 +16,8 @@ import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
 import com.github.PiotrDuma.payroll.domain.employee.api.ReceiveEmployee;
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyRate;
+import com.github.PiotrDuma.payroll.exception.ResourceNotFoundException;
+import java.util.UUID;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +42,7 @@ class HourlyClassificationIntegrationTest {
   private ReceiveEmployee repo;
 
   @Test
-  void addEmployeeFactoryShouldSetHourlyClassification(){
+  void initHourlyEmployeeTransactionShouldSetHourlyClassification(){
     AddEmployeeTransaction transaction = this.addEmployeeFactory.initHourlyEmployeeTransaction(
         ADDRESS, EMPLOYEE_NAME, HOURLY_RATE);
 
@@ -55,7 +58,7 @@ class HourlyClassificationIntegrationTest {
   }
 
   @Test
-  void changeEmployeeServiceShouldSetHourlyClassification(){
+  void changeHourlyClassificationTransactionShouldSetHourlyClassification(){
     Salary salary = new Salary(1234);
     AddEmployeeTransaction transaction = this.addEmployeeFactory.initSalariedEmployeeTransaction(
         ADDRESS, EMPLOYEE_NAME, salary);
@@ -75,5 +78,13 @@ class HourlyClassificationIntegrationTest {
     HourlyClassificationEntity entity = (HourlyClassificationEntity) paymentClassification2;
 
     assertEquals(HOURLY_RATE, entity.getHourlyRate());
+  }
+
+  @Test
+  void changeHourlyClassificationTransactionShouldThrowWhenEmployeeIdIsInvalid(){
+    EmployeeId employeeId = new EmployeeId(UUID.randomUUID());
+
+    assertThrows(ResourceNotFoundException.class,
+        () -> this.changeEmployeeService.changeHourlyClassificationTransaction(employeeId, HOURLY_RATE));
   }
 }
