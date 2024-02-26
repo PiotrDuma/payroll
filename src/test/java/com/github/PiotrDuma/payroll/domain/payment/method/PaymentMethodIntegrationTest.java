@@ -13,6 +13,8 @@ import com.github.PiotrDuma.payroll.domain.employee.api.ChangeEmployeeService;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
 import com.github.PiotrDuma.payroll.domain.employee.api.ReceiveEmployee;
+import com.github.PiotrDuma.payroll.exception.ResourceNotFoundException;
+import java.util.UUID;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +39,7 @@ class PaymentMethodIntegrationTest {
   private ReceiveEmployee repo;
 
   @Test
-  void changeEmployeeServiceShouldSetDirectPaymentMethod(){
+  void changeDirectPaymentMethodTransactionShouldSetDirectPaymentMethod(){
     Bank bank = new Bank("bank");
     BankAccount bankAccount = new BankAccount("01234567980123456789012345");
     EmployeeId employeeId = initEmployee();
@@ -54,7 +56,17 @@ class PaymentMethodIntegrationTest {
   }
 
   @Test
-  void changeEmployeeServiceShouldSetMailPaymentMethod(){
+  void changeDirectPaymentMethodTransactionShouldThrowWhenEmployeeIdIsInvalid(){
+    Bank bank = new Bank("bank");
+    BankAccount bankAccount = new BankAccount("01234567980123456789012345");
+    EmployeeId employeeId = new EmployeeId(UUID.randomUUID());
+
+    assertThrows(ResourceNotFoundException.class,
+        () -> changeEmployeeService.changeDirectPaymentMethodTransaction(employeeId, bank, bankAccount));
+  }
+
+  @Test
+  void changeMailPaymentMethodTransactionShouldSetMailPaymentMethod(){
     Address address = new Address("new address");
 
     EmployeeId employeeId = initEmployee();
@@ -70,7 +82,17 @@ class PaymentMethodIntegrationTest {
   }
 
   @Test
-  void changeEmployeeServiceShouldHoldPaymentMethod(){
+  void changeMailPaymentMethodTransactionShouldThrowWhenEmployeeIdIsInvalid(){
+    Address address = new Address("new address");
+
+    EmployeeId employeeId = new EmployeeId(UUID.randomUUID());
+
+    assertThrows(ResourceNotFoundException.class,
+        () -> changeEmployeeService.changeMailPaymentMethodTransaction(employeeId, address));
+  }
+
+  @Test
+  void changeHoldPaymentMethodTransactionShouldSetHoldPaymentMethod(){
     Address address = new Address("new address");
     EmployeeId employeeId = initEmployee();
 
@@ -84,6 +106,14 @@ class PaymentMethodIntegrationTest {
     EmployeeResponse finalEmployee = repo.find(employeeId);
 
     assertTrue(finalEmployee.getPaymentMethod() instanceof HoldPaymentMethod);
+  }
+
+  @Test
+  void changeHoldPaymentMethodTransactionShouldThrowWhenEmployeeIdIsInvalid(){
+    EmployeeId employeeId = new EmployeeId(UUID.randomUUID());
+
+    assertThrows(ResourceNotFoundException.class,
+        () -> changeEmployeeService.changeHoldPaymentMethodTransaction(employeeId));
   }
 
   private EmployeeId initEmployee(){
