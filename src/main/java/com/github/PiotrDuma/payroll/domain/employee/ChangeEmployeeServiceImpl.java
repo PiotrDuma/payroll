@@ -54,20 +54,20 @@ class ChangeEmployeeServiceImpl implements ChangeEmployeeService {
 
   @Override
   public void changeHoldPaymentMethodTransaction(EmployeeId employeeId) {
-    this.factory.create(ChangeEmployeeTransaction.HOLD_PAYMENT)
+    this.factory.create(ChangeEmployeeTransaction.HOLD_PAYMENT, employeeId)
         .execute();
   }
 
   @Override
   public void changeDirectPaymentMethodTransaction(EmployeeId employeeId, Bank bank,
       BankAccount account) {
-    this.factory.create(ChangeEmployeeTransaction.DIRECT_PAYMENT, bank, account)
+    this.factory.create(ChangeEmployeeTransaction.DIRECT_PAYMENT, employeeId, bank, account)
         .execute();
   }
 
   @Override
   public void changeMailPaymentMethodTransaction(EmployeeId employeeId, Address address) {
-    this.factory.create(ChangeEmployeeTransaction.MAIL_PAYMENT, address)
+    this.factory.create(ChangeEmployeeTransaction.MAIL_PAYMENT, employeeId, address)
         .execute();
   }
 }
