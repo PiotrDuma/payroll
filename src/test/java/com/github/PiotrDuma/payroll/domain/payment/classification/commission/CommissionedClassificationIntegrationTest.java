@@ -2,6 +2,7 @@ package com.github.PiotrDuma.payroll.domain.payment.classification.commission;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.github.PiotrDuma.payroll.common.address.Address;
@@ -15,6 +16,8 @@ import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
 import com.github.PiotrDuma.payroll.domain.employee.api.ReceiveEmployee;
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
+import com.github.PiotrDuma.payroll.exception.ResourceNotFoundException;
+import java.util.UUID;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +42,7 @@ class CommissionedClassificationIntegrationTest {
   private ReceiveEmployee repo;
 
   @Test
-  void addEmployeeFactoryShouldSetCommissionedClassification(){
+  void initCommissionedEmployeeTransactionShouldSetCommissionedClassification(){
     AddEmployeeTransaction transaction = this.addEmployeeFactory.initCommissionedEmployeeTransaction(
         ADDRESS, EMPLOYEE_NAME, SALARY, COMMISSION_RATE);
 
@@ -56,7 +59,7 @@ class CommissionedClassificationIntegrationTest {
   }
 
   @Test
-  void changeEmployeeServiceShouldSetCommissionedClassification(){
+  void changeCommissionedClassificationTransactionShouldSetCommissionedClassification(){
     AddEmployeeTransaction transaction = this.addEmployeeFactory.initSalariedEmployeeTransaction(
         ADDRESS, EMPLOYEE_NAME, new Salary(123));
 
@@ -76,5 +79,14 @@ class CommissionedClassificationIntegrationTest {
 
     assertEquals(SALARY, entity.getSalary());
     assertEquals(COMMISSION_RATE, entity.getCommissionRate());
+  }
+
+  @Test
+  void changeCommissionedClassificationTransactionShouldThrowWhenEmployeeIdIsInvalid(){
+    EmployeeId employeeId = new EmployeeId(UUID.randomUUID());
+
+    assertThrows(ResourceNotFoundException.class,
+        () -> this.changeEmployeeService.changeCommissionedClassificationTransaction(
+            employeeId, SALARY, COMMISSION_RATE));
   }
 }
