@@ -12,7 +12,6 @@ import com.github.PiotrDuma.payroll.common.salary.Salary;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
 import com.github.PiotrDuma.payroll.domain.employee.api.ReceiveEmployee;
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
-import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionedClassification;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyRate;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.Hours;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.TimeCardProvider;
@@ -66,6 +65,26 @@ class TimeCardProviderServiceTest {
 
     assertEquals(DATE, timecard.getDate());
     assertEquals(HOURS, timecard.getHours());
+    assertEquals(EMPLOYEE_ID, timecard.getEmployeeId());
+  }
+
+  @Test
+  void addTimeCardShouldUpdateTimeCardWithSameDate(){
+    Hours newHours = new Hours(12.);
+    HourlyClassificationEntity classification = new HourlyClassificationEntity(new HourlyRate(12));
+    when(employeeResponse.getPaymentClassification()).thenReturn(classification);
+
+    this.service.addOrUpdateTimeCard(EMPLOYEE_ID, DATE, HOURS);
+
+    assertEquals(1, classification.getTimeCards().size());
+
+    this.service.addOrUpdateTimeCard(EMPLOYEE_ID, DATE, newHours);
+    assertEquals(1, classification.getTimeCards().size());
+
+    TimeCard timecard = classification.getTimeCards().iterator().next();
+
+    assertEquals(DATE, timecard.getDate());
+    assertEquals(newHours, timecard.getHours());
     assertEquals(EMPLOYEE_ID, timecard.getEmployeeId());
   }
 
