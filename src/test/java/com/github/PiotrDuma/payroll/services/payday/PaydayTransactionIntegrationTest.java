@@ -1,5 +1,7 @@
 package com.github.PiotrDuma.payroll.services.payday;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.github.PiotrDuma.payroll.common.address.Address;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.common.salary.Salary;
@@ -11,16 +13,18 @@ import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.Hou
 import com.github.PiotrDuma.payroll.domain.union.api.UnionAffiliationService;
 import com.github.PiotrDuma.payroll.services.payday.api.PaydayTransaction;
 import java.time.Clock;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
@@ -45,7 +49,10 @@ class PaydayTransactionIntegrationTest { //TODO: implement transaction integrati
   @Autowired
   private UnionAffiliationService unionAffiliationService;
   @Autowired
-  private PaycheckRepository repo;
+  private PaycheckRepository paycheckRepository;
+  @Autowired
+  private Clock clock;
+
   private PaydayTransaction transaction;
 
   private EmployeeId salariedEmployee;
@@ -55,21 +62,35 @@ class PaydayTransactionIntegrationTest { //TODO: implement transaction integrati
   @BeforeEach
   void setUp(){
     this.transaction = new PaydayTransactionService(receiveEmployee, unionAffiliationService,
-        clock(), repo);
+        clock, paycheckRepository);
     this.salariedEmployee = initSalariedEmployee();
     this.hourlyEmployee = initHourlyEmployee();
     this.commissionedEmployee = initCommissionedEmployee();
   }
 
-  @Bean
-  @Primary
-  private Clock clock(){
-    return Clock.fixed(NOW.toInstant(), NOW.getZone());
+  @Test
+  void executePaydayShouldInvokePaymentOnlyForHourlyEmployee(){
+    System.out.println(clock.instant());
+    LocalDate payday = LocalDate.of(2000, 3, 3);
+    executePaydayWithDate(payday);
+
+    assertEquals(1, paycheckRepository.findAll().size());
+    PaycheckEntity paycheck = paycheckRepository.findAll().iterator().next();
+
+    assertEquals(hourlyEmployee, paycheck.getEmployeeId());
+    assertEquals(payday, paycheck.getDate());
+  }
+
+  private void executePaydayWithDate(LocalDate payday) {
+    PaydayTransactionService modifiedTransaction = (PaydayTransactionService) transaction;
+    modifiedTransaction.setToday(payday);
+    modifiedTransaction.execute();
   }
 
   private EmployeeId initSalariedEmployee(){
-    return this.employeeFactory.initSalariedEmployeeTransaction(ADDRESS, EMPLOYEE_NAME, SALARY)
-        .execute();
+    return this.employeeFactory.initSalariedEmployeeTransaction(ADDRESS,
+            EMPLOYEE_NAME, SALARY)
+         .execute();
   }
 
   private EmployeeId initHourlyEmployee(){
@@ -81,5 +102,14 @@ class PaydayTransactionIntegrationTest { //TODO: implement transaction integrati
     return this.employeeFactory.initCommissionedEmployeeTransaction(ADDRESS, EMPLOYEE_NAME, SALARY,
             COMMISSION_RATE)
         .execute();
+  }
+
+  @TestConfiguration
+  static class TestOverridingClockServiceConfiguration {
+
+    @Bean
+    public Clock clock(){
+      return Clock.fixed(NOW.toInstant(), NOW.getZone());
+    }
   }
 }

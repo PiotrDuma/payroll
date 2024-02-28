@@ -48,7 +48,7 @@ class PaydayTransactionService implements PaydayTransaction {
     log.info(String.format(MESSAGE, today.toString()));
   }
 
-  private void setToday(LocalDate today) {
+  protected void setToday(LocalDate today) {
     this.today = today;
   }
 }
