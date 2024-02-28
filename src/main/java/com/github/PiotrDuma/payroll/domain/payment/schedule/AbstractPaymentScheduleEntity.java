@@ -7,9 +7,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Table;
 import java.util.UUID;
 
 @Entity
+@Table(name = "schedule")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "method")
 public abstract class AbstractPaymentScheduleEntity implements PaymentSchedule {

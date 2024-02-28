@@ -2,9 +2,11 @@ package com.github.PiotrDuma.payroll.domain.payment.schedule;
 
 import com.github.PiotrDuma.payroll.common.PaymentPeriod;
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import java.time.LocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
+@Entity
 abstract class AbstractPaymentSchedule extends AbstractPaymentScheduleEntity {
   private static final String INVALID_DATE = "Provided date is invalid";
 
