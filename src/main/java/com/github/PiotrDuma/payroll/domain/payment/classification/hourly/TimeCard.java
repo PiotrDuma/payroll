@@ -32,6 +32,7 @@ class TimeCard {
   }
 
   protected TimeCard(EmployeeId employeeId,LocalDate date, Hours hours) {
+    this.id = UUID.randomUUID();
     this.employeeId = employeeId;
     this.date = date;
     this.hours = hours;

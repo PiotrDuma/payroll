@@ -1,0 +1,59 @@
+package com.github.PiotrDuma.payroll.domain.payment.classification.hourly;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import com.github.PiotrDuma.payroll.common.address.Address;
+import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
+import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransactionFactory;
+import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
+import com.github.PiotrDuma.payroll.domain.employee.api.ReceiveEmployee;
+import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyRate;
+import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.Hours;
+import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.TimeCardProvider;
+import java.time.LocalDate;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+
+@SpringBootTest
+@Tag("IntegrationTest")
+@ActiveProfiles("test")
+class TimeCardProviderIntegrationTest {
+
+  @Autowired
+  private TimeCardProvider timeCardProvider;
+
+  @Autowired
+  private ReceiveEmployee employeeRepo;
+
+  @Autowired
+  private AddEmployeeTransactionFactory addEmployeeFactory;
+
+  @Test
+  void addTimeCardShouldSaveEmployeeTimecard(){
+    EmployeeId id = initEmployee();
+    LocalDate date = LocalDate.of(2000, 1, 1);
+    Hours hours = new Hours(12.5);
+    this.timeCardProvider.addOrUpdateTimeCard(id, date, hours);
+
+    HourlyClassificationEntity classification =
+        (HourlyClassificationEntity) this.employeeRepo.find(id).getPaymentClassification();
+    TimeCard timecard = classification.getTimeCards().iterator().next();
+
+    assertEquals(1, classification.getTimeCards().size());
+
+    assertEquals(id, timecard.getEmployeeId());
+    assertEquals(date, timecard.getDate());
+    assertEquals(hours, timecard.getHours());
+  }
+
+  private EmployeeId initEmployee(){
+    Address address = new Address("ADDRESS");
+    EmployeeName name = new EmployeeName("name");
+    HourlyRate rate = new HourlyRate(12);
+    return this.addEmployeeFactory.initHourlyEmployeeTransaction(address, name, rate)
+        .execute();
+  }
+}

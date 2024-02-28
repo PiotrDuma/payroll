@@ -79,6 +79,7 @@ class PaydayTransactionIntegrationTest { //TODO: implement transaction integrati
 
     assertEquals(hourlyEmployee, paycheck.getEmployeeId());
     assertEquals(payday, paycheck.getDate());
+    assertEquals(0, paycheck.getUnionDues().getAmount().doubleValue());
   }
 
   private void executePaydayWithDate(LocalDate payday) {

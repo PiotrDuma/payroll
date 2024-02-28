@@ -1,5 +1,6 @@
 package com.github.PiotrDuma.payroll.domain.payment.classification.hourly;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.github.PiotrDuma.payroll.common.salary.Salary;
@@ -33,12 +34,12 @@ class AddHourlyClassificationTest {
     PaymentPeriod paymentPeriod = new PaymentPeriod(DATE.minusDays(1), DATE.plusDays(1));
     PaymentClassification classification = this.service.getClassification(HOURLY_RATE);
 
-    if(classification instanceof TimeCardProvider){
-      ((TimeCardProvider) classification).addOrUpdateTimeCard(employeeId, DATE, hours);
+    if(classification instanceof HourlyClassificationEntity){
+      ((HourlyClassificationEntity) classification).addOrUpdateTimeCard(employeeId, DATE, hours);
     }
 
     Salary result = classification.calculatePay(paymentPeriod);
 
-    assertTrue(result.equals(expected));
+    assertEquals(expected, result);
   }
 }

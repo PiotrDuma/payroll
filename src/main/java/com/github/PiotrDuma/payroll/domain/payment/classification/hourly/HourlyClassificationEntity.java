@@ -7,13 +7,11 @@ import com.github.PiotrDuma.payroll.domain.payment.classification.AbstractPaymen
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyRate;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.Hours;
-import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.TimeCardProvider;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
@@ -21,12 +19,10 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Table(name = "hourly_classification")
-class HourlyClassificationEntity extends AbstractPaymentClassification
-    implements PaymentClassification, TimeCardProvider {
+class HourlyClassificationEntity extends AbstractPaymentClassification implements PaymentClassification {
   @Column(name = "hourly_rate")
   @Convert(converter = HourlyRateConverter.class)
   private HourlyRate hourlyRate;
