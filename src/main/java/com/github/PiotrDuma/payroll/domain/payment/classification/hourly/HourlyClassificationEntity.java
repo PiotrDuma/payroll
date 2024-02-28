@@ -40,8 +40,8 @@ class HourlyClassificationEntity extends AbstractPaymentClassification implement
   @Override
   public Salary calculatePay(PaymentPeriod paymentPeriod) {
     List<BigDecimal> dailyWages = this.timeCards.stream()
-        .filter(e -> e.getDate().isAfter(paymentPeriod.startPeriod()) && e.getDate()
-            .isBefore(paymentPeriod.endPeriod()))
+        .filter(e -> !e.getDate().isBefore(paymentPeriod.startPeriod()) && !e.getDate()
+            .isAfter(paymentPeriod.endPeriod()))
         .map(this::countDailyWage)
         .toList();
     return new Salary(dailyWages.stream()

@@ -59,54 +59,80 @@ class HourlyClassificationEntityTest {
   @Test
   void shouldCountPartTimeSalary(){
     Salary expected = new Salary(30.25); // 5.5 * 5.5
-
     PaymentPeriod paymentPeriod = new PaymentPeriod(DATE.minusDays(1), DATE.plusDays(1));
     Hours hours = new Hours(5.5);
+
     this.entity.addOrUpdateTimeCard(EMPLOYEE_ID, DATE, hours);
 
     Salary result = this.entity.calculatePay(paymentPeriod);
 
-    assertTrue(result.equals(expected));
+    assertEquals(result, expected);
   }
 
   @Test
   void shouldNotCountTimeCardsBeforePeymentPeriod(){
     Salary expected = new Salary(30.25); // 5.5 * 5.5
-
     PaymentPeriod paymentPeriod = new PaymentPeriod(DATE.minusDays(1), DATE.plusDays(1));
     Hours hours = new Hours(5.5);
+
     this.entity.addOrUpdateTimeCard(EMPLOYEE_ID, DATE, hours);
     this.entity.addOrUpdateTimeCard(EMPLOYEE_ID, DATE.minusDays(3), hours);
 
     Salary result = this.entity.calculatePay(paymentPeriod);
 
-    assertTrue(result.equals(expected));
+    assertEquals(result, expected);
   }
 
   @Test
   void shouldNotCountTimeCardsAfterPeymentPeriod(){
     Salary expected = new Salary(30.25); // 5.5 * 5.5
-
     PaymentPeriod paymentPeriod = new PaymentPeriod(DATE.minusDays(1), DATE.plusDays(1));
     Hours hours = new Hours(5.5);
+
     this.entity.addOrUpdateTimeCard(EMPLOYEE_ID, DATE, hours);
     this.entity.addOrUpdateTimeCard(EMPLOYEE_ID, DATE.plusDays(3), hours);
 
     Salary result = this.entity.calculatePay(paymentPeriod);
 
-    assertTrue(result.equals(expected));
+    assertEquals(result, expected);
+  }
+
+  @Test
+  void shouldCountTimeCardOfTheFirstDayOfPeymentPeriod(){
+    Salary expected = new Salary(30.25); // 5.5 * 5.5
+    PaymentPeriod paymentPeriod = new PaymentPeriod(DATE, DATE.plusDays(1));
+    Hours hours = new Hours(5.5);
+
+    this.entity.addOrUpdateTimeCard(EMPLOYEE_ID, DATE, hours);
+
+    Salary result = this.entity.calculatePay(paymentPeriod);
+
+    assertEquals(result, expected);
+  }
+
+  @Test
+  void shouldCountTimeCardOfTheLastDayOfPeymentPeriod(){
+    Salary expected = new Salary(30.25); // 5.5 * 5.5
+    PaymentPeriod paymentPeriod = new PaymentPeriod(DATE.minusDays(1), DATE);
+    Hours hours = new Hours(5.5);
+
+    this.entity.addOrUpdateTimeCard(EMPLOYEE_ID, DATE, hours);
+
+    Salary result = this.entity.calculatePay(paymentPeriod);
+
+    assertEquals(result, expected);
   }
 
   @Test
   void shouldCountExtraOvertime(){ //every hour more than 8 is paid extra 1.5
     Salary expected = new Salary(68.750); // 8 * 5.5 + 3 * 5.5 * 1.5
-
     PaymentPeriod paymentPeriod = new PaymentPeriod(DATE.minusDays(1), DATE.plusDays(1));
     Hours hours = new Hours(11d);
+
     this.entity.addOrUpdateTimeCard(EMPLOYEE_ID, DATE, hours);
 
     Salary result = this.entity.calculatePay(paymentPeriod);
 
-    assertTrue(result.equals(expected));
+    assertEquals(result, expected);
   }
 }
