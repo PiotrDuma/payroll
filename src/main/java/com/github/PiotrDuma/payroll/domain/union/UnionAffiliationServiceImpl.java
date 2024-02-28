@@ -45,7 +45,7 @@ class UnionAffiliationServiceImpl implements UnionAffiliationService {
   @Override
   public Amount countMembershipCharges(EmployeeId employeeId, PaymentPeriod period) {
     return (Amount)transactionFactory
-        .create(UnionTransaction.CHARGE_MEMBERS, employeeId, period)
+        .create(UnionTransaction.COUNT_CHARGES, employeeId, period)
         .execute();
   }
 }
