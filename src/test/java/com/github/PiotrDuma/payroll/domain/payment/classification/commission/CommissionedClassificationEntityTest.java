@@ -1,16 +1,12 @@
 package com.github.PiotrDuma.payroll.domain.payment.classification.commission;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.github.PiotrDuma.payroll.common.salary.Salary;
-import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
-import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
-import com.github.PiotrDuma.payroll.common.amount.Amount;
-import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
-import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionedClassification;
-import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.SalesReceiptProvider;
 import com.github.PiotrDuma.payroll.common.PaymentPeriod;
+import com.github.PiotrDuma.payroll.common.amount.Amount;
+import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
+import com.github.PiotrDuma.payroll.common.salary.Salary;
+import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
 import java.time.LocalDate;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,101 +16,71 @@ class CommissionedClassificationEntityTest {
   private static final LocalDate DATE = LocalDate.of(1999, 12,30);
   private static final PaymentPeriod PERIOD =
       new PaymentPeriod(DATE.minusDays(1), DATE.plusDays(1));
-  private CommissionedClassification service;
+  private static final Salary SALARY = new Salary(1000);
+  private static final CommissionRate COMMISSION_RATE = new CommissionRate(15.);
+  private static final EmployeeId EMPLOYEE_ID = new EmployeeId(UUID.randomUUID());
+  private CommissionedClassificationEntity classification;
 
   @BeforeEach
   void setUp(){
-    this.service = new AddCommissionedClassification();
+    this.classification = new CommissionedClassificationEntity(SALARY, COMMISSION_RATE);
   }
 
   @Test
   void shouldAddSalesReceiptToObject(){
-    EmployeeId employeeId = new EmployeeId(UUID.randomUUID());
-    Salary salary = new Salary(1000);
-    CommissionRate commissionRate = new CommissionRate(15.);
     Amount amount = new Amount(10000);
 
-    CommissionedClassificationEntity classification =
-        (CommissionedClassificationEntity)this.service.getClassification(salary, commissionRate);
-
-
-    classification.addSalesReceipt(employeeId, DATE, amount);
-    classification.addSalesReceipt(employeeId, DATE, amount);
-    classification.addSalesReceipt(employeeId, DATE, amount);
+    this.classification.addSalesReceipt(EMPLOYEE_ID, DATE, amount);
+    this.classification.addSalesReceipt(EMPLOYEE_ID, DATE, amount);
+    this.classification.addSalesReceipt(EMPLOYEE_ID, DATE, amount);
 
     assertEquals(3, classification.getSalesReceipts().size());
   }
 
   @Test
   void shouldCalculateSalaryWithSalesReceipt(){
-    EmployeeId employeeId = new EmployeeId(UUID.randomUUID());
-    Salary salary = new Salary(1000);
-    CommissionRate commissionRate = new CommissionRate(15.);
     Amount amount = new Amount(10000);
     Salary expected = new Salary(2500); //salary + 15% * amount
 
-    PaymentClassification classification = this.service.getClassification(salary, commissionRate);
-
-    if(classification instanceof SalesReceiptProvider){
-      ((SalesReceiptProvider) classification).addSalesReceipt(employeeId, DATE, amount);
-    }
+    this.classification.addSalesReceipt(EMPLOYEE_ID, DATE, amount);
 
     Salary result = classification.calculatePay(PERIOD);
 
-    assertTrue(result.equals(expected));
+    assertEquals(expected, result);
   }
 
   @Test
   void shouldCalculateSalaryInValidPeriod(){
-    EmployeeId employeeId = new EmployeeId(UUID.randomUUID());
-    Salary salary = new Salary(1000);
-    CommissionRate commissionRate = new CommissionRate(15.);
     Amount amount = new Amount(10000);
     Salary expected = new Salary(2500); //salary + 15% * amount
 
-    PaymentClassification classification = this.service.getClassification(salary, commissionRate);
-
-    if(classification instanceof SalesReceiptProvider){
-      ((SalesReceiptProvider) classification).addSalesReceipt(employeeId, DATE, amount);
-      ((SalesReceiptProvider) classification).addSalesReceipt(employeeId, DATE.minusDays(4), amount);
-      ((SalesReceiptProvider) classification).addSalesReceipt(employeeId, DATE.plusDays(4), amount);
-    }
+    this.classification.addSalesReceipt(EMPLOYEE_ID, DATE, amount);
+    this.classification.addSalesReceipt(EMPLOYEE_ID, DATE.minusDays(2), amount);
+    this.classification.addSalesReceipt(EMPLOYEE_ID, DATE.plusDays(2), amount);
 
     Salary result = classification.calculatePay(PERIOD);
 
-    assertTrue(result.equals(expected));
+    assertEquals(expected, result);
   }
 
   @Test
   void shouldCalculateSalaryWithManySalesReceipt(){
-    EmployeeId employeeId = new EmployeeId(UUID.randomUUID());
-    Salary salary = new Salary(1000);
-    CommissionRate commissionRate = new CommissionRate(15.);
     Amount amount = new Amount(10000);
     Salary expected = new Salary(5500); //salary + 15% * amount * 3
 
-    PaymentClassification classification = this.service.getClassification(salary, commissionRate);
-
-    if(classification instanceof SalesReceiptProvider){
-      ((SalesReceiptProvider) classification).addSalesReceipt(employeeId, DATE, amount);
-      ((SalesReceiptProvider) classification).addSalesReceipt(employeeId, DATE, amount);
-      ((SalesReceiptProvider) classification).addSalesReceipt(employeeId, DATE, amount);
-    }
+    this.classification.addSalesReceipt(EMPLOYEE_ID, DATE.minusDays(1), amount);
+    this.classification.addSalesReceipt(EMPLOYEE_ID, DATE, amount);
+    this.classification.addSalesReceipt(EMPLOYEE_ID, DATE.plusDays(1), amount);
 
     Salary result = classification.calculatePay(PERIOD);
 
-    assertTrue(result.equals(expected));
+    assertEquals(expected, result);
   }
 
   @Test
   void shouldCalculateSalaryWithoutSalesReceipt(){
-    Salary salary = new Salary(1000);
-    CommissionRate commissionRate = new CommissionRate(15.);
+    Salary result = this.classification.calculatePay(PERIOD);
 
-    PaymentClassification classification = this.service.getClassification(salary, commissionRate);
-
-    Salary result = classification.calculatePay(PERIOD);
-
-    assertTrue(result.equals(salary));
+    assertEquals(SALARY, result);
   }
 }

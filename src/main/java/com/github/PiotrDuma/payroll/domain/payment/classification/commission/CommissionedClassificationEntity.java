@@ -48,8 +48,8 @@ class CommissionedClassificationEntity extends AbstractPaymentClassification
   @Override
   public Salary calculatePay(PaymentPeriod paymentPeriod) {
     BigDecimal sum = this.salesReceipts.stream()
-        .filter(e -> e.getDate().isAfter(paymentPeriod.startPeriod()) &&
-            e.getDate().isBefore(paymentPeriod.endPeriod()))
+        .filter(e -> !e.getDate().isBefore(paymentPeriod.startPeriod()) &&
+            !e.getDate().isAfter(paymentPeriod.endPeriod()))
         .map(SalesReceipt::getAmount)
         .map(Amount::getAmount)
         .reduce(BigDecimal.ZERO, BigDecimal::add)
