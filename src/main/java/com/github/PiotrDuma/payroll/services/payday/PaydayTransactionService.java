@@ -12,8 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 class PaydayTransactionService implements PaydayTransaction {
   private static final Logger log = LoggerFactory.getLogger(PaydayTransactionService.class);
   private static final String MESSAGE = "%s: PAYDAY EXECUTED";

@@ -6,10 +6,10 @@ import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassif
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.Hours;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.TimeCardProvider;
 import com.github.PiotrDuma.payroll.exception.InvalidArgumentException;
-import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
