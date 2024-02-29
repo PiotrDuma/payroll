@@ -26,7 +26,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "commissioned_classification")
 class CommissionedClassificationEntity extends AbstractPaymentClassification
-    implements PaymentClassification, SalesReceiptProvider{
+    implements PaymentClassification{
   @Column(name = "salary")
   @Convert(converter = SalaryConverter.class)
   private Salary salary;
@@ -58,7 +58,6 @@ class CommissionedClassificationEntity extends AbstractPaymentClassification
     return new Salary(sum);
   }
 
-  @Override
   public void addSalesReceipt(EmployeeId employeeId, LocalDate date, Amount amount) {
     this.salesReceipts.add(new SalesReceipt(employeeId, date, amount));
   }

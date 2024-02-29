@@ -46,4 +46,8 @@ class SalesReceipt {
   public Amount getAmount() {
     return amount;
   }
+
+  public EmployeeId getEmployeeId() {
+    return employeeId;
+  }
 }
