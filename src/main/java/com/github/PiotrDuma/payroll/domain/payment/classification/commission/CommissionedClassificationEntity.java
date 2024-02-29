@@ -13,6 +13,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -32,7 +33,7 @@ class CommissionedClassificationEntity extends AbstractPaymentClassification
   @Column(name = "commission_rate")
   @Convert(converter = CommissionRateConverter.class)
   private CommissionRate commissionRate;
-  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   private List<SalesReceipt> salesReceipts;
 
   protected CommissionedClassificationEntity() {

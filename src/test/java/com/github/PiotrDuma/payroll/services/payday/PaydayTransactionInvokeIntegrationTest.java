@@ -34,7 +34,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = Replace.ANY)
-class PaydayTransactionInvokeIntegrationTest { //TODO: implement transaction integration test.
+class PaydayTransactionInvokeIntegrationTest {
   private static final ZonedDateTime NOW = ZonedDateTime.of(2000, 3, 1,
       16, 5, 12, 0, ZoneId.of("UTC")); //wednesday
   private static final Salary SALARY = new Salary(1234);
@@ -89,15 +89,15 @@ class PaydayTransactionInvokeIntegrationTest { //TODO: implement transaction int
     assertEquals(0, paycheck.getUnionDues().getAmount().doubleValue());
   }
 
-//  @Test //TODO: fix salesReceipt
-//  void executePaydayShouldInvokePaymentForWeeklyAndBiweeklyEmployees(){
-//    LocalDate payday = LocalDate.of(2000, 3, 10);
-//    executePaydayWithDate(payday);
-//
-//    assertEquals(2, paycheckRepository.findAll().size());
-//    assertEquals(1, paycheckRepository.findAllByEmployeeId(hourlyEmployee).size());
-//    assertEquals(1, paycheckRepository.findAllByEmployeeId(commissionedEmployee).size());
-//  }
+  @Test
+  void executePaydayShouldInvokePaymentForWeeklyAndBiweeklyEmployees(){
+    LocalDate payday = LocalDate.of(2000, 3, 10);
+    executePaydayWithDate(payday);
+
+    assertEquals(2, paycheckRepository.findAll().size());
+    assertEquals(1, paycheckRepository.findAllByEmployeeId(hourlyEmployee).size());
+    assertEquals(1, paycheckRepository.findAllByEmployeeId(commissionedEmployee).size());
+  }
 
   @Test
   void executePaydayShouldInvokePaymentForMonthlyEmployee(){
@@ -108,16 +108,16 @@ class PaydayTransactionInvokeIntegrationTest { //TODO: implement transaction int
     assertEquals(1, paycheckRepository.findAllByEmployeeId(salariedEmployee).size());
   }
 
-//  @Test //TODO: fix salesReceipt
-//  void executePaydayShouldInvokePaymentForAllEmployees(){
-//    LocalDate payday = LocalDate.of(2000, 3, 31);
-//    executePaydayWithDate(payday);
-//
-//    assertEquals(3, paycheckRepository.findAll().size());
-//    assertEquals(1, paycheckRepository.findAllByEmployeeId(hourlyEmployee).size());
-//    assertEquals(1, paycheckRepository.findAllByEmployeeId(commissionedEmployee).size());
-//    assertEquals(1, paycheckRepository.findAllByEmployeeId(salariedEmployee).size());
-//  }
+  @Test
+  void executePaydayShouldInvokePaymentForAllEmployees(){
+    LocalDate payday = LocalDate.of(2000, 3, 31);
+    executePaydayWithDate(payday);
+
+    assertEquals(3, paycheckRepository.findAll().size());
+    assertEquals(1, paycheckRepository.findAllByEmployeeId(hourlyEmployee).size());
+    assertEquals(1, paycheckRepository.findAllByEmployeeId(commissionedEmployee).size());
+    assertEquals(1, paycheckRepository.findAllByEmployeeId(salariedEmployee).size());
+  }
 
   private void executePaydayWithDate(LocalDate payday) {
     PaydayTransactionService modifiedTransaction = (PaydayTransactionService) transaction;
