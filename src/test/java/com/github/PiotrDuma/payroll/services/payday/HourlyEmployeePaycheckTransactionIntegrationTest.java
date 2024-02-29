@@ -115,7 +115,7 @@ class HourlyEmployeePaycheckTransactionIntegrationTest {
   }
 
   @Test
-  void executePaydayShouldInvokePaymentShouldNotIncludeTimeCardsFromBeforePaymentPeriod(){
+  void executePaydayShouldInvokePaymentExcludingTimeCardsFromBeforePaymentPeriod(){
     LocalDate payday = LocalDate.of(2000, 3, 3);
     this.timeCardProvider.addOrUpdateTimeCard(employeeId, payday, HOURS);
     this.timeCardProvider.addOrUpdateTimeCard(employeeId, NOW.toLocalDate().minusDays(1), HOURS);
@@ -131,7 +131,7 @@ class HourlyEmployeePaycheckTransactionIntegrationTest {
   }
 
   @Test
-  void executePaydayShouldInvokePaymentShouldNotIncludeTimeCardsFromAfterPaymentPeriod(){
+  void executePaydayShouldInvokePaymentExcludingTimeCardsFromAfterPaymentPeriod(){
     LocalDate payday = LocalDate.of(2000, 3, 3);
     this.timeCardProvider.addOrUpdateTimeCard(employeeId, payday, HOURS);
     this.timeCardProvider.addOrUpdateTimeCard(employeeId, payday.plusDays(1), HOURS);
