@@ -35,7 +35,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = Replace.ANY)
-public class CommissionedEmployeePaycheckTransactionIntegrationTest {
+class CommissionedEmployeePaycheckTransactionIntegrationTest {
   private static final ZonedDateTime NOW = ZonedDateTime.of(2000, 3, 1,
       16, 5, 12, 0, ZoneId.of("UTC")); //wednesday
   private static final EmployeeName EMPLOYEE_NAME = new EmployeeName("NAME");

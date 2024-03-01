@@ -5,8 +5,10 @@ import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassif
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionedClassification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 class AddCommissionedClassification implements CommissionedClassification {
 
   @Override

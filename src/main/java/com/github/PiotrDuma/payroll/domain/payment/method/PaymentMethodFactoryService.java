@@ -6,8 +6,10 @@ import com.github.PiotrDuma.payroll.common.bankAccount.BankAccount;
 import com.github.PiotrDuma.payroll.domain.payment.method.api.PaymentMethod;
 import com.github.PiotrDuma.payroll.domain.payment.method.api.PaymentMethodFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 class PaymentMethodFactoryService implements PaymentMethodFactory {
 
   @Override

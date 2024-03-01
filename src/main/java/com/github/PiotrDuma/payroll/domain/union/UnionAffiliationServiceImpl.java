@@ -8,8 +8,10 @@ import com.github.PiotrDuma.payroll.domain.union.api.UnionDto;
 import java.time.LocalDate;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 class UnionAffiliationServiceImpl implements UnionAffiliationService {
   private final UnionAffiliationTransactionFactory transactionFactory;
 

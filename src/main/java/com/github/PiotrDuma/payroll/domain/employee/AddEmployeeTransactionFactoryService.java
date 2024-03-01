@@ -14,8 +14,10 @@ import com.github.PiotrDuma.payroll.domain.payment.method.api.PaymentMethodFacto
 import com.github.PiotrDuma.payroll.domain.payment.schedule.api.PaymentScheduleFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 class AddEmployeeTransactionFactoryService implements AddEmployeeTransactionFactory {
   private final EmployeeRepository repository;
   private final SalariedClassification salariedClassification;
