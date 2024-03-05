@@ -76,6 +76,7 @@ java -jar -Dspring.profiles.active=test target/payroll-SNAPSHOT_1.1.jar
 The main changes were caused by differences between C++ and Java. The Spring weeb application architecture required to provide higher lever of encapsulation, new design patterns and implementation of infrastructure and controller layers. 
 
 + avoidance of public classes, lack of pointers and global variables forced to change Transaction command interface to provide ID identifiers or final objects;
++ JPA/Hibernate infrastructure forced changes in Employee interfaces' references. Associated methods entities had to be related by public abstract classes to initialize entities;
 + Union Affiliation has been excluded from Employee and implemented as independent domain with ability to create many instances and changing dues using different entry point;
 + Payday Transaction is a new service aggregating required elements across domains;
 + every Change Employee Transaction is placed in separated class provided by factory; 
