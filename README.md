@@ -1,6 +1,22 @@
 # payroll
 Payroll is an implementation of payment system in Java/Spring enviroment based on requirements' stories, UML diagrams and design patterns dercribed by Robert C. Martin in one of his book [[1]](#book-reference). A large amount of abstraction, polimorphism and SOLID priciples make system's architecture more flexible for extensions and keep code clean and simple. The design, originally written in C++, required a few modifications to be adjusted into Spring web application. The changes are describeed in the [modifications'](#modifications) and [conclusions'](#conclusions) sections.
 
+## Release info:
+
+### SNAPSHOT 1.0
+
++ implementation of domain models and system's methods;
++ unit tests;
++ extension of domain classes with value objects;
++ custom exceptions and global exception handler;
+
+### SNAPSHOT 1.1
+
++ infrastructure implementation based on Spring JPA/Hibernate;
++ integration tests;
++ application profiles and database configurations.
+  
+
 ## Run project
 
 There's two different approaches to run payroll application. It depends on acive profile. The "prod" profile requires connection to the PostgreSQL database server and configured application-prod.properties file. The "test" profile contains simple in memory H2 database, which is implemented to run integration tests and it can be also used as a standalone application instace, however in this case all data will be lost when application's process is terminated.
@@ -15,7 +31,7 @@ Before application run, database must be initialized on [PostgreSQL server](http
 ```
 git clone https://github.com/PiotrDuma/payroll.git
 ```
-2. Set database connection in application-prod.properties file. You can find it on the path: 'payroll\src\main\resources\application-prod.properties'
+2. Set database connection in application-prod.properties file. It can be found on the path: 'payroll\src\main\resources\application-prod.properties'
 ```
 spring.datasource.url=jdbc:postgresql://localhost:5433/payroll
 spring.datasource.username=postgres
