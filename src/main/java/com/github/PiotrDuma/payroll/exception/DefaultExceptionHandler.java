@@ -3,6 +3,7 @@ package com.github.PiotrDuma.payroll.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -57,6 +58,17 @@ class DefaultExceptionHandler {
         ExceptionDto exceptionDto = new ExceptionDto(
             request.getRequestURI(),
             ex.getMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now(clock)
+        );
+        return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
+    private ResponseEntity<ExceptionDto> handleHttpRequestException(HttpServletRequest request) {
+        ExceptionDto exceptionDto = new ExceptionDto(
+            request.getRequestURI(),
+            "Request method '" + request.getMethod() + "' is not supported",
             HttpStatus.BAD_REQUEST.value(),
             LocalDateTime.now(clock)
         );

@@ -2,6 +2,7 @@ package com.github.PiotrDuma.payroll.exception;
 
 import com.sun.nio.sctp.IllegalReceiveException;
 import org.springframework.http.HttpHeaders;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -27,5 +28,10 @@ class ExceptionControllerMock {
     @RequestMapping("/test/badRequest")
     public void callInvalidArgumentException() throws RuntimeException{
         throw new InvalidArgumentException("invalid argument");
+    }
+
+    @GetMapping("/test/unsupported")
+    public void initEndpoint() throws RuntimeException{
+        throw new RuntimeException("invalid argument");
     }
 }

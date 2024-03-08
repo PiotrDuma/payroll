@@ -15,6 +15,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.time.Clock;
@@ -98,6 +99,30 @@ class DefaultExceptionHandlerTest {
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof NoHandlerFoundException))
                 .andExpect(result -> assertEquals(exceptionMessage, Objects.requireNonNull(result.getResolvedException()).getMessage()))
                 .andReturn();
+        String result = mvcResult.getResponse().getContentAsString();
+        assertEquals(JsonFormatter.getRawString(expected), result);
+    }
+
+    @Test
+    void shouldHandleHttpRequestMethodNotSupportedException() throws Exception{
+        String exceptionMessage = "Request method 'PUT' is not supported";
+        String expected = """
+        {
+            "requestURL": "/test/unsupported",
+            "errorMessage": "Request method 'PUT' is not supported",
+            "statusCode": 400,
+            "timestamp": "2024-01-02T03:40:50.906435344"
+        }
+        """;
+
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.put("/test/unsupported"))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType("application/json"))
+            .andExpect(result -> assertTrue(result.getResolvedException()
+                instanceof HttpRequestMethodNotSupportedException))
+            .andExpect(result -> assertEquals(exceptionMessage,
+                Objects.requireNonNull(result.getResolvedException()).getMessage()))
+            .andReturn();
         String result = mvcResult.getResponse().getContentAsString();
         assertEquals(JsonFormatter.getRawString(expected), result);
     }
