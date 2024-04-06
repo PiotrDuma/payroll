@@ -13,7 +13,6 @@ public class PayrollApplication {
 		SpringApplication.run(PayrollApplication.class, args);
 	}
 
-
 	@Bean
 	public Clock clock() {
 		return Clock.systemDefaultZone();
