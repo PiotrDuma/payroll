@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.github.PiotrDuma.payroll.common.amount.Amount;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.common.PaymentPeriod;
+import com.github.PiotrDuma.payroll.domain.employee.api.ReceiveEmployee;
 import java.time.LocalDate;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,8 @@ class UnionAffiliationTransactionFactoryTest {
 
   @Mock
   private UnionAffiliationRepository repo;
+  @Mock
+  private ReceiveEmployee employeeRepo;
 
   @InjectMocks
   private UnionAffiliationTransactionFactory factory;

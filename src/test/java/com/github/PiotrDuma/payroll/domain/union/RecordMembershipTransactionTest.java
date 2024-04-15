@@ -4,11 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
+import com.github.PiotrDuma.payroll.domain.employee.api.ReceiveEmployee;
 import com.github.PiotrDuma.payroll.exception.ResourceNotFoundException;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,6 +25,8 @@ class RecordMembershipTransactionTest {
   private static final EmployeeId EMPLOYEE_ID = new EmployeeId(UUID.randomUUID());
 
   @Mock
+  private ReceiveEmployee employeeRepo;
+  @Mock
   private UnionAffiliationRepository repo;
 
   private RecordMembershipTransaction transaction;
@@ -30,7 +34,7 @@ class RecordMembershipTransactionTest {
   @BeforeEach
   void setUp(){
     this.union = new UnionEntity("name");
-    this.transaction = new RecordMembershipTransaction(repo, union.getId(), EMPLOYEE_ID);
+    this.transaction = new RecordMembershipTransaction(repo, employeeRepo, union.getId(), EMPLOYEE_ID);
   }
 
   @Test
@@ -49,9 +53,23 @@ class RecordMembershipTransactionTest {
   void shouldThrowResourceNotFoundWhenUnionIsNotFound(){
     String message = "Union not found";
     UUID uuid = UUID.randomUUID();
-    RecordMembershipTransaction transaction = new RecordMembershipTransaction(repo, uuid, EMPLOYEE_ID);
+    RecordMembershipTransaction transaction = new RecordMembershipTransaction(repo, employeeRepo, uuid, EMPLOYEE_ID);
 
     when(this.repo.findById(any())).thenReturn(Optional.empty());
+
+    ResourceNotFoundException exception = assertThrows(
+        ResourceNotFoundException.class, () -> this.transaction.execute());
+
+    assertEquals(message, exception.getMessage());
+  }
+
+  @Test
+  void shouldThrowResourceNotFoundWhenEmployeeIsNotFound(){
+    String message = "Employee not found";
+    UUID uuid = UUID.randomUUID();
+    RecordMembershipTransaction transaction = new RecordMembershipTransaction(repo, employeeRepo, uuid, EMPLOYEE_ID);
+
+    doThrow(new ResourceNotFoundException(message)).when(this.employeeRepo).find(any());
 
     ResourceNotFoundException exception = assertThrows(
         ResourceNotFoundException.class, () -> this.transaction.execute());
