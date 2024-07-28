@@ -1,5 +1,5 @@
 # payroll
-Payroll is an implementation of payment system in Java/Spring enviroment based on requirements' stories, UML diagrams and design patterns dercribed by Robert C. Martin in one of his book [[1]](#book-reference). A large amount of abstraction, polimorphism and SOLID priciples make system's architecture more flexible for extensions and keep code clean and simple. The design, originally written in C++, required a few modifications to be adjusted into Spring web application. The changes are describeed in the [modifications'](#modifications) and [conclusions'](#conclusions) sections.
+Payroll is an implementation of payment system in Java/Spring enviroment based on requirements' stories, UML diagrams and design patterns dercribed by Robert C. Martin in one of his book [[1]](#book-reference). A large amount of abstraction, polymorphism and SOLID priciples make system's architecture more flexible for extensions and keep code clean and simple. The design, originally written in C++, required a few modifications to be adjusted into Spring web application. The changes are describeed in the [modifications'](#modifications) and [conclusions'](#conclusions) sections.
 
 ## Release info:
 
