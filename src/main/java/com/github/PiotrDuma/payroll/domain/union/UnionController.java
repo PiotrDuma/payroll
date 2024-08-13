@@ -5,6 +5,7 @@ import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.union.api.UnionAffiliationService;
 import com.github.PiotrDuma.payroll.domain.union.api.UnionDto;
 import com.github.PiotrDuma.payroll.exception.ResourceNotFoundException;
+import com.github.PiotrDuma.payroll.tools.UUIDParser;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -52,7 +53,8 @@ class UnionController {
 
   @GetMapping("/unions/{id}")
   public ResponseEntity<UnionDto> getUnions(@PathVariable("id") String id){
-    UnionEntity union = repo.findById(UUID.fromString(id))
+    UUID parsedId = UUIDParser.parse(id);
+    UnionEntity union = repo.findById(parsedId)
         .orElseThrow(() -> new ResourceNotFoundException(String.format(NOT_FOUND, id)));
     return new ResponseEntity<>(union.toDto(), HttpStatus.OK);
   }
