@@ -1,5 +1,6 @@
-package com.github.PiotrDuma.payroll.services.payday.api;
+package com.github.PiotrDuma.payroll.services.payday;
 
+import com.github.PiotrDuma.payroll.services.payday.api.PaydayTransaction;
 import java.time.Clock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
