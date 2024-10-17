@@ -14,6 +14,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +27,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 class UnionController {
+  private static final Logger log = LoggerFactory.getLogger(UnionController.class);
   private static final String NOT_FOUND = "Union '%s' not found";
+  private static final String MESSAGE_REVOKE_MEMBERSHIP = "POST request on '/unions/{id}/undo' with"
+      + " parameters id=%s, EmployeeDto=%s executed at %s";
+  private static final String MESSAGE_ADD_MEMBER = "POST request on '/unions/{id}/add' with"
+      + " parameters id=%s, EmployeeDto=%s executed at %s";
+  private static final String MESSAGE_CHARGE = "POST request on '/unions/{id}/{amount}' with"
+      + " parameters id=%s, amount=%s executed at %s";
+  private static final String MESSAGE_ADD_UNION = "POST request on '/unions/add' with"
+      + " parameters unionNameDto=%s executed at %s";
   private final UnionAffiliationRepository repo;
   private final UnionAffiliationService unionService;
   private final Clock clock;
@@ -40,6 +51,7 @@ class UnionController {
 
   @PostMapping("/unions")
   public ResponseEntity<UnionDto> addUnion(@RequestBody @Valid UnionNameDto unionName){
+    log.info(String.format(MESSAGE_ADD_UNION, unionName, this.clock.instant().toString()));
     UnionDto unionDto = this.unionService.addUnion(unionName.name());
     return new ResponseEntity<>(unionDto, HttpStatus.OK);
   }
@@ -62,6 +74,7 @@ class UnionController {
   @PostMapping("/unions/{id}/{amount}")
   public ResponseEntity<UnionDto> charge(@PathVariable("id") String id,
       @PathVariable("amount") Double amount){
+    log.info(String.format(MESSAGE_CHARGE, id, amount.toString(), this.clock.instant().toString()));
     LocalDate date = LocalDate.ofInstant(clock.instant(), clock.getZone());
     this.unionService.chargeMembers(UUID.fromString(id), new Amount(amount), date);
     return new ResponseEntity<>(HttpStatus.OK);
@@ -70,6 +83,8 @@ class UnionController {
   @PostMapping("/unions/{id}/add")
   public ResponseEntity<UnionDto> addMember(@PathVariable("id") String id,
       @RequestBody @Valid EmployeeDto employee){
+    log.info(String.format(MESSAGE_ADD_MEMBER, id, employee.toString(),
+        this.clock.instant().toString()));
     this.unionService.recordMembership(UUID.fromString(id),
         new EmployeeId(UUID.fromString(employee.id())));
     return new ResponseEntity<>(HttpStatus.OK);
@@ -78,6 +93,8 @@ class UnionController {
   @PostMapping("/unions/{id}/undo")
   public ResponseEntity<UnionDto> revokeMembership(@PathVariable("id") String id,
       @RequestBody @Valid EmployeeDto employee){
+    log.info(String.format(MESSAGE_REVOKE_MEMBERSHIP, id, employee.toString(),
+        this.clock.instant().toString()));
     this.unionService.undoMembershipAffiliation(UUID.fromString(id),
         new EmployeeId(UUID.fromString(employee.id())));
     return new ResponseEntity<>(HttpStatus.OK);
