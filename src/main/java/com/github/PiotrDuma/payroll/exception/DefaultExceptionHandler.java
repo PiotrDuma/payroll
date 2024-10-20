@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -40,6 +41,21 @@ class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
         ExceptionDto exceptionDto = new ExceptionDto(
             request.getRequestURI(),
             ex.getMessage(),
+            HttpStatus.BAD_REQUEST.value(),
+            LocalDateTime.now(clock)
+        );
+        return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+        HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        String fieldException = ex.getBindingResult().getFieldErrors().get(0).getDefaultMessage();
+
+        HttpServletRequest httpRequest = getHttpServletRequest(request);
+        ExceptionDto exceptionDto = new ExceptionDto(
+            httpRequest.getRequestURI(),
+            fieldException,
             HttpStatus.BAD_REQUEST.value(),
             LocalDateTime.now(clock)
         );

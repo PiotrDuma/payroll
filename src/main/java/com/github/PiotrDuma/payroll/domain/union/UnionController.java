@@ -7,6 +7,7 @@ import com.github.PiotrDuma.payroll.domain.union.api.UnionDto;
 import com.github.PiotrDuma.payroll.exception.ResourceNotFoundException;
 import com.github.PiotrDuma.payroll.tools.UUIDParser;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.Clock;
@@ -71,12 +72,13 @@ class UnionController {
     return new ResponseEntity<>(union.toDto(), HttpStatus.OK);
   }
 
-  @PostMapping("/unions/{id}/{amount}")
+  @PostMapping(value = "/unions/{id}/charge")
   public ResponseEntity<UnionDto> charge(@PathVariable("id") String id,
-      @PathVariable("amount") Double amount){
+       @Valid @RequestBody AmountDto amount){
     log.info(String.format(MESSAGE_CHARGE, id, amount.toString(), this.clock.instant().toString()));
+
     LocalDate date = LocalDate.ofInstant(clock.instant(), clock.getZone());
-    this.unionService.chargeMembers(UUID.fromString(id), new Amount(amount), date);
+    this.unionService.chargeMembers(UUIDParser.parse(id), new Amount(amount.amount()), date);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
@@ -85,8 +87,8 @@ class UnionController {
       @RequestBody @Valid EmployeeDto employee){
     log.info(String.format(MESSAGE_ADD_MEMBER, id, employee.toString(),
         this.clock.instant().toString()));
-    this.unionService.recordMembership(UUID.fromString(id),
-        new EmployeeId(UUID.fromString(employee.id())));
+    this.unionService.recordMembership(UUIDParser.parse(id),
+        new EmployeeId(UUIDParser.parse(employee.id())));
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
@@ -95,12 +97,13 @@ class UnionController {
       @RequestBody @Valid EmployeeDto employee){
     log.info(String.format(MESSAGE_REVOKE_MEMBERSHIP, id, employee.toString(),
         this.clock.instant().toString()));
-    this.unionService.undoMembershipAffiliation(UUID.fromString(id),
-        new EmployeeId(UUID.fromString(employee.id())));
+
+    this.unionService.undoMembershipAffiliation(UUIDParser.parse(id),
+        new EmployeeId(UUIDParser.parse(employee.id())));
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  private record UnionNameDto(@NotNull @NotBlank String name) {
+  private record UnionNameDto(@NotBlank String name) {
     private UnionNameDto(String name) {
         this.name = name;
       }
@@ -111,13 +114,21 @@ class UnionController {
     }
   }
 
-  private record EmployeeDto(@NotNull @NotBlank String id){
-    private EmployeeDto(String id){
-      this.id = id;
-    }
+  private record AmountDto(@NotNull(message = "Amount cannot empty")
+                           @DecimalMin(value = "0.0", message = "Amount cannot be lower than 0") Double amount) {
+    private AmountDto(Double amount) {
+        this.amount = amount;
+      }
+
     @Override
-    public String id(){
-      return id;
+    public Double amount() {
+      return amount;
     }
   }
+
+  private record EmployeeDto(@NotBlank String id) {
+    private EmployeeDto(String id) {
+        this.id = id;
+      }
+    }
 }

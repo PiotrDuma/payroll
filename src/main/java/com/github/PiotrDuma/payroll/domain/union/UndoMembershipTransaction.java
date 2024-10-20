@@ -1,6 +1,7 @@
 package com.github.PiotrDuma.payroll.domain.union;
 
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
+import com.github.PiotrDuma.payroll.exception.InvalidArgumentException;
 import com.github.PiotrDuma.payroll.exception.ResourceNotFoundException;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ class UndoMembershipTransaction implements UnionTransaction {
 
   private void checkEmployeeMembership(UnionEntity union) {
     if(!union.isMember(employeeId)){
-      throw new ResourceNotFoundException("Employee "+ employeeId + " is not affiliated with this union");
+      throw new InvalidArgumentException("Employee "+ employeeId + " is not affiliated with this union");
     }
   }
 

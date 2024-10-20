@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
+import com.github.PiotrDuma.payroll.exception.InvalidArgumentException;
 import com.github.PiotrDuma.payroll.exception.ResourceNotFoundException;
 import java.util.HashSet;
 import java.util.Optional;
@@ -69,8 +70,7 @@ class UndoMembershipTransactionTest {
     String message = "Employee "+ EMPLOYEE_ID + " is not affiliated with this union";
     when(this.repo.findById(any())).thenReturn(Optional.of(union));
 
-    ResourceNotFoundException exception = assertThrows(
-        ResourceNotFoundException.class, () -> this.transaction.execute());
+    Exception exception = assertThrows(InvalidArgumentException.class, () -> this.transaction.execute());
     assertEquals(message, exception.getMessage());
   }
 }
