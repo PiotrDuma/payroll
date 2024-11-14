@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,7 +55,7 @@ class UnionController {
   }
 
   @PostMapping("/unions")
-  public ResponseEntity<Object> addUnion(@RequestBody @Valid UnionNameDto unionName,
+  public ResponseEntity<UnionDto> addUnion(@RequestBody @Valid UnionNameDto unionName,
       HttpServletRequest request){
     log.info(String.format(MESSAGE_ADD_UNION, unionName, this.clock.instant().toString()));
     UnionDto unionDto = this.unionService.addUnion(unionName.name());
@@ -90,34 +91,28 @@ class UnionController {
     LocalDate date = LocalDate.ofInstant(clock.instant(), clock.getZone());
     this.unionService.chargeMembers(UUIDParser.parse(id), new Amount(amount.amount()), date);
 
-    URI location = ServletUriComponentsBuilder.fromContextPath(request)
-        .path("/unions/{id}")
-        .buildAndExpand(id)
-        .toUri();
-    return ResponseEntity.status(HttpStatus.CREATED)
-        .header("Location", location.toString())
-        .build();
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   @PostMapping("/unions/{id}/add")
-  public ResponseEntity<UnionDto> addMember(@PathVariable("id") String id,
+  public ResponseEntity<Object> addMember(@PathVariable("id") String id,
       @RequestBody @Valid EmployeeDto employee){
     log.info(String.format(MESSAGE_ADD_MEMBER, id, employee.toString(),
         this.clock.instant().toString()));
     this.unionService.recordMembership(UUIDParser.parse(id),
         new EmployeeId(UUIDParser.parse(employee.id())));
-    return new ResponseEntity<>(HttpStatus.OK);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   @PostMapping("/unions/{id}/undo")
-  public ResponseEntity<UnionDto> revokeMembership(@PathVariable("id") String id,
+  public ResponseEntity<Object> revokeMembership(@PathVariable("id") String id,
       @RequestBody @Valid EmployeeDto employee){
     log.info(String.format(MESSAGE_REVOKE_MEMBERSHIP, id, employee.toString(),
         this.clock.instant().toString()));
 
     this.unionService.undoMembershipAffiliation(UUIDParser.parse(id),
         new EmployeeId(UUIDParser.parse(employee.id())));
-    return new ResponseEntity<>(HttpStatus.OK);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   public record UnionNameDto(@NotBlank String name) {

@@ -10,7 +10,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import com.github.PiotrDuma.payroll.common.amount.Amount;
+import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.union.UnionController.AmountDto;
+import com.github.PiotrDuma.payroll.domain.union.UnionController.EmployeeDto;
 import com.github.PiotrDuma.payroll.domain.union.api.UnionAffiliationService;
 import com.github.PiotrDuma.payroll.domain.union.api.UnionDto;
 import com.github.PiotrDuma.payroll.exception.ResourceNotFoundException;
@@ -56,7 +58,7 @@ class UnionControllerTest {
   void shouldInvokeAddUnion() throws Exception {
     String unionName = "unionName";
     UUID id = UUID.randomUUID();
-    UnionController.UnionNameDto dto= new UnionController.UnionNameDto(unionName);
+    UnionController.UnionNameDto dto = new UnionController.UnionNameDto(unionName);
     UnionDto expected = new UnionDto(id, unionName);
 
     when(this.unionService.addUnion(any())).thenReturn(expected);
@@ -66,13 +68,15 @@ class UnionControllerTest {
         .content(ObjectMapperProvider.createJson().writeValueAsString(dto)));
 
     result.andExpect(MockMvcResultMatchers.status().isCreated())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.containsString(expected.id().toString())))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.containsString(expected.name())))
+        .andExpect(MockMvcResultMatchers.jsonPath("$.id",
+            Matchers.containsString(expected.id().toString())))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("$.name", Matchers.containsString(expected.name())))
         .andExpect(MockMvcResultMatchers.redirectedUrlPattern("http://*/unions/" + id));
   }
 
   @Test
-  void shouldReturnUnionDtoWhenRequestedById() throws Exception {
+  void requestByIdShouldReturnUnionDto() throws Exception {
     String unionName = "unionName";
     UUID id = UUID.randomUUID();
     UnionDto expected = new UnionDto(id, unionName);
@@ -84,12 +88,14 @@ class UnionControllerTest {
     ResultActions result = mockMvc.perform(get("/unions/" + id));
 
     result.andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.containsString(expected.id().toString())))
-        .andExpect(MockMvcResultMatchers.jsonPath("$.name", Matchers.containsString(expected.name())));
+        .andExpect(MockMvcResultMatchers.jsonPath("$.id",
+            Matchers.containsString(expected.id().toString())))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("$.name", Matchers.containsString(expected.name())));
   }
 
   @Test
-  void shouldThrowExceptionWhenRequestedByIdNotFound() throws Exception {
+  void requestUnionByIdShouldThrowNotFoundWhenIsNotFound() throws Exception {
     String message = "message";
     UUID id = UUID.randomUUID();
 
@@ -97,6 +103,13 @@ class UnionControllerTest {
 
     ResultActions result = mockMvc.perform(get("/unions/" + id))
         .andExpect(MockMvcResultMatchers.status().isNotFound());
+  }
+
+  @Test
+  void requestUnionByIdShouldThrowBadRequestWhenIdIsInvalid() throws Exception {
+
+    ResultActions result = mockMvc.perform(get("/unions/" + "123"))
+        .andExpect(MockMvcResultMatchers.status().isBadRequest());
   }
 
   @Test
@@ -118,10 +131,14 @@ class UnionControllerTest {
     ResultActions result = mockMvc.perform(get("/unions"));
 
     result.andExpect(MockMvcResultMatchers.status().isOk())
-        .andExpect(MockMvcResultMatchers.jsonPath("$[0].id", Matchers.containsString(expected.id().toString())))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[0].name", Matchers.containsString(expected.name())))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[1].id", Matchers.containsString(expected1.id().toString())))
-        .andExpect(MockMvcResultMatchers.jsonPath("$[1].name", Matchers.containsString(expected1.name())));
+        .andExpect(MockMvcResultMatchers.jsonPath("$[0].id",
+            Matchers.containsString(expected.id().toString())))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("$[0].name", Matchers.containsString(expected.name())))
+        .andExpect(MockMvcResultMatchers.jsonPath("$[1].id",
+            Matchers.containsString(expected1.id().toString())))
+        .andExpect(
+            MockMvcResultMatchers.jsonPath("$[1].name", Matchers.containsString(expected1.name())));
   }
 
   @Test
@@ -135,17 +152,17 @@ class UnionControllerTest {
         .contentType(MediaType.APPLICATION_JSON)
         .content(ObjectMapperProvider.createJson().writeValueAsString(amount)));
 
-    result.andExpect(MockMvcResultMatchers.status().isCreated())
-        .andExpect(MockMvcResultMatchers.redirectedUrlPattern("http://*/unions/" + id));
+    result.andExpect(MockMvcResultMatchers.status().isNoContent());
     verify(this.unionService, times(1))
         .chargeMembers(providedId.capture(), providedAmount.capture(), any());
 
     Assertions.assertEquals(id, providedId.getValue());
-    Assertions.assertTrue(providedAmount.getValue().getAmount().equals(BigDecimal.valueOf(amount.amount())));
+    Assertions.assertTrue(
+        providedAmount.getValue().getAmount().equals(BigDecimal.valueOf(amount.amount())));
   }
 
   @Test
-  void shouldThrowBadRequestWhenChargeHasProvidedBadId() throws Exception{
+  void chargeShouldThrowBadRequestWhenUnionIdIsInvalid() throws Exception {
     AmountDto amount = new AmountDto(1d);
 
     ResultActions result = mockMvc.perform(post("/unions/" + "123" + "/charge")
@@ -156,7 +173,7 @@ class UnionControllerTest {
   }
 
   @Test
-  void shouldThrowBadRequestWhenChargeHasProvidedNegativeAmount() throws Exception{
+  void chargeShouldThrowBadRequestWhenAmountIsNegative() throws Exception {
     String expectedMessage = "Amount cannot be lower than 0";
     UUID id = UUID.randomUUID();
     AmountDto amount = new AmountDto(-11d);
@@ -166,8 +183,98 @@ class UnionControllerTest {
         .content(ObjectMapperProvider.createJson().writeValueAsString(amount)));
 
     result.andExpect(MockMvcResultMatchers.status().isBadRequest())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.errorMessage", Matchers.containsString(expectedMessage)));
+        .andExpect(MockMvcResultMatchers.jsonPath("$.errorMessage",
+            Matchers.containsString(expectedMessage)));
   }
 
+  @Test
+  void shouldInvokeAddMember() throws Exception {
+    UUID unionId = UUID.randomUUID();
+    UUID employeeId = UUID.randomUUID();
+    EmployeeDto dto = new EmployeeDto(employeeId.toString());
 
+    ArgumentCaptor<UUID> providedUnionId = ArgumentCaptor.forClass(UUID.class);
+    ArgumentCaptor<EmployeeId> providedEmployeeId = ArgumentCaptor.forClass(EmployeeId.class);
+
+    ResultActions result = mockMvc.perform(post("/unions/" + unionId + "/add")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(ObjectMapperProvider.createJson().writeValueAsString(dto)));
+
+    result.andExpect(MockMvcResultMatchers.status().isNoContent());
+    verify(this.unionService, times(1))
+        .recordMembership(providedUnionId.capture(), providedEmployeeId.capture());
+
+    Assertions.assertEquals(unionId, providedUnionId.getValue());
+    Assertions.assertEquals(employeeId, providedEmployeeId.getValue().getId());
+  }
+
+  @Test
+  void addMemberShouldThrowBadRequestWhenInvalidUnionIdFormat() throws Exception {
+    UUID unionId = UUID.randomUUID();
+    UUID employeeId = UUID.randomUUID();
+    EmployeeDto dto = new EmployeeDto(employeeId.toString());
+
+    ResultActions result = mockMvc.perform(post("/unions/" + "123" + "/add")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(ObjectMapperProvider.createJson().writeValueAsString(dto)));
+
+    result.andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+
+  @Test
+  void addMemberShouldThrowBadRequestWhenInvalidEmployeeIdFormat() throws Exception {
+    UUID unionId = UUID.randomUUID();
+    EmployeeDto dto = new EmployeeDto("123");
+
+    ResultActions result = mockMvc.perform(post("/unions/" + unionId + "/add")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(ObjectMapperProvider.createJson().writeValueAsString(dto)));
+
+    result.andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+
+  @Test
+  void shouldInvokeUndoMembership() throws Exception {
+    UUID unionId = UUID.randomUUID();
+    UUID employeeId = UUID.randomUUID();
+    EmployeeDto dto = new EmployeeDto(employeeId.toString());
+
+    ArgumentCaptor<UUID> providedUnionId = ArgumentCaptor.forClass(UUID.class);
+    ArgumentCaptor<EmployeeId> providedEmployeeId = ArgumentCaptor.forClass(EmployeeId.class);
+
+    ResultActions result = mockMvc.perform(post("/unions/" + unionId + "/undo")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(ObjectMapperProvider.createJson().writeValueAsString(dto)));
+
+    result.andExpect(MockMvcResultMatchers.status().isNoContent());
+    verify(this.unionService, times(1))
+        .undoMembershipAffiliation(providedUnionId.capture(), providedEmployeeId.capture());
+
+    Assertions.assertEquals(unionId, providedUnionId.getValue());
+    Assertions.assertEquals(employeeId, providedEmployeeId.getValue().getId());
+  }
+
+  @Test
+  void undoMembershipShouldThrowBadRequestWhenUnionIdIsInvalid() throws Exception {
+    UUID employeeId = UUID.randomUUID();
+    EmployeeDto dto = new EmployeeDto(employeeId.toString());
+
+    ResultActions result = mockMvc.perform(post("/unions/" + "123" + "/undo")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(ObjectMapperProvider.createJson().writeValueAsString(dto)));
+
+    result.andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
+
+  @Test
+  void undoMembershipShouldThrowBadRequestWhenEmployeeIdIsInvalid() throws Exception {
+    UUID unionId = UUID.randomUUID();
+    EmployeeDto dto = new EmployeeDto("123");
+
+    ResultActions result = mockMvc.perform(post("/unions/" + unionId + "/undo")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(ObjectMapperProvider.createJson().writeValueAsString(dto)));
+
+    result.andExpect(MockMvcResultMatchers.status().isBadRequest());
+  }
 }
