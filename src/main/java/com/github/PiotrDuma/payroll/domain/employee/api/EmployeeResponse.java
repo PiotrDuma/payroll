@@ -13,5 +13,5 @@ public interface EmployeeResponse {
   PaymentSchedule getSchedule();
   PaymentClassification getPaymentClassification();
   PaymentMethod getPaymentMethod();
-  //TODO: toDto method
+  EmployeeDto toDto();
 }

@@ -4,6 +4,7 @@ import com.github.PiotrDuma.payroll.common.address.Address;
 import com.github.PiotrDuma.payroll.common.address.AddressConverter;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeIdConverter;
+import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
 import com.github.PiotrDuma.payroll.domain.payment.classification.AbstractPaymentClassification;
@@ -33,9 +34,7 @@ class Employee implements EmployeeResponse {
 
   @Id
   @Column(name = "id", updatable = false, nullable = false)
-//  @Convert(converter = EmployeeIdConverter.class)
   private UUID id;
-//  private EmployeeId id;
   @Convert(converter = EmployeeNameConverter.class)
   private EmployeeName name;
   @Convert(converter = AddressConverter.class)
@@ -117,5 +116,10 @@ class Employee implements EmployeeResponse {
 
   public void setPaymentMethod(PaymentMethod paymentMethod) {
     this.paymentMethod = paymentMethod;
+  }
+
+  @Override
+  public EmployeeDto toDto() {
+    return new EmployeeDto(this.id.toString(), this.name.getName(), this.address.getAddress());
   }
 }
