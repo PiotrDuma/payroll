@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -126,7 +125,7 @@ class UnionController {
     }
   }
 
-  public record AmountDto(@NotNull(message = "Amount cannot empty")
+  public record AmountDto(@NotNull(message = "Amount cannot be empty")
                            @DecimalMin(value = "0.0", message = "Amount cannot be lower than 0") Double amount) {
     public AmountDto(Double amount) {
         this.amount = amount;

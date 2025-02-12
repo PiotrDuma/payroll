@@ -3,12 +3,19 @@ package com.github.PiotrDuma.payroll.domain.employee;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
+import com.github.PiotrDuma.payroll.domain.employee.EmployeeController.SalariedDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransaction;
+import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransactionFactory;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
 import com.github.PiotrDuma.payroll.domain.employee.api.ReceiveEmployee;
@@ -21,12 +28,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springdoc.core.providers.ObjectMapperProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(controllers = EmployeeController.class)
 @AutoConfigureMockMvc
@@ -39,6 +49,8 @@ class EmployeeControllerTest {
   @MockBean
   private ReceiveEmployee receiveEmployee;
 
+  @MockBean
+  private AddEmployeeTransactionFactory employeeFactory;
   @InjectMocks
   private EmployeeController employeeController;
 
@@ -102,5 +114,26 @@ class EmployeeControllerTest {
         .andExpect(jsonPath("$.id", Matchers.containsString(dto.getId())))
         .andExpect(jsonPath("$.name", Matchers.containsString(dto.getName())))
         .andExpect(jsonPath("$.address", Matchers.containsString(dto.getAddress())));
+  }
+
+  @Test
+  void postSalariedEmployeeShouldReturnId() throws Exception {
+    UUID id = UUID.randomUUID();
+    AddEmployeeTransaction transaction = mock(AddEmployeeTransaction.class);
+    SalariedDto dto = new SalariedDto("address", "name", 1234d);
+
+    when(this.employeeFactory.initSalariedEmployeeTransaction(any(), any(), any()))
+        .thenReturn(transaction);
+    when(transaction.execute()).thenReturn(new EmployeeId(id));
+
+    ResultActions result = this.mockMvc.perform(post("/employees")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(ObjectMapperProvider.createJson().writeValueAsString(dto)));
+
+    verify(this.employeeFactory, times(1)).initSalariedEmployeeTransaction(
+        any(), any(), any());
+
+    result.andExpect(status().isCreated())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.containsString(id.toString())));
   }
 }
