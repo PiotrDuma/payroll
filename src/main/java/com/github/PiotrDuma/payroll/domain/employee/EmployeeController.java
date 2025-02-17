@@ -69,11 +69,33 @@ class EmployeeController {
                             @NotNull(message = "Name cannot empty") String name,
                             @NotNull(message = "Salary cannot be empty")
                             @DecimalMin(value = "0.0", message = "Salary cannot be lower than 0") Double salary){
-
     public SalariedDto(String address, String name,  Double salary) {
       this.address = address;
       this.name = name;
       this.salary = salary;
+    }
+  }
+  public record HourlyDto(@NotNull(message = "Address cannot empty") String address,
+                            @NotNull(message = "Name cannot empty") String name,
+                            @NotNull(message = "Hourly rate cannot be empty")
+                            @DecimalMin(value = "0.0", message = "Hourly rate cannot be lower than 0") Double rate) {
+    public HourlyDto(String address, String name, Double rate) {
+      this.address = address;
+      this.name = name;
+      this.rate = rate;
+    }
+  }
+  public record CommissionedDto(@NotNull(message = "Address cannot empty") String address,
+                          @NotNull(message = "Name cannot empty") String name,
+                          @NotNull(message = "Salary cannot be empty")
+                          @DecimalMin(value = "0.0", message = "Salary cannot be lower than 0") Double salary,
+                          @NotNull(message = "Commissioned rate cannot be empty")
+                          @DecimalMin(value = "0.0", message = "Commissioned rate cannot be lower than 0") Double rate) {
+    public CommissionedDto(String address, String name, Double salary, Double rate) {
+      this.address = address;
+      this.name = name;
+      this.salary = salary;
+      this.rate = rate;
     }
   }
 }

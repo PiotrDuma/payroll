@@ -13,6 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
+import com.github.PiotrDuma.payroll.domain.employee.EmployeeController.CommissionedDto;
+import com.github.PiotrDuma.payroll.domain.employee.EmployeeController.HourlyDto;
 import com.github.PiotrDuma.payroll.domain.employee.EmployeeController.SalariedDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransaction;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransactionFactory;
@@ -131,6 +133,48 @@ class EmployeeControllerTest {
         .content(ObjectMapperProvider.createJson().writeValueAsString(dto)));
 
     verify(this.employeeFactory, times(1)).initSalariedEmployeeTransaction(
+        any(), any(), any());
+
+    result.andExpect(status().isCreated())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.containsString(id.toString())));
+  }
+
+  @Test
+  void postHourlyEmployeeShouldReturnId() throws Exception {
+    UUID id = UUID.randomUUID();
+    AddEmployeeTransaction transaction = mock(AddEmployeeTransaction.class);
+    HourlyDto dto = new HourlyDto("address", "name", 12.5d);
+
+    when(this.employeeFactory.initHourlyEmployeeTransaction(any(), any(), any()))
+        .thenReturn(transaction);
+    when(transaction.execute()).thenReturn(new EmployeeId(id));
+
+    ResultActions result = this.mockMvc.perform(post("/employees")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(ObjectMapperProvider.createJson().writeValueAsString(dto)));
+
+    verify(this.employeeFactory, times(1)).initHourlyEmployeeTransaction(
+        any(), any(), any());
+
+    result.andExpect(status().isCreated())
+        .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.containsString(id.toString())));
+  }
+
+  @Test
+  void postCommissionedEmployeeShouldReturnId() throws Exception {
+    UUID id = UUID.randomUUID();
+    AddEmployeeTransaction transaction = mock(AddEmployeeTransaction.class);
+    CommissionedDto dto = new CommissionedDto("address", "name", 500d, 12d);
+
+    when(this.employeeFactory.initCommissionedEmployeeTransaction(any(), any(), any(), any()))
+        .thenReturn(transaction);
+    when(transaction.execute()).thenReturn(new EmployeeId(id));
+
+    ResultActions result = this.mockMvc.perform(post("/employees")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(ObjectMapperProvider.createJson().writeValueAsString(dto)));
+
+    verify(this.employeeFactory, times(1)).initHourlyEmployeeTransaction(
         any(), any(), any());
 
     result.andExpect(status().isCreated())
