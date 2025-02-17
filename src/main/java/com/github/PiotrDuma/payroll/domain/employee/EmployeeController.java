@@ -1,5 +1,7 @@
 package com.github.PiotrDuma.payroll.domain.employee;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.PiotrDuma.payroll.common.address.Address;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.common.salary.Salary;
@@ -9,6 +11,9 @@ import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
 import com.github.PiotrDuma.payroll.domain.employee.api.ReceiveEmployee;
+import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
+import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyRate;
+import com.github.PiotrDuma.payroll.exception.InvalidArgumentException;
 import com.github.PiotrDuma.payroll.tools.UUIDParser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -54,15 +59,51 @@ class EmployeeController {
   }
 
   @PostMapping(value = "/employees", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<EmployeeId> addEmployee(@RequestBody @Valid SalariedDto dto,
-      HttpServletRequest request){
-    AddEmployeeTransaction addEmployeeTransaction = this.addEmployee.initSalariedEmployeeTransaction(
-        new Address(dto.address()),
-        new EmployeeName(dto.name()),
-        new Salary(dto.salary()));
+  public ResponseEntity<EmployeeId> addEmployee(@RequestBody @Valid JsonNode dto,
+      HttpServletRequest request) throws Exception{
+    AddEmployeeTransaction addEmployeeTransaction = null;
+
+    try{
+      if(dto.has("commissionedRate")){
+        addEmployeeTransaction = getAddCommissionedEmplyeeTransaction(dto);
+      } else if (dto.has("hourlyRate")) {
+        addEmployeeTransaction = getAddHourlyEmployeeTransaction(dto);
+      } else if (dto.has("salary")) {
+        addEmployeeTransaction = getAddSalariedEmployeeTransaction(dto);
+      } else { //catch invalid json body request
+        throw new InvalidArgumentException("Invalid Employee json body");      }
+    }catch (Exception e) { //catch invalid json mapping
+      throw new InvalidArgumentException("Invalid Employee json body");
+    }
 
     EmployeeId id = addEmployeeTransaction.execute();
+
     return new ResponseEntity<>(id, HttpStatus.CREATED);
+  }
+
+  private AddEmployeeTransaction getAddSalariedEmployeeTransaction(JsonNode dto) {
+    SalariedDto converted= new ObjectMapper().convertValue(dto, SalariedDto.class);
+    return this.addEmployee.initSalariedEmployeeTransaction(
+        new Address(converted.address()),
+        new EmployeeName(converted.name()),
+        new Salary(converted.salary()));
+  }
+
+  private AddEmployeeTransaction getAddHourlyEmployeeTransaction(JsonNode dto) {
+    HourlyDto converted= new ObjectMapper().convertValue(dto, HourlyDto.class);
+    return this.addEmployee.initHourlyEmployeeTransaction(
+        new Address(converted.address()),
+        new EmployeeName(converted.name()),
+        new HourlyRate(converted.hourlyRate()));
+  }
+
+  private AddEmployeeTransaction getAddCommissionedEmplyeeTransaction(JsonNode dto) {
+    CommissionedDto converted= new ObjectMapper().convertValue(dto, CommissionedDto.class);
+    return this.addEmployee.initCommissionedEmployeeTransaction(
+        new Address(converted.address()),
+        new EmployeeName(converted.name()),
+        new Salary(converted.salary()),
+        new CommissionRate(converted.commissionedRate()));
   }
 
   public record SalariedDto(@NotNull(message = "Address cannot empty") String address,
@@ -78,11 +119,11 @@ class EmployeeController {
   public record HourlyDto(@NotNull(message = "Address cannot empty") String address,
                             @NotNull(message = "Name cannot empty") String name,
                             @NotNull(message = "Hourly rate cannot be empty")
-                            @DecimalMin(value = "0.0", message = "Hourly rate cannot be lower than 0") Double rate) {
-    public HourlyDto(String address, String name, Double rate) {
+                            @DecimalMin(value = "0.0", message = "Hourly rate cannot be lower than 0") Double hourlyRate) {
+    public HourlyDto(String address, String name, Double hourlyRate) {
       this.address = address;
       this.name = name;
-      this.rate = rate;
+      this.hourlyRate = hourlyRate;
     }
   }
   public record CommissionedDto(@NotNull(message = "Address cannot empty") String address,
@@ -90,12 +131,12 @@ class EmployeeController {
                           @NotNull(message = "Salary cannot be empty")
                           @DecimalMin(value = "0.0", message = "Salary cannot be lower than 0") Double salary,
                           @NotNull(message = "Commissioned rate cannot be empty")
-                          @DecimalMin(value = "0.0", message = "Commissioned rate cannot be lower than 0") Double rate) {
-    public CommissionedDto(String address, String name, Double salary, Double rate) {
+                          @DecimalMin(value = "0.0", message = "Commissioned rate cannot be lower than 0") Double commissionedRate) {
+    public CommissionedDto(String address, String name, Double salary, Double commissionedRate) {
       this.address = address;
       this.name = name;
       this.salary = salary;
-      this.rate = rate;
+      this.commissionedRate = commissionedRate;
     }
   }
 }

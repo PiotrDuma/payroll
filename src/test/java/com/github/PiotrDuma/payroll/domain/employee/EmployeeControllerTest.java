@@ -174,8 +174,8 @@ class EmployeeControllerTest {
         .contentType(MediaType.APPLICATION_JSON)
         .content(ObjectMapperProvider.createJson().writeValueAsString(dto)));
 
-    verify(this.employeeFactory, times(1)).initHourlyEmployeeTransaction(
-        any(), any(), any());
+    verify(this.employeeFactory, times(1)).initCommissionedEmployeeTransaction(
+        any(), any(), any(), any());
 
     result.andExpect(status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.containsString(id.toString())));
