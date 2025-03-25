@@ -20,6 +20,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -35,6 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/employees")
 class EmployeeController {
+  private final Logger log = LoggerFactory.getLogger(EmployeeController.class);
   private final ReceiveEmployee receiveEmployee;
   private final AddEmployeeTransactionFactory addEmployee;
 
@@ -47,6 +50,7 @@ class EmployeeController {
 
   @GetMapping
   public ResponseEntity<List<EmployeeDto>> getEmployees(){
+    log.debug("Request GET performed on '/employees' endpoint");
     List<EmployeeDto> list = this.receiveEmployee.findAll().stream()
         .map(EmployeeResponse::toDto)
         .toList();
@@ -55,6 +59,7 @@ class EmployeeController {
 
   @GetMapping("/{id}")
   public ResponseEntity<EmployeeDto> getEmployee(@PathVariable("id")String id){
+    log.debug("Request GET performed on '/employees/" + id +"' endpoint");
     UUID parsedId = UUIDParser.parse(id);
     EmployeeDto dto = this.receiveEmployee.find(new EmployeeId(parsedId)).toDto();
     return new ResponseEntity<>(dto, HttpStatus.OK);
@@ -63,6 +68,7 @@ class EmployeeController {
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<EmployeeId> addEmployee(@RequestBody @Valid AddEmployeeDto dto,
       HttpServletRequest request) throws Exception{
+    log.debug("Request POST performed on '/employees' endpoint");
     AddEmployeeTransaction addEmployeeTransaction = null;
 
 
