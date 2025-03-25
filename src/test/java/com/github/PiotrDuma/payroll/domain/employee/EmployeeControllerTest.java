@@ -58,18 +58,19 @@ class EmployeeControllerTest {
   private EmployeeController employeeController;
 
   @Test
-  void shouldReturnEmptyListOfEmployees() throws Exception{
+  void shouldReturnEmptyListOfEmployees() throws Exception {
     List<EmployeeResponse> list = new ArrayList<>();
     when(this.receiveEmployee.findAll()).thenReturn(list);
 
     ResultActions result = this.mockMvc.perform(get("/employees"));
 
     result.andExpect(status().isOk())
-        .andExpect(content().string("[]"));;
+        .andExpect(content().string("[]"));
+    ;
   }
 
   @Test
-  void shouldReturnListOfEmployees() throws Exception{
+  void shouldReturnListOfEmployees() throws Exception {
     EmployeeResponse employee = mock(EmployeeResponse.class);
     EmployeeDto dto = new EmployeeDto(UUID.randomUUID().toString(), "Name", "address");
 
@@ -86,24 +87,24 @@ class EmployeeControllerTest {
   }
 
   @Test
-  void getEmployeeShouldThrowWhenIdFormatIsInvalid() throws Exception{
+  void getEmployeeShouldThrowWhenIdFormatIsInvalid() throws Exception {
     ResultActions result = this.mockMvc.perform(get("/employees/1234"))
         .andExpect(status().isBadRequest());
   }
 
   @Test
-  void getEmployeeShouldThrowWhenEmployeeIsNotFound() throws Exception{
+  void getEmployeeShouldThrowWhenEmployeeIsNotFound() throws Exception {
     UUID id = UUID.randomUUID();
     String message = "employee not found";
     doThrow(new ResourceNotFoundException(message)).when(this.receiveEmployee).find(any());
 
-    ResultActions result = this.mockMvc.perform(get("/employees/"+id.toString()))
+    ResultActions result = this.mockMvc.perform(get("/employees/" + id.toString()))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.errorMessage", Matchers.containsString(message)));
   }
 
   @Test
-  void shouldReturnEmployeeById() throws Exception{
+  void shouldReturnEmployeeById() throws Exception {
     EmployeeResponse employee = mock(EmployeeResponse.class);
     UUID id = UUID.randomUUID();
     EmployeeDto dto = new EmployeeDto(id.toString(), "Name", "address");
@@ -111,7 +112,7 @@ class EmployeeControllerTest {
     when(this.receiveEmployee.find(any())).thenReturn(employee);
     when(employee.toDto()).thenReturn(dto);
 
-    ResultActions result = this.mockMvc.perform(get("/employees/"+id));
+    ResultActions result = this.mockMvc.perform(get("/employees/" + id));
 
     result.andExpect(status().isOk())
         .andExpect(jsonPath("$.id", Matchers.containsString(dto.getId())))
