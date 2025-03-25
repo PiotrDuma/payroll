@@ -13,12 +13,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
-import com.github.PiotrDuma.payroll.domain.employee.EmployeeController.CommissionedDto;
-import com.github.PiotrDuma.payroll.domain.employee.EmployeeController.HourlyDto;
-import com.github.PiotrDuma.payroll.domain.employee.EmployeeController.SalariedDto;
+import com.github.PiotrDuma.payroll.domain.employee.EmployeeController.AddEmployeeDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransaction;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransactionFactory;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeRequestDto.CommissionedDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeRequestDto.HourlyDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeRequestDto.SalariedDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
 import com.github.PiotrDuma.payroll.domain.employee.api.ReceiveEmployee;
 import com.github.PiotrDuma.payroll.exception.ResourceNotFoundException;
@@ -122,7 +123,8 @@ class EmployeeControllerTest {
   void postSalariedEmployeeShouldReturnId() throws Exception {
     UUID id = UUID.randomUUID();
     AddEmployeeTransaction transaction = mock(AddEmployeeTransaction.class);
-    SalariedDto dto = new SalariedDto("address", "name", 1234d);
+    SalariedDto salariedDto = new SalariedDto("address", "name", 1234d);
+    AddEmployeeDto dto = new AddEmployeeDto(salariedDto, null, null);
 
     when(this.employeeFactory.initSalariedEmployeeTransaction(any(), any(), any()))
         .thenReturn(transaction);
@@ -143,7 +145,8 @@ class EmployeeControllerTest {
   void postHourlyEmployeeShouldReturnId() throws Exception {
     UUID id = UUID.randomUUID();
     AddEmployeeTransaction transaction = mock(AddEmployeeTransaction.class);
-    HourlyDto dto = new HourlyDto("address", "name", 12.5d);
+    HourlyDto hourlyDto = new HourlyDto("address", "name", 12.5d);
+    AddEmployeeDto dto = new AddEmployeeDto(null, hourlyDto, null);
 
     when(this.employeeFactory.initHourlyEmployeeTransaction(any(), any(), any()))
         .thenReturn(transaction);
@@ -164,7 +167,8 @@ class EmployeeControllerTest {
   void postCommissionedEmployeeShouldReturnId() throws Exception {
     UUID id = UUID.randomUUID();
     AddEmployeeTransaction transaction = mock(AddEmployeeTransaction.class);
-    CommissionedDto dto = new CommissionedDto("address", "name", 500d, 12d);
+    CommissionedDto commissionedDto = new CommissionedDto("address", "name", 500d, 12d);
+    AddEmployeeDto dto = new AddEmployeeDto(null, null, commissionedDto);
 
     when(this.employeeFactory.initCommissionedEmployeeTransaction(any(), any(), any(), any()))
         .thenReturn(transaction);
