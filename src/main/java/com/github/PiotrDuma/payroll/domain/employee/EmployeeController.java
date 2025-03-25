@@ -21,6 +21,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +29,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/employees")
 class EmployeeController {
   private final ReceiveEmployee receiveEmployee;
   private final AddEmployeeTransactionFactory addEmployee;
@@ -42,7 +45,7 @@ class EmployeeController {
     this.addEmployee = addEmployee;
   }
 
-  @GetMapping("/employees")
+  @GetMapping
   public ResponseEntity<List<EmployeeDto>> getEmployees(){
     List<EmployeeDto> list = this.receiveEmployee.findAll().stream()
         .map(EmployeeResponse::toDto)
@@ -50,14 +53,14 @@ class EmployeeController {
     return new ResponseEntity<>(list, HttpStatus.OK);
   }
 
-  @GetMapping("/employees/{id}")
+  @GetMapping("/{id}")
   public ResponseEntity<EmployeeDto> getEmployee(@PathVariable("id")String id){
     UUID parsedId = UUIDParser.parse(id);
     EmployeeDto dto = this.receiveEmployee.find(new EmployeeId(parsedId)).toDto();
     return new ResponseEntity<>(dto, HttpStatus.OK);
   }
 
-  @PostMapping(value = "/employees", consumes = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<EmployeeId> addEmployee(@RequestBody @Valid AddEmployeeDto dto,
       HttpServletRequest request) throws Exception{
     AddEmployeeTransaction addEmployeeTransaction = null;
@@ -74,8 +77,10 @@ class EmployeeController {
     }
 
     EmployeeId id = addEmployeeTransaction.execute();
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Location", "/employees/" + id);
 
-    return new ResponseEntity<>(id, HttpStatus.CREATED);
+    return new ResponseEntity<>(id, headers, HttpStatus.CREATED);
   }
 
   private AddEmployeeTransaction getAddSalariedEmployeeTransaction(AddEmployeeDto dto) {
