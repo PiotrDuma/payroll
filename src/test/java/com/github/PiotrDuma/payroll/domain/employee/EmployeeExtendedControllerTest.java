@@ -1,11 +1,13 @@
 package com.github.PiotrDuma.payroll.domain.employee;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.github.PiotrDuma.payroll.common.address.Address;
@@ -24,6 +26,8 @@ import java.util.UUID;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springdoc.core.providers.ObjectMapperProvider;
@@ -53,8 +57,11 @@ class EmployeeExtendedControllerTest {
   @InjectMocks
   private EmployeeExtendedController controller;
 
+  @Captor
+  ArgumentCaptor<EmployeeId> idCaptor;
+
   @Test
-  void postSalariedEmployeeShouldReturnId() throws Exception {
+  void postSalariedEmployeeShouldExecuteService() throws Exception {
     String endpoint = "/employees/salaried";
     String uri = "/employees/" + ID;
 
@@ -77,7 +84,26 @@ class EmployeeExtendedControllerTest {
   }
 
   @Test
-  void postHourlyEmployeeShouldReturnId() throws Exception {
+  void putSalariedEmployeeShouldInvokeService() throws Exception {
+    String uri = "/employees/{id}/salaried";
+    ArgumentCaptor<Salary> salaryCaptor = ArgumentCaptor.forClass(Salary.class);
+
+    ChangeEmployeeTransaction transaction = mock(ChangeSalariedClassificationTransaction.class);
+
+    ResultActions result = this.mockMvc.perform(put(uri, ID)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(ObjectMapperProvider.createJson().writeValueAsString(getSalariedDto())))
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+    verify(this.changeEmployeeService, times(1))
+        .changeSalariedClassificationTransaction(idCaptor.capture(), salaryCaptor.capture());
+
+    assertEquals(idCaptor.getValue().getId().toString(), ID.toString());
+    assertEquals(salaryCaptor.getValue(), getSalariedDto().salary());
+  }
+
+  @Test
+  void postHourlyEmployeeShouldExecuteService() throws Exception {
     String endpoint = "/employees/hourly";
     String uri = "/employees/" + ID;
 
@@ -100,7 +126,26 @@ class EmployeeExtendedControllerTest {
   }
 
   @Test
-  void postCommissionedEmployeeShouldReturnId() throws Exception {
+  void putHourlyEmployeeShouldInvokeService() throws Exception {
+    String uri = "/employees/{id}/hourly";
+    ArgumentCaptor<HourlyRate> rateCaptor = ArgumentCaptor.forClass(HourlyRate.class);
+
+    ChangeEmployeeTransaction transaction = mock(ChangeHourlyClassificationTransaction.class);
+
+    ResultActions result = this.mockMvc.perform(put(uri, ID)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(ObjectMapperProvider.createJson().writeValueAsString(getHourlyDto())))
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+    verify(this.changeEmployeeService, times(1))
+        .changeHourlyClassificationTransaction(idCaptor.capture(), rateCaptor.capture());
+
+    assertEquals(idCaptor.getValue().getId().toString(), ID.toString());
+    assertEquals(rateCaptor.getValue(), getHourlyDto().hourlyRate());
+  }
+
+  @Test
+  void postCommissionedEmployeeShouldExecuteService() throws Exception {
     String endpoint = "/employees/commissioned";
     String uri = "/employees/" + ID;
 
@@ -120,6 +165,28 @@ class EmployeeExtendedControllerTest {
     result.andExpect(status().isCreated())
         .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.containsString(ID.toString())))
         .andExpect(MockMvcResultMatchers.header().stringValues("Location", uri));
+  }
+
+  @Test
+  void putCommissionedEmployeeShouldInvokeService() throws Exception {
+    String uri = "/employees/{id}/commissioned";
+    ArgumentCaptor<Salary> salaryCaptor = ArgumentCaptor.forClass(Salary.class);
+    ArgumentCaptor<CommissionRate> rateCaptor = ArgumentCaptor.forClass(CommissionRate.class);
+
+    ChangeEmployeeTransaction transaction = mock(ChangeCommissionedClassificationTransaction.class);
+
+    ResultActions result = this.mockMvc.perform(put(uri, ID)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(ObjectMapperProvider.createJson().writeValueAsString(getCommissionedDto())))
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+    verify(this.changeEmployeeService, times(1))
+        .changeCommissionedClassificationTransaction(idCaptor.capture(),
+            salaryCaptor.capture(), rateCaptor.capture());
+
+    assertEquals(idCaptor.getValue().getId().toString(), ID.toString());
+    assertEquals(salaryCaptor.getValue(), getCommissionedDto().salary());
+    assertEquals(rateCaptor.getValue(), getCommissionedDto().commissionedRate());
   }
 
   private CommissionedDto getCommissionedDto(){
