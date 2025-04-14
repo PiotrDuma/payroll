@@ -258,6 +258,46 @@ class EmployeeExtendedControllerTest {
     assertEquals(idCaptor.getValue().getId().toString(), ID.toString());
   }
 
+  @Test
+  void putAddressShouldInvokeChangeAddressService() throws Exception {
+    String uri = "/employees/{id}/address";
+    Address address = new Address("address");
+    ArgumentCaptor<Address> addressCaptor = ArgumentCaptor.forClass(Address.class);
+
+    ChangeEmployeeTransaction transaction = mock(ChangeAddressTransaction.class);
+
+    ResultActions result = this.mockMvc.perform(put(uri, ID)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(ObjectMapperProvider.createJson().writeValueAsString(address)))
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+    verify(this.changeEmployeeService, times(1))
+        .changeAddressTransaction(idCaptor.capture(), addressCaptor.capture());
+
+    assertEquals(idCaptor.getValue().getId().toString(), ID.toString());
+    assertEquals(addressCaptor.getValue(), address);
+  }
+
+  @Test
+  void putNameShouldInvokeChangeNameService() throws Exception {
+    String uri = "/employees/{id}/name";
+    EmployeeName name = new EmployeeName("name");
+    ArgumentCaptor<EmployeeName> nameCaptor = ArgumentCaptor.forClass(EmployeeName.class);
+
+    ChangeEmployeeTransaction transaction = mock(ChangeNameTransaction.class);
+
+    ResultActions result = this.mockMvc.perform(put(uri, ID)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(ObjectMapperProvider.createJson().writeValueAsString(name)))
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+    verify(this.changeEmployeeService, times(1))
+        .changeNameTransaction(idCaptor.capture(), nameCaptor.capture());
+
+    assertEquals(idCaptor.getValue().getId().toString(), ID.toString());
+    assertEquals(nameCaptor.getValue(), name);
+  }
+
   private CommissionedDto getCommissionedDto(){
     return new CommissionedDto(new Address("address"),
         new EmployeeName("name"),

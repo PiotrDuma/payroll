@@ -1,14 +1,15 @@
 package com.github.PiotrDuma.payroll.domain.employee;
 
+import com.github.PiotrDuma.payroll.common.address.Address;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransaction;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransactionFactory;
 import com.github.PiotrDuma.payroll.domain.employee.api.ChangeEmployeeService;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeName;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.CommissionedDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.HourlyDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.SalariedDto;
-import com.github.PiotrDuma.payroll.exception.InvalidArgumentException;
 import com.github.PiotrDuma.payroll.tools.UUIDParser;
 import jakarta.validation.Valid;
 import java.util.UUID;
@@ -35,6 +36,28 @@ class EmployeeExtendedController {
       ChangeEmployeeService changeEmployeeService) {
     this.addEmployee = addEmployee;
     this.changeEmployeeService = changeEmployeeService;
+  }
+
+  @PutMapping("/employees/{id}/address")
+  public ResponseEntity<EmployeeId> changeEmployeeAddress(@PathVariable("id") UUID id,
+      @RequestBody @Valid Address address){
+    log.debug(String.format("Request PUT performed on '/employees/%s/address' endpoint", id));
+
+    UUID uuid = UUIDParser.parse(id.toString());
+
+    this.changeEmployeeService.changeAddressTransaction(new EmployeeId(uuid), address);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  @PutMapping("/employees/{id}/name")
+  public ResponseEntity<EmployeeId> changeEmployeeName(@PathVariable("id") UUID id,
+      @RequestBody @Valid EmployeeName name){
+    log.debug(String.format("Request PUT performed on '/employees/%s/name' endpoint", id));
+
+    UUID uuid = UUIDParser.parse(id.toString());
+
+    this.changeEmployeeService.changeNameTransaction(new EmployeeId(uuid), name);
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
   @PostMapping("/employees/salaried")
