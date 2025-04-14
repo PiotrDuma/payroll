@@ -19,6 +19,9 @@ import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransaction;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransactionFactory;
 import com.github.PiotrDuma.payroll.domain.employee.api.ChangeEmployeeService;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeName;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.AddCommissionedDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.AddHourlyDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.AddSalariedDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.CommissionedDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.DirectPaymentMethodDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.HourlyDto;
@@ -77,7 +80,7 @@ class EmployeeExtendedControllerTest {
 
     ResultActions result = this.mockMvc.perform(post(endpoint)
         .contentType(MediaType.APPLICATION_JSON)
-        .content(ObjectMapperProvider.createJson().writeValueAsString(getSalariedDto())));
+        .content(ObjectMapperProvider.createJson().writeValueAsString(getAddSalariedDto())));
 
     verify(this.addEmployee, times(1)).initSalariedEmployeeTransaction(
         any(), any(), any());
@@ -102,8 +105,8 @@ class EmployeeExtendedControllerTest {
     verify(this.changeEmployeeService, times(1))
         .changeSalariedClassificationTransaction(idCaptor.capture(), salaryCaptor.capture());
 
-    assertEquals(idCaptor.getValue().getId().toString(), ID.toString());
-    assertEquals(salaryCaptor.getValue(), getSalariedDto().salary());
+    assertEquals(ID.toString(), idCaptor.getValue().getId().toString());
+    assertEquals(getSalariedDto().salary(), salaryCaptor.getValue());
   }
 
   @Test
@@ -119,7 +122,7 @@ class EmployeeExtendedControllerTest {
 
     ResultActions result = this.mockMvc.perform(post(endpoint)
         .contentType(MediaType.APPLICATION_JSON)
-        .content(ObjectMapperProvider.createJson().writeValueAsString(getHourlyDto())));
+        .content(ObjectMapperProvider.createJson().writeValueAsString(getAddHourlyDto())));
 
     verify(this.addEmployee, times(1)).initHourlyEmployeeTransaction(
         any(), any(), any());
@@ -132,6 +135,7 @@ class EmployeeExtendedControllerTest {
   @Test
   void putHourlyEmployeeShouldInvokeService() throws Exception {
     String uri = "/employees/{id}/hourly";
+
     ArgumentCaptor<HourlyRate> rateCaptor = ArgumentCaptor.forClass(HourlyRate.class);
 
     ChangeEmployeeTransaction transaction = mock(ChangeHourlyClassificationTransaction.class);
@@ -144,8 +148,8 @@ class EmployeeExtendedControllerTest {
     verify(this.changeEmployeeService, times(1))
         .changeHourlyClassificationTransaction(idCaptor.capture(), rateCaptor.capture());
 
-    assertEquals(idCaptor.getValue().getId().toString(), ID.toString());
-    assertEquals(rateCaptor.getValue(), getHourlyDto().hourlyRate());
+    assertEquals(ID.toString(), idCaptor.getValue().getId().toString());
+    assertEquals(getHourlyDto().hourlyRate(), rateCaptor.getValue());
   }
 
   @Test
@@ -161,7 +165,7 @@ class EmployeeExtendedControllerTest {
 
     ResultActions result = this.mockMvc.perform(post(endpoint)
         .contentType(MediaType.APPLICATION_JSON)
-        .content(ObjectMapperProvider.createJson().writeValueAsString(getCommissionedDto())));
+        .content(ObjectMapperProvider.createJson().writeValueAsString(getAddCommissionedDto())));
 
     verify(this.addEmployee, times(1)).initCommissionedEmployeeTransaction(
         any(), any(), any(), any());
@@ -188,9 +192,9 @@ class EmployeeExtendedControllerTest {
         .changeCommissionedClassificationTransaction(idCaptor.capture(),
             salaryCaptor.capture(), rateCaptor.capture());
 
-    assertEquals(idCaptor.getValue().getId().toString(), ID.toString());
-    assertEquals(salaryCaptor.getValue(), getCommissionedDto().salary());
-    assertEquals(rateCaptor.getValue(), getCommissionedDto().commissionedRate());
+    assertEquals(ID.toString(), idCaptor.getValue().getId().toString());
+    assertEquals(getCommissionedDto().salary(), salaryCaptor.getValue());
+    assertEquals(getCommissionedDto().commissionedRate(), rateCaptor.getValue());
   }
 
   @Test
@@ -215,9 +219,9 @@ class EmployeeExtendedControllerTest {
         .changeDirectPaymentMethodTransaction(idCaptor.capture(),
             bankCaptor.capture(), accountCaptor.capture());
 
-    assertEquals(idCaptor.getValue().getId().toString(), ID.toString());
-    assertEquals(bankCaptor.getValue(), bank);
-    assertEquals(accountCaptor.getValue(), account);
+    assertEquals(ID.toString(), idCaptor.getValue().getId().toString());
+    assertEquals(bank, bankCaptor.getValue());
+    assertEquals(account, accountCaptor.getValue());
   }
 
   @Test
@@ -237,8 +241,8 @@ class EmployeeExtendedControllerTest {
     verify(this.changeEmployeeService, times(1))
         .changeMailPaymentMethodTransaction(idCaptor.capture(), addressCaptor.capture());
 
-    assertEquals(idCaptor.getValue().getId().toString(), ID.toString());
-    assertEquals(addressCaptor.getValue(), address);
+    assertEquals(ID.toString(), idCaptor.getValue().getId().toString());
+    assertEquals(address, addressCaptor.getValue());
   }
 
   @Test
@@ -255,7 +259,7 @@ class EmployeeExtendedControllerTest {
     verify(this.changeEmployeeService, times(1))
         .changeHoldPaymentMethodTransaction(idCaptor.capture());
 
-    assertEquals(idCaptor.getValue().getId().toString(), ID.toString());
+    assertEquals(ID.toString(), idCaptor.getValue().getId().toString());
   }
 
   @Test
@@ -274,8 +278,8 @@ class EmployeeExtendedControllerTest {
     verify(this.changeEmployeeService, times(1))
         .changeAddressTransaction(idCaptor.capture(), addressCaptor.capture());
 
-    assertEquals(idCaptor.getValue().getId().toString(), ID.toString());
-    assertEquals(addressCaptor.getValue(), address);
+    assertEquals(ID.toString(), idCaptor.getValue().getId().toString());
+    assertEquals(address, addressCaptor.getValue());
   }
 
   @Test
@@ -294,26 +298,41 @@ class EmployeeExtendedControllerTest {
     verify(this.changeEmployeeService, times(1))
         .changeNameTransaction(idCaptor.capture(), nameCaptor.capture());
 
-    assertEquals(idCaptor.getValue().getId().toString(), ID.toString());
-    assertEquals(nameCaptor.getValue(), name);
+    assertEquals(ID.toString(), idCaptor.getValue().getId().toString());
+    assertEquals(name, nameCaptor.getValue());
+  }
+
+  private AddCommissionedDto getAddCommissionedDto(){
+    return new AddCommissionedDto(
+        new EmployeeName("name"),
+        new Address("address"),
+        getCommissionedDto());
   }
 
   private CommissionedDto getCommissionedDto(){
-    return new CommissionedDto(new Address("address"),
+    return new CommissionedDto(new Salary(1234d), new CommissionRate(12.5d));
+  }
+
+  private AddHourlyDto getAddHourlyDto(){
+    return new AddHourlyDto(
         new EmployeeName("name"),
-        new Salary(500d),
-        new CommissionRate(12d));
+        new Address("address"),
+        getHourlyDto()
+    );
   }
 
   private HourlyDto getHourlyDto(){
-    return new HourlyDto(new Address("address"),
-        new EmployeeName("name"),
-        new HourlyRate(12.5d));
+    return new HourlyDto(new HourlyRate(12.5d));
   }
 
-  private SalariedDto getSalariedDto() {
-    return new SalariedDto(new Address("address"),
+  private AddSalariedDto getAddSalariedDto() {
+    return new AddSalariedDto(
         new EmployeeName("name"),
-        new Salary(1234d));
+        new Address("address"),
+        getSalariedDto());
+  }
+
+  private SalariedDto getSalariedDto(){
+    return new SalariedDto(new Salary(1234d));
   }
 }

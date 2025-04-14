@@ -5,9 +5,9 @@ import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransaction;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransactionFactory;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeDto;
-import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.CommissionedDto;
-import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.HourlyDto;
-import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.SalariedDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.AddCommissionedDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.AddHourlyDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.AddSalariedDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.ReceiveEmployee;
 import com.github.PiotrDuma.payroll.exception.InvalidArgumentException;
 import com.github.PiotrDuma.payroll.tools.UUIDParser;
@@ -54,7 +54,7 @@ class EmployeeController {
 
   @GetMapping("/{id}")
   public ResponseEntity<EmployeeDto> getEmployee(@PathVariable("id") String id){
-    log.debug("Request GET performed on '/employees/" + id +"' endpoint");
+    log.debug(String.format("Request GET performed on '/employees/%s' endpoint", id));
     UUID parsedId = UUIDParser.parse(id);
     EmployeeDto dto = this.receiveEmployee.find(new EmployeeId(parsedId)).toDto();
     return new ResponseEntity<>(dto, HttpStatus.OK);
@@ -85,7 +85,7 @@ class EmployeeController {
   }
 
 //  @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-//  public ResponseEntity<EmployeeId> editEmployee(@RequestBody @Valid AddEmployeeDto dto,
+//  public ResponseEntity<EmployeeId> editEmployee(@RequestBody @Valid ChangeEmployeeDto dto,
 //      HttpServletRequest request) throws Exception{
 //    log.debug("Request PUT performed on '/employees' endpoint");
 //    AddEmployeeTransaction addEmployeeTransaction = null;
@@ -107,30 +107,23 @@ class EmployeeController {
 //    return new ResponseEntity<>(id, headers, HttpStatus.CREATED);
 //  }
 
-  private AddEmployeeTransaction getAddCommissionedEmployeeTransaction(CommissionedDto dto) {
+  private AddEmployeeTransaction getAddCommissionedEmployeeTransaction(AddCommissionedDto dto) {
     return this.addEmployee.initCommissionedEmployeeTransaction(
-        dto.address(), dto.name(), dto.salary(), dto.commissionedRate());
+        dto.address(), dto.name(), dto.classification().salary(), dto.classification().commissionedRate());
   }
 
-  private AddEmployeeTransaction getAddHourlyEmployeeTransaction(HourlyDto dto) {
+  private AddEmployeeTransaction getAddHourlyEmployeeTransaction(AddHourlyDto dto) {
     return this.addEmployee.initHourlyEmployeeTransaction(
-        dto.address(), dto.name(), dto.hourlyRate());
+        dto.address(), dto.name(), dto.classification().hourlyRate());
   }
 
-  private AddEmployeeTransaction getAddSalariedEmployeeTransaction(SalariedDto dto){
+  private AddEmployeeTransaction getAddSalariedEmployeeTransaction(AddSalariedDto dto){
     return this.addEmployee.initSalariedEmployeeTransaction(
-        dto.address(), dto.name(), dto.salary());
+        dto.address(), dto.name(), dto.classification().salary());
   }
 
-  public record AddEmployeeDto(@Valid SalariedDto salariedDto,
-                               @Valid HourlyDto hourlyDto,
-                               @Valid CommissionedDto commissionedDto){
-    public AddEmployeeDto (SalariedDto salariedDto,
-                        HourlyDto hourlyDto,
-                        CommissionedDto commissionedDto){
-      this.salariedDto = salariedDto;
-      this.hourlyDto = hourlyDto;
-      this.commissionedDto = commissionedDto;
-    }
+  public record AddEmployeeDto(@Valid AddSalariedDto salariedDto,
+                               @Valid AddHourlyDto hourlyDto,
+                               @Valid AddCommissionedDto commissionedDto){
   }
 }

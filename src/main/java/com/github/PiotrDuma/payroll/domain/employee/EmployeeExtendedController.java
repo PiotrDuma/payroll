@@ -1,12 +1,16 @@
 package com.github.PiotrDuma.payroll.domain.employee;
 
+import static com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.AddCommissionedDto;
+import static com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.AddHourlyDto;
+import static com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.AddSalariedDto;
+import static com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.PaymentMethodDto;
+
 import com.github.PiotrDuma.payroll.common.address.Address;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransaction;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransactionFactory;
 import com.github.PiotrDuma.payroll.domain.employee.api.ChangeEmployeeService;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeName;
-import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.CommissionedDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.HourlyDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.SalariedDto;
@@ -61,7 +65,7 @@ class EmployeeExtendedController {
   }
 
   @PostMapping("/employees/salaried")
-  public ResponseEntity<EmployeeId> addEmployee(@RequestBody @Valid SalariedDto dto){
+  public ResponseEntity<EmployeeId> addEmployee(@RequestBody @Valid AddSalariedDto dto){
     log.debug("Request POST performed on '/employees/salaried' endpoint");
 
     EmployeeId id = getAddSalariedEmployeeTransaction(dto).execute();
@@ -82,7 +86,7 @@ class EmployeeExtendedController {
   }
 
   @PostMapping("/employees/hourly")
-  public ResponseEntity<EmployeeId> addEmployee(@RequestBody @Valid HourlyDto dto){
+  public ResponseEntity<EmployeeId> addEmployee(@RequestBody @Valid AddHourlyDto dto){
     log.debug("Request POST performed on '/employees/hourly' endpoint");
 
     EmployeeId id = getAddHourlyEmployeeTransaction(dto).execute();
@@ -103,7 +107,7 @@ class EmployeeExtendedController {
   }
 
   @PostMapping("/employees/commissioned")
-  public ResponseEntity<EmployeeId> addEmployee(@RequestBody @Valid CommissionedDto dto){
+  public ResponseEntity<EmployeeId> addEmployee(@RequestBody @Valid AddCommissionedDto dto){
     log.debug("Request POST performed on '/employees/salaried' endpoint");
 
     EmployeeId id = getAddCommissionedEmployeeTransaction(dto).execute();
@@ -126,7 +130,7 @@ class EmployeeExtendedController {
 
   @PutMapping("/employees/{id}/method")
   public ResponseEntity<EmployeeId> changePaymentMethod(@PathVariable("id") UUID id,
-      @RequestBody @Valid EmployeeRequestDto.PaymentMethodDto dto){
+      @RequestBody @Valid PaymentMethodDto dto){
     log.debug(String.format("Request PUT performed on '/employees/%s/commissioned' endpoint", id));
 
     UUID uuid = UUIDParser.parse(id.toString());
@@ -142,18 +146,18 @@ class EmployeeExtendedController {
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 
-  private AddEmployeeTransaction getAddCommissionedEmployeeTransaction(CommissionedDto dto) {
+  private AddEmployeeTransaction getAddCommissionedEmployeeTransaction(AddCommissionedDto dto) {
     return this.addEmployee.initCommissionedEmployeeTransaction(
-            dto.address(), dto.name(), dto.salary(), dto.commissionedRate());
+            dto.address(), dto.name(), dto.classification().salary(), dto.classification().commissionedRate());
   }
 
-  private AddEmployeeTransaction getAddHourlyEmployeeTransaction(HourlyDto dto) {
+  private AddEmployeeTransaction getAddHourlyEmployeeTransaction(AddHourlyDto dto) {
     return this.addEmployee.initHourlyEmployeeTransaction(
-        dto.address(), dto.name(), dto.hourlyRate());
+        dto.address(), dto.name(), dto.classification().hourlyRate());
   }
 
-  private AddEmployeeTransaction getAddSalariedEmployeeTransaction(SalariedDto dto){
+  private AddEmployeeTransaction getAddSalariedEmployeeTransaction(AddSalariedDto dto){
     return this.addEmployee.initSalariedEmployeeTransaction(
-        dto.address(), dto.name(), dto.salary());
+        dto.address(), dto.name(), dto.classification().salary());
   }
 }

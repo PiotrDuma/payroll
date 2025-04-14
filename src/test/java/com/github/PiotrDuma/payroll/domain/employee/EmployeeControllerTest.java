@@ -18,12 +18,15 @@ import com.github.PiotrDuma.payroll.common.salary.Salary;
 import com.github.PiotrDuma.payroll.domain.employee.EmployeeController.AddEmployeeDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransaction;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransactionFactory;
+import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeName;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.AddCommissionedDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.AddHourlyDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.AddSalariedDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.CommissionedDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.HourlyDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.SalariedDto;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.ReceiveEmployee;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyRate;
@@ -129,7 +132,7 @@ class EmployeeControllerTest {
   @Test
   void postSalariedEmployeeShouldReturnId() throws Exception {
     AddEmployeeTransaction transaction = mock(AddEmployeeTransaction.class);
-    AddEmployeeDto dto = new AddEmployeeDto(getSalariedDto(), null, null);
+    AddEmployeeDto dto = new AddEmployeeDto(getAddSalariedDto(), null, null);
 
     when(this.employeeFactory.initSalariedEmployeeTransaction(any(), any(), any()))
         .thenReturn(transaction);
@@ -149,7 +152,7 @@ class EmployeeControllerTest {
   @Test
   void postHourlyEmployeeShouldReturnId() throws Exception {
     AddEmployeeTransaction transaction = mock(AddEmployeeTransaction.class);
-    AddEmployeeDto dto = new AddEmployeeDto(null, getHourlyDto(), null);
+    AddEmployeeDto dto = new AddEmployeeDto(null, getAddHourlyDto(), null);
 
     when(this.employeeFactory.initHourlyEmployeeTransaction(any(), any(), any()))
         .thenReturn(transaction);
@@ -169,7 +172,7 @@ class EmployeeControllerTest {
   @Test
   void postCommissionedEmployeeShouldReturnId() throws Exception {
     AddEmployeeTransaction transaction = mock(AddEmployeeTransaction.class);
-    AddEmployeeDto dto = new AddEmployeeDto(null, null, getCommissionedDto());
+    AddEmployeeDto dto = new AddEmployeeDto(null, null, getAddCommissionedDto());
 
     when(this.employeeFactory.initCommissionedEmployeeTransaction(any(), any(), any(), any()))
         .thenReturn(transaction);
@@ -186,22 +189,33 @@ class EmployeeControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.containsString(ID.toString())));
   }
 
-  private CommissionedDto getCommissionedDto(){
-    return new CommissionedDto(new Address("address"),
+  private AddCommissionedDto getAddCommissionedDto(){
+    return new AddCommissionedDto(
         new EmployeeName("name"),
-        new Salary(500d),
-        new CommissionRate(12d));
+        new Address("address"),
+        new CommissionedDto(
+            new Salary(1234d),
+            new CommissionRate(12.5d)
+        )
+    );
   }
 
-  private HourlyDto getHourlyDto(){
-    return new HourlyDto(new Address("address"),
+  private AddHourlyDto getAddHourlyDto(){
+    return new AddHourlyDto(
         new EmployeeName("name"),
-        new HourlyRate(12.5d));
+        new Address("address"),
+        new HourlyDto(new HourlyRate(12.5d)
+        )
+    );
   }
 
-  private SalariedDto getSalariedDto() {
-    return new SalariedDto(new Address("address"),
+  private AddSalariedDto getAddSalariedDto() {
+    return new AddSalariedDto(
         new EmployeeName("name"),
-        new Salary(1234d));
+        new Address("address"),
+        new SalariedDto(
+            new Salary(1234d)
+        )
+    );
   }
 }
