@@ -111,10 +111,11 @@ class EmployeeExtendedController {
     if(dto.directMethod() !=null){
       this.changeEmployeeService.changeDirectPaymentMethodTransaction(
           new EmployeeId(uuid), dto.directMethod().bank(), dto.directMethod().account());
-    }else { //catch invalid json body request
-      throw new InvalidArgumentException("Invalid Employee payment method json body");
+    } else if (dto.mailMethod() != null) {
+      this.changeEmployeeService.changeMailPaymentMethodTransaction(new EmployeeId(uuid), dto.mailMethod());
+    } else {
+      this.changeEmployeeService.changeHoldPaymentMethodTransaction(new EmployeeId(uuid));
     }
-
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 

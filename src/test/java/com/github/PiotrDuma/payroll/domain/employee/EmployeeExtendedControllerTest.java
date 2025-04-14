@@ -19,7 +19,6 @@ import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransaction;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransactionFactory;
 import com.github.PiotrDuma.payroll.domain.employee.api.ChangeEmployeeService;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeName;
-import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.CommissionedDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.DirectPaymentMethodDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.HourlyDto;
@@ -219,6 +218,44 @@ class EmployeeExtendedControllerTest {
     assertEquals(idCaptor.getValue().getId().toString(), ID.toString());
     assertEquals(bankCaptor.getValue(), bank);
     assertEquals(accountCaptor.getValue(), account);
+  }
+
+  @Test
+  void putMailPaymentMethodShouldInvokeService() throws Exception {
+    String uri = "/employees/{id}/method";
+    Address address = new Address("address");
+    PaymentMethodDto dto = new PaymentMethodDto(null, address);
+    ArgumentCaptor<Address> addressCaptor = ArgumentCaptor.forClass(Address.class);
+
+    ChangeEmployeeTransaction transaction = mock(ChangeMailMethodTransaction.class);
+
+    ResultActions result = this.mockMvc.perform(put(uri, ID)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(ObjectMapperProvider.createJson().writeValueAsString(dto)))
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+    verify(this.changeEmployeeService, times(1))
+        .changeMailPaymentMethodTransaction(idCaptor.capture(), addressCaptor.capture());
+
+    assertEquals(idCaptor.getValue().getId().toString(), ID.toString());
+    assertEquals(addressCaptor.getValue(), address);
+  }
+
+  @Test
+  void putHoldPaymentMethodShouldInvokeService() throws Exception {
+    String uri = "/employees/{id}/method";
+    ChangeEmployeeTransaction transaction = mock(ChangeHoldMethodTransaction.class);
+    PaymentMethodDto dto = new PaymentMethodDto(null, null);
+
+    ResultActions result = this.mockMvc.perform(put(uri, ID)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(ObjectMapperProvider.createJson().writeValueAsString(dto)))
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+    verify(this.changeEmployeeService, times(1))
+        .changeHoldPaymentMethodTransaction(idCaptor.capture());
+
+    assertEquals(idCaptor.getValue().getId().toString(), ID.toString());
   }
 
   private CommissionedDto getCommissionedDto(){
