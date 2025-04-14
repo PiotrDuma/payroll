@@ -11,14 +11,19 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.github.PiotrDuma.payroll.common.address.Address;
+import com.github.PiotrDuma.payroll.common.bank.Bank;
+import com.github.PiotrDuma.payroll.common.bankAccount.BankAccount;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.common.salary.Salary;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransaction;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransactionFactory;
 import com.github.PiotrDuma.payroll.domain.employee.api.ChangeEmployeeService;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeName;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.CommissionedDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.DirectPaymentMethodDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.HourlyDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.PaymentMethodDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.SalariedDto;
 import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
 import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyRate;
@@ -187,6 +192,33 @@ class EmployeeExtendedControllerTest {
     assertEquals(idCaptor.getValue().getId().toString(), ID.toString());
     assertEquals(salaryCaptor.getValue(), getCommissionedDto().salary());
     assertEquals(rateCaptor.getValue(), getCommissionedDto().commissionedRate());
+  }
+
+  @Test
+  void putDirectPaymentMethodShouldInvokeService() throws Exception {
+    Bank bank = new Bank("bankname");
+    BankAccount account = new BankAccount("01234567890123456789012345");
+    String uri = "/employees/{id}/method";
+    PaymentMethodDto dto = new PaymentMethodDto(new DirectPaymentMethodDto(bank, account), null);
+
+
+    ArgumentCaptor<Bank> bankCaptor = ArgumentCaptor.forClass(Bank.class);
+    ArgumentCaptor<BankAccount> accountCaptor = ArgumentCaptor.forClass(BankAccount.class);
+
+    ChangeEmployeeTransaction transaction = mock(ChangeDirectMethodTransaction.class);
+
+    ResultActions result = this.mockMvc.perform(put(uri, ID)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(ObjectMapperProvider.createJson().writeValueAsString(dto)))
+        .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+    verify(this.changeEmployeeService, times(1))
+        .changeDirectPaymentMethodTransaction(idCaptor.capture(),
+            bankCaptor.capture(), accountCaptor.capture());
+
+    assertEquals(idCaptor.getValue().getId().toString(), ID.toString());
+    assertEquals(bankCaptor.getValue(), bank);
+    assertEquals(accountCaptor.getValue(), account);
   }
 
   private CommissionedDto getCommissionedDto(){

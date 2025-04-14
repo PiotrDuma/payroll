@@ -4,9 +4,11 @@ import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransaction;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransactionFactory;
 import com.github.PiotrDuma.payroll.domain.employee.api.ChangeEmployeeService;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.CommissionedDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.HourlyDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.SalariedDto;
+import com.github.PiotrDuma.payroll.exception.InvalidArgumentException;
 import com.github.PiotrDuma.payroll.tools.UUIDParser;
 import jakarta.validation.Valid;
 import java.util.UUID;
@@ -96,6 +98,23 @@ class EmployeeExtendedController {
 
     this.changeEmployeeService.changeCommissionedClassificationTransaction(new EmployeeId(uuid),
         dto.salary(), dto.commissionedRate());
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
+  @PutMapping("/employees/{id}/method")
+  public ResponseEntity<EmployeeId> changePaymentMethod(@PathVariable("id") UUID id,
+      @RequestBody @Valid EmployeeRequestDto.PaymentMethodDto dto){
+    log.debug(String.format("Request PUT performed on '/employees/%s/commissioned' endpoint", id));
+
+    UUID uuid = UUIDParser.parse(id.toString());
+
+    if(dto.directMethod() !=null){
+      this.changeEmployeeService.changeDirectPaymentMethodTransaction(
+          new EmployeeId(uuid), dto.directMethod().bank(), dto.directMethod().account());
+    }else { //catch invalid json body request
+      throw new InvalidArgumentException("Invalid Employee payment method json body");
+    }
+
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
 

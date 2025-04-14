@@ -16,7 +16,10 @@ public class BankAccount {
   @NotNull(message = NULL_VALUE)
   @Length(min = 26, max = 26, message = INVALID_FORMAT)
   @Pattern(regexp = "\\d+", message = NUMBERS_ONLY)
-  private final String number;
+  private String number;
+
+  public BankAccount() {
+  }
 
   public BankAccount(String number) {
     this.number = number;

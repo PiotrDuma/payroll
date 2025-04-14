@@ -27,4 +27,9 @@ public class EmployeeRequestDto {
   public record DirectPaymentMethodDto(@Valid Bank bank,
                                        @Valid BankAccount account){
   }
+
+  public record PaymentMethodDto(@Valid DirectPaymentMethodDto directMethod,
+                                 @Valid Address mailMethod){
+
+  }
 }
