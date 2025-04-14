@@ -2,7 +2,7 @@ package com.github.PiotrDuma.payroll.domain.employee;
 
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
-import com.github.PiotrDuma.payroll.domain.employee.api.ReceiveEmployee;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.ReceiveEmployee;
 import com.github.PiotrDuma.payroll.exception.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.List;

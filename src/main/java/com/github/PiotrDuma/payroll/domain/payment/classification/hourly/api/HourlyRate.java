@@ -14,7 +14,10 @@ public class HourlyRate{
 
   @NotNull(message = NULL_VALUE)
   @DecimalMin(value = "0.0", message = MINIMUM_VALUE)
-  private final BigDecimal hourlyRate;
+  private BigDecimal hourlyRate;
+
+  public HourlyRate() {
+  }
 
   public HourlyRate(BigDecimal hourlyRate) {
     this.hourlyRate = hourlyRate;

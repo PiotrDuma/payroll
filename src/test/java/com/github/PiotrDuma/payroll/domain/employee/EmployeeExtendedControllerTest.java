@@ -8,13 +8,18 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.github.PiotrDuma.payroll.common.address.Address;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
+import com.github.PiotrDuma.payroll.common.salary.Salary;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransaction;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransactionFactory;
 import com.github.PiotrDuma.payroll.domain.employee.api.ChangeEmployeeService;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeRequestDto.CommissionedDto;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeRequestDto.HourlyDto;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeRequestDto.SalariedDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeName;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.CommissionedDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.HourlyDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.SalariedDto;
+import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
+import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyRate;
 import java.util.UUID;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -35,6 +40,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 class EmployeeExtendedControllerTest {
+  private static final UUID ID = UUID.randomUUID();
   @Autowired
   private MockMvc mockMvc;
 
@@ -50,75 +56,88 @@ class EmployeeExtendedControllerTest {
   @Test
   void postSalariedEmployeeShouldReturnId() throws Exception {
     String endpoint = "/employees/salaried";
-    UUID id = UUID.randomUUID();
-    String url = "/employees/" + id;
+    String uri = "/employees/" + ID;
 
     AddEmployeeTransaction transaction = mock(AddEmployeeTransaction.class);
-    SalariedDto dto = new SalariedDto("address", "name", 1234d);
 
     when(this.addEmployee.initSalariedEmployeeTransaction(any(), any(), any()))
         .thenReturn(transaction);
-    when(transaction.execute()).thenReturn(new EmployeeId(id));
+    when(transaction.execute()).thenReturn(new EmployeeId(ID));
 
     ResultActions result = this.mockMvc.perform(post(endpoint)
         .contentType(MediaType.APPLICATION_JSON)
-        .content(ObjectMapperProvider.createJson().writeValueAsString(dto)));
+        .content(ObjectMapperProvider.createJson().writeValueAsString(getSalariedDto())));
 
     verify(this.addEmployee, times(1)).initSalariedEmployeeTransaction(
         any(), any(), any());
 
     result.andExpect(status().isCreated())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.containsString(id.toString())))
-        .andExpect(MockMvcResultMatchers.header().stringValues("Location", url));
+        .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.containsString(ID.toString())))
+        .andExpect(MockMvcResultMatchers.header().stringValues("Location", uri));
   }
 
   @Test
   void postHourlyEmployeeShouldReturnId() throws Exception {
     String endpoint = "/employees/hourly";
-    UUID id = UUID.randomUUID();
-    String url = "/employees/" + id;
+    String uri = "/employees/" + ID;
 
     AddEmployeeTransaction transaction = mock(AddEmployeeTransaction.class);
-    HourlyDto dto = new HourlyDto("address", "name", 12.5d);
 
     when(this.addEmployee.initHourlyEmployeeTransaction(any(), any(), any()))
         .thenReturn(transaction);
-    when(transaction.execute()).thenReturn(new EmployeeId(id));
+    when(transaction.execute()).thenReturn(new EmployeeId(ID));
 
     ResultActions result = this.mockMvc.perform(post(endpoint)
         .contentType(MediaType.APPLICATION_JSON)
-        .content(ObjectMapperProvider.createJson().writeValueAsString(dto)));
+        .content(ObjectMapperProvider.createJson().writeValueAsString(getHourlyDto())));
 
     verify(this.addEmployee, times(1)).initHourlyEmployeeTransaction(
         any(), any(), any());
 
     result.andExpect(status().isCreated())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.containsString(id.toString())))
-        .andExpect(MockMvcResultMatchers.header().stringValues("Location", url));
+        .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.containsString(ID.toString())))
+        .andExpect(MockMvcResultMatchers.header().stringValues("Location", uri));
   }
 
   @Test
   void postCommissionedEmployeeShouldReturnId() throws Exception {
     String endpoint = "/employees/commissioned";
-    UUID id = UUID.randomUUID();
-    String url = "/employees/" + id;
+    String uri = "/employees/" + ID;
 
     AddEmployeeTransaction transaction = mock(AddEmployeeTransaction.class);
-    CommissionedDto dto = new CommissionedDto("address", "name", 500d, 12d);
 
     when(this.addEmployee.initCommissionedEmployeeTransaction(any(), any(), any(), any()))
         .thenReturn(transaction);
-    when(transaction.execute()).thenReturn(new EmployeeId(id));
+    when(transaction.execute()).thenReturn(new EmployeeId(ID));
 
     ResultActions result = this.mockMvc.perform(post(endpoint)
         .contentType(MediaType.APPLICATION_JSON)
-        .content(ObjectMapperProvider.createJson().writeValueAsString(dto)));
+        .content(ObjectMapperProvider.createJson().writeValueAsString(getCommissionedDto())));
 
     verify(this.addEmployee, times(1)).initCommissionedEmployeeTransaction(
         any(), any(), any(), any());
 
     result.andExpect(status().isCreated())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.containsString(id.toString())))
-        .andExpect(MockMvcResultMatchers.header().stringValues("Location", url));
+        .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.containsString(ID.toString())))
+        .andExpect(MockMvcResultMatchers.header().stringValues("Location", uri));
+  }
+
+  private CommissionedDto getCommissionedDto(){
+    return new CommissionedDto(new Address("address"),
+        new EmployeeName("name"),
+        new Salary(500d),
+        new CommissionRate(12d));
+  }
+
+  private HourlyDto getHourlyDto(){
+    return new HourlyDto(new Address("address"),
+        new EmployeeName("name"),
+        new HourlyRate(12.5d));
+  }
+
+  private SalariedDto getSalariedDto() {
+    return new SalariedDto(new Address("address"),
+        new EmployeeName("name"),
+        new Salary(1234d));
   }
 }

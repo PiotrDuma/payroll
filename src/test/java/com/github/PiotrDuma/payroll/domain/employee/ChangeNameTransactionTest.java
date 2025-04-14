@@ -8,7 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.github.PiotrDuma.payroll.common.address.Address;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeName;
 import com.github.PiotrDuma.payroll.exception.ResourceNotFoundException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;

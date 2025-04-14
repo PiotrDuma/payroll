@@ -3,7 +3,7 @@ package com.github.PiotrDuma.payroll.services.payday;
 import com.github.PiotrDuma.payroll.common.amount.Amount;
 import com.github.PiotrDuma.payroll.common.PaymentPeriod;
 import com.github.PiotrDuma.payroll.common.salary.Salary;
-import com.github.PiotrDuma.payroll.domain.employee.api.ReceiveEmployee;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.ReceiveEmployee;
 import com.github.PiotrDuma.payroll.domain.union.api.UnionAffiliationService;
 import com.github.PiotrDuma.payroll.services.payday.api.PaydayTransaction;
 import java.time.Clock;

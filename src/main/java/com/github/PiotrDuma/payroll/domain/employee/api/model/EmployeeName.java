@@ -1,7 +1,13 @@
-package com.github.PiotrDuma.payroll.domain.employee.api;
+package com.github.PiotrDuma.payroll.domain.employee.api.model;
+
+import jakarta.validation.constraints.NotNull;
 
 public class EmployeeName {
-  private final String name;
+  @NotNull(message = "Name cannot empty")
+  private String name;
+
+  public EmployeeName() {
+  }
 
   public EmployeeName(String name) {
     this.name = name;

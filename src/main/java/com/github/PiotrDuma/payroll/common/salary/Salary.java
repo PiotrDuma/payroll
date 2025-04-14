@@ -10,7 +10,10 @@ public class Salary {
 
   @NotNull(message = NULL_VALUE)
   @DecimalMin(value = "0.0", message = MIN_VALUE)
-  private final BigDecimal salary;
+  private BigDecimal salary;
+
+  public Salary() {
+  }
 
   public Salary(BigDecimal salary) {
     this.salary = salary;

@@ -1,6 +1,7 @@
-package com.github.PiotrDuma.payroll.domain.employee.api;
+package com.github.PiotrDuma.payroll.domain.employee.api.model;
 
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
+import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
 import com.github.PiotrDuma.payroll.exception.ResourceNotFoundException;
 import java.util.List;
 

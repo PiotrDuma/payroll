@@ -1,7 +1,13 @@
 package com.github.PiotrDuma.payroll.common.address;
 
+import jakarta.validation.constraints.NotNull;
+
 public class Address {
+  @NotNull(message = "Address cannot empty")
   private String address;
+
+  public Address() {
+  }
 
   public Address(String address) {
     this.address = address;

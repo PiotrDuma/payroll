@@ -2,7 +2,7 @@ package com.github.PiotrDuma.payroll.domain.employee;
 
 import com.github.PiotrDuma.payroll.common.address.Address;
 import com.github.PiotrDuma.payroll.common.salary.Salary;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeName;
 import com.github.PiotrDuma.payroll.domain.payment.classification.PaymentClassification;
 import com.github.PiotrDuma.payroll.domain.payment.classification.salary.api.SalariedClassification;
 import com.github.PiotrDuma.payroll.domain.payment.method.api.PaymentMethodFactory;

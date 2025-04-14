@@ -1,4 +1,4 @@
-package com.github.PiotrDuma.payroll.domain.employee.api;
+package com.github.PiotrDuma.payroll.domain.employee.api.model;
 
 public class EmployeeDto {
   private String id;

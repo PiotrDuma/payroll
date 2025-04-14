@@ -1,7 +1,7 @@
 package com.github.PiotrDuma.payroll.domain.employee;
 
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeName;
 import org.springframework.beans.factory.annotation.Autowired;
 
 class ChangeNameTransaction extends AbstractChangeEmployeeTransaction

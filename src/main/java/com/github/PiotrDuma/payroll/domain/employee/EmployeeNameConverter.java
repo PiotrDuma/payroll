@@ -1,6 +1,6 @@
 package com.github.PiotrDuma.payroll.domain.employee;
 
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeName;
 import jakarta.persistence.AttributeConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

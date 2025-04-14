@@ -1,19 +1,14 @@
 package com.github.PiotrDuma.payroll.domain.employee;
 
-import com.github.PiotrDuma.payroll.common.address.Address;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
-import com.github.PiotrDuma.payroll.common.salary.Salary;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransaction;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransactionFactory;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeDto;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeRequestDto.CommissionedDto;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeRequestDto.HourlyDto;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeRequestDto.SalariedDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
-import com.github.PiotrDuma.payroll.domain.employee.api.ReceiveEmployee;
-import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
-import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyRate;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.CommissionedDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.HourlyDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.SalariedDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.ReceiveEmployee;
 import com.github.PiotrDuma.payroll.exception.InvalidArgumentException;
 import com.github.PiotrDuma.payroll.tools.UUIDParser;
 import jakarta.servlet.http.HttpServletRequest;
@@ -58,7 +53,7 @@ class EmployeeController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<EmployeeDto> getEmployee(@PathVariable("id")String id){
+  public ResponseEntity<EmployeeDto> getEmployee(@PathVariable("id") String id){
     log.debug("Request GET performed on '/employees/" + id +"' endpoint");
     UUID parsedId = UUIDParser.parse(id);
     EmployeeDto dto = this.receiveEmployee.find(new EmployeeId(parsedId)).toDto();
@@ -73,11 +68,11 @@ class EmployeeController {
 
 
     if(dto.commissionedDto() != null){
-      addEmployeeTransaction = getAddCommissionedEmplyeeTransaction(dto);
+      addEmployeeTransaction = getAddCommissionedEmployeeTransaction(dto.commissionedDto());
     } else if (dto.hourlyDto() != null) {
-      addEmployeeTransaction = getAddHourlyEmployeeTransaction(dto);
+      addEmployeeTransaction = getAddHourlyEmployeeTransaction(dto.hourlyDto());
     } else if (dto.salariedDto() != null) {
-      addEmployeeTransaction = getAddSalariedEmployeeTransaction(dto);
+      addEmployeeTransaction = getAddSalariedEmployeeTransaction(dto.salariedDto());
     } else { //catch invalid json body request
       throw new InvalidArgumentException("Invalid Employee json body");
     }
@@ -89,29 +84,42 @@ class EmployeeController {
     return new ResponseEntity<>(id, headers, HttpStatus.CREATED);
   }
 
-  private AddEmployeeTransaction getAddSalariedEmployeeTransaction(AddEmployeeDto dto) {
-    SalariedDto converted = dto.salariedDto();
-    return this.addEmployee.initSalariedEmployeeTransaction(
-        new Address(converted.address()),
-        new EmployeeName(converted.name()),
-        new Salary(converted.salary()));
-  }
+//  @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+//  public ResponseEntity<EmployeeId> editEmployee(@RequestBody @Valid AddEmployeeDto dto,
+//      HttpServletRequest request) throws Exception{
+//    log.debug("Request PUT performed on '/employees' endpoint");
+//    AddEmployeeTransaction addEmployeeTransaction = null;
+//
+//    if(dto.commissionedDto() != null){
+//      addEmployeeTransaction = getAddCommissionedEmployeeTransaction(dto.commissionedDto());
+//    } else if (dto.hourlyDto() != null) {
+//      addEmployeeTransaction = getAddHourlyEmployeeTransaction(dto.hourlyDto());
+//    } else if (dto.salariedDto() != null) {
+//      addEmployeeTransaction = getAddSalariedEmployeeTransaction(dto.salariedDto());
+//    } else { //catch invalid json body request
+//      throw new InvalidArgumentException("Invalid Employee json body");
+//    }
+//
+//    EmployeeId id = addEmployeeTransaction.execute();
+//    HttpHeaders headers = new HttpHeaders();
+//    headers.add("Location", "/employees/" + id);
+//
+//    return new ResponseEntity<>(id, headers, HttpStatus.CREATED);
+//  }
 
-  private AddEmployeeTransaction getAddHourlyEmployeeTransaction(AddEmployeeDto dto) {
-    HourlyDto converted = dto.hourlyDto();
-    return this.addEmployee.initHourlyEmployeeTransaction(
-        new Address(converted.address()),
-        new EmployeeName(converted.name()),
-        new HourlyRate(converted.hourlyRate()));
-  }
-
-  private AddEmployeeTransaction getAddCommissionedEmplyeeTransaction(AddEmployeeDto dto) {
-    CommissionedDto converted = dto.commissionedDto();
+  private AddEmployeeTransaction getAddCommissionedEmployeeTransaction(CommissionedDto dto) {
     return this.addEmployee.initCommissionedEmployeeTransaction(
-        new Address(converted.address()),
-        new EmployeeName(converted.name()),
-        new Salary(converted.salary()),
-        new CommissionRate(converted.commissionedRate()));
+        dto.address(), dto.name(), dto.salary(), dto.commissionedRate());
+  }
+
+  private AddEmployeeTransaction getAddHourlyEmployeeTransaction(HourlyDto dto) {
+    return this.addEmployee.initHourlyEmployeeTransaction(
+        dto.address(), dto.name(), dto.hourlyRate());
+  }
+
+  private AddEmployeeTransaction getAddSalariedEmployeeTransaction(SalariedDto dto){
+    return this.addEmployee.initSalariedEmployeeTransaction(
+        dto.address(), dto.name(), dto.salary());
   }
 
   public record AddEmployeeDto(@Valid SalariedDto salariedDto,

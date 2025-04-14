@@ -9,7 +9,7 @@ import static org.mockito.Mockito.when;
 
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
-import com.github.PiotrDuma.payroll.domain.employee.api.ReceiveEmployee;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.ReceiveEmployee;
 import com.github.PiotrDuma.payroll.exception.ResourceNotFoundException;
 import java.util.List;
 import java.util.Optional;

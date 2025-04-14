@@ -1,18 +1,13 @@
 package com.github.PiotrDuma.payroll.domain.employee;
 
-import com.github.PiotrDuma.payroll.common.address.Address;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
-import com.github.PiotrDuma.payroll.common.salary.Salary;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransaction;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransactionFactory;
 import com.github.PiotrDuma.payroll.domain.employee.api.ChangeEmployeeService;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeName;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeRequestDto;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeRequestDto.CommissionedDto;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeRequestDto.HourlyDto;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeRequestDto.SalariedDto;
-import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
-import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyRate;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.CommissionedDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.HourlyDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.SalariedDto;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +32,7 @@ class EmployeeExtendedController {
   }
 
   @PostMapping("/employees/salaried")
-  public ResponseEntity<EmployeeId> addSalariedEmployee(@RequestBody SalariedDto dto){
+  public ResponseEntity<EmployeeId> addSalariedEmployee(@RequestBody @Valid SalariedDto dto){
     log.debug("Request POST performed on '/employees/salaried' endpoint");
 
     EmployeeId id = getAddSalariedEmployeeTransaction(dto).execute();
@@ -47,7 +42,7 @@ class EmployeeExtendedController {
   }
 
   @PostMapping("/employees/hourly")
-  public ResponseEntity<EmployeeId> addHourlyEmployee(@RequestBody HourlyDto dto){
+  public ResponseEntity<EmployeeId> addHourlyEmployee(@RequestBody @Valid HourlyDto dto){
     log.debug("Request POST performed on '/employees/hourly' endpoint");
 
     EmployeeId id = getAddHourlyEmployeeTransaction(dto).execute();
@@ -57,7 +52,7 @@ class EmployeeExtendedController {
   }
 
   @PostMapping("/employees/commissioned")
-  public ResponseEntity<EmployeeId> addCommissionedEmployee(@RequestBody CommissionedDto dto){
+  public ResponseEntity<EmployeeId> addCommissionedEmployee(@RequestBody @Valid CommissionedDto dto){
     log.debug("Request POST performed on '/employees/salaried' endpoint");
 
     EmployeeId id = getAddCommissionedEmployeeTransaction(dto).execute();
@@ -68,26 +63,16 @@ class EmployeeExtendedController {
 
   private AddEmployeeTransaction getAddCommissionedEmployeeTransaction(CommissionedDto dto) {
     return this.addEmployee.initCommissionedEmployeeTransaction(
-        new Address(dto.address()),
-        new EmployeeName(dto.name()),
-        new Salary(dto.salary()),
-        new CommissionRate(dto.commissionedRate())
-    );
+            dto.address(), dto.name(), dto.salary(), dto.commissionedRate());
   }
 
   private AddEmployeeTransaction getAddHourlyEmployeeTransaction(HourlyDto dto) {
     return this.addEmployee.initHourlyEmployeeTransaction(
-        new Address(dto.address()),
-        new EmployeeName(dto.name()),
-        new HourlyRate(dto.hourlyRate())
-    );
+        dto.address(), dto.name(), dto.hourlyRate());
   }
 
   private AddEmployeeTransaction getAddSalariedEmployeeTransaction(SalariedDto dto){
     return this.addEmployee.initSalariedEmployeeTransaction(
-        new Address(dto.address()),
-        new EmployeeName(dto.name()),
-        new Salary(dto.salary())
-    );
+        dto.address(), dto.name(), dto.salary());
   }
 }

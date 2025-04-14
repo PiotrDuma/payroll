@@ -15,6 +15,9 @@ public class CommissionRate {
   @Max(value = 100, message = MAX_VALUE_EXCEPTION)
   private double commissionRate;
 
+  public CommissionRate() {
+  }
+
   public CommissionRate(double commissionRate) {
     this.commissionRate = commissionRate;
   }

@@ -10,7 +10,10 @@ public class Amount{
 
   @NotNull(message = NULL_VALUE)
   @DecimalMin(value = "0.0", message = MIN_VALUE)
-  private final BigDecimal value;
+  private BigDecimal value;
+
+  public Amount() {
+  }
 
   public Amount(BigDecimal value) {
     this.value = value;

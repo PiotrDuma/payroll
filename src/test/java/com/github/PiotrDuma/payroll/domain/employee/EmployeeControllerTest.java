@@ -12,16 +12,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.github.PiotrDuma.payroll.common.address.Address;
 import com.github.PiotrDuma.payroll.common.employeeId.EmployeeId;
+import com.github.PiotrDuma.payroll.common.salary.Salary;
 import com.github.PiotrDuma.payroll.domain.employee.EmployeeController.AddEmployeeDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransaction;
 import com.github.PiotrDuma.payroll.domain.employee.api.AddEmployeeTransactionFactory;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeDto;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeRequestDto.CommissionedDto;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeRequestDto.HourlyDto;
-import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeRequestDto.SalariedDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeName;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.CommissionedDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.HourlyDto;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.EmployeeRequestDto.SalariedDto;
 import com.github.PiotrDuma.payroll.domain.employee.api.EmployeeResponse;
-import com.github.PiotrDuma.payroll.domain.employee.api.ReceiveEmployee;
+import com.github.PiotrDuma.payroll.domain.employee.api.model.ReceiveEmployee;
+import com.github.PiotrDuma.payroll.domain.payment.classification.commission.api.CommissionRate;
+import com.github.PiotrDuma.payroll.domain.payment.classification.hourly.api.HourlyRate;
 import com.github.PiotrDuma.payroll.exception.ResourceNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +50,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
 class EmployeeControllerTest {
+  private static final UUID ID = UUID.randomUUID();
 
   @Autowired
   private MockMvc mockMvc;
@@ -122,14 +128,12 @@ class EmployeeControllerTest {
 
   @Test
   void postSalariedEmployeeShouldReturnId() throws Exception {
-    UUID id = UUID.randomUUID();
     AddEmployeeTransaction transaction = mock(AddEmployeeTransaction.class);
-    SalariedDto salariedDto = new SalariedDto("address", "name", 1234d);
-    AddEmployeeDto dto = new AddEmployeeDto(salariedDto, null, null);
+    AddEmployeeDto dto = new AddEmployeeDto(getSalariedDto(), null, null);
 
     when(this.employeeFactory.initSalariedEmployeeTransaction(any(), any(), any()))
         .thenReturn(transaction);
-    when(transaction.execute()).thenReturn(new EmployeeId(id));
+    when(transaction.execute()).thenReturn(new EmployeeId(ID));
 
     ResultActions result = this.mockMvc.perform(post("/employees")
         .contentType(MediaType.APPLICATION_JSON)
@@ -139,19 +143,17 @@ class EmployeeControllerTest {
         any(), any(), any());
 
     result.andExpect(status().isCreated())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.containsString(id.toString())));
+        .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.containsString(ID.toString())));
   }
 
   @Test
   void postHourlyEmployeeShouldReturnId() throws Exception {
-    UUID id = UUID.randomUUID();
     AddEmployeeTransaction transaction = mock(AddEmployeeTransaction.class);
-    HourlyDto hourlyDto = new HourlyDto("address", "name", 12.5d);
-    AddEmployeeDto dto = new AddEmployeeDto(null, hourlyDto, null);
+    AddEmployeeDto dto = new AddEmployeeDto(null, getHourlyDto(), null);
 
     when(this.employeeFactory.initHourlyEmployeeTransaction(any(), any(), any()))
         .thenReturn(transaction);
-    when(transaction.execute()).thenReturn(new EmployeeId(id));
+    when(transaction.execute()).thenReturn(new EmployeeId(ID));
 
     ResultActions result = this.mockMvc.perform(post("/employees")
         .contentType(MediaType.APPLICATION_JSON)
@@ -161,19 +163,17 @@ class EmployeeControllerTest {
         any(), any(), any());
 
     result.andExpect(status().isCreated())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.containsString(id.toString())));
+        .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.containsString(ID.toString())));
   }
 
   @Test
   void postCommissionedEmployeeShouldReturnId() throws Exception {
-    UUID id = UUID.randomUUID();
     AddEmployeeTransaction transaction = mock(AddEmployeeTransaction.class);
-    CommissionedDto commissionedDto = new CommissionedDto("address", "name", 500d, 12d);
-    AddEmployeeDto dto = new AddEmployeeDto(null, null, commissionedDto);
+    AddEmployeeDto dto = new AddEmployeeDto(null, null, getCommissionedDto());
 
     when(this.employeeFactory.initCommissionedEmployeeTransaction(any(), any(), any(), any()))
         .thenReturn(transaction);
-    when(transaction.execute()).thenReturn(new EmployeeId(id));
+    when(transaction.execute()).thenReturn(new EmployeeId(ID));
 
     ResultActions result = this.mockMvc.perform(post("/employees")
         .contentType(MediaType.APPLICATION_JSON)
@@ -183,6 +183,25 @@ class EmployeeControllerTest {
         any(), any(), any(), any());
 
     result.andExpect(status().isCreated())
-        .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.containsString(id.toString())));
+        .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.containsString(ID.toString())));
+  }
+
+  private CommissionedDto getCommissionedDto(){
+    return new CommissionedDto(new Address("address"),
+        new EmployeeName("name"),
+        new Salary(500d),
+        new CommissionRate(12d));
+  }
+
+  private HourlyDto getHourlyDto(){
+    return new HourlyDto(new Address("address"),
+        new EmployeeName("name"),
+        new HourlyRate(12.5d));
+  }
+
+  private SalariedDto getSalariedDto() {
+    return new SalariedDto(new Address("address"),
+        new EmployeeName("name"),
+        new Salary(1234d));
   }
 }
