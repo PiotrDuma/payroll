@@ -31,6 +31,14 @@ public class Amount{
     return value;
   }
 
+  public BigDecimal getValue() {
+    return value;
+  }
+
+  public void setValue(BigDecimal value) {
+    this.value = value;
+  }
+
   @Override
   public boolean equals(Object obj) {
     if(!(obj instanceof Amount o)){
