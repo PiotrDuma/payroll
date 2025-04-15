@@ -16,9 +16,33 @@ Payroll is an implementation of payment system in Java/Spring enviroment based o
 + infrastructure implementation based on Spring JPA/Hibernate;
 + integration tests;
 + application profiles and database configurations.
-  
 
-## Run project
+### SNAPSHOT 1.2
+
++ REST Controllers 
+
+## Descritpion
+
+The payment system manages employees and executes their payments. Every employee is related with one of three different contract types. Every contract type contains payment schedule and method dependent on their contract type.
+
+1. Salaried employee:
+  + contains declared amount of salary,
+  + payment is executed on the last day of each month,
+2. Hourly employee
+  + salary is calculated with declared timecards,
+  + timecards can be added or updated on this type of employee with given date and worked hours,
+  + payment is executed every week on Fridays,
+3. Commissioned employee
+  + contains flat salary paid every payment period,
+  + every salary contains additional bonus of commissioned rate from employee's contract from declared sales receipts,
+  + sales receipts can be added by commissioned employees with given date and amount,
+  + payment is executed every two weeks on Friday,
+
+Additionally, every employee can choose method of receiving payment from given direct payment via bank account, main payment or just hold with no additional requirements. 
+
+A more detailed description is available in the source book [[1]](#book-reference).
+
+## Build & run project
 
 There's two different approaches to run payroll application. It depends on acive profile. The "prod" profile requires connection to the PostgreSQL database server and configured application-prod.properties file. The "test" profile contains simple in memory H2 database, which is implemented to run integration tests and it can be also used as a standalone application instace, however in this case all data will be lost when application's process is terminated.
 
@@ -48,7 +72,7 @@ mvn clean install
 ```
 5. Run application in your command window
 ```
-java -jar -Dspring.profiles.active=prod target/payroll-SNAPSHOT_1.1.jar
+java -jar -Dspring.profiles.active=prod target/payroll-SNAPSHOT_1.2.jar
 ```
 
 ### B. 'test' profile
@@ -69,8 +93,16 @@ mvn clean install
 ```
 4. Run application in your command window
 ```
-java -jar -Dspring.profiles.active=test target/payroll-SNAPSHOT_1.1.jar
+java -jar -Dspring.profiles.active=test target/payroll-SNAPSHOT_1.2.jar
 ```
+
+### Run project
+
+The best entry point to the project is to access URL listed below. The  
+```
+http://localhost:8080/swagger-ui/index.html
+```
+*domain name, in this case 'localhostL8080' may be different and it depends on hosting address and port number.
 
 ## Modifications
 
@@ -80,7 +112,8 @@ The main changes were caused by differences between C++ and Java. The Spring wee
 + JPA/Hibernate infrastructure forced changes in Employee interfaces' references. Associated methods entities had to be related by public abstract classes to initialize entities;
 + Union Affiliation has been excluded from Employee and implemented as independent domain with ability to create many instances and changing dues using different entry point;
 + Payday Transaction is a new service aggregating required elements across domains;
-+ every Change Employee Transaction is placed in separated class provided by factory; 
++ every Change Employee Transaction is placed in separated class provided by factory;
++ every transaction is available to be invoked through RESTController endpoints;
 
 
 ## Biblography
