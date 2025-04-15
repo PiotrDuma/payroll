@@ -13,7 +13,10 @@ public class Hours {
   @NotNull(message = NULL_VALUE)
   @Min(value = 0, message = MIN_VALUE)
   @Max(value = 24, message = MAX_VALUE)
-  private final Double hours;
+  private Double hours;
+
+  public Hours() {
+  }
 
   public Hours(Double hours) {
     this.hours = hours;
