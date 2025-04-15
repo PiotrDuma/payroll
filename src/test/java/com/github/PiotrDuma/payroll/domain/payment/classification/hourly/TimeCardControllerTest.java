@@ -73,4 +73,58 @@ class TimeCardControllerTest {
     assertEquals(date, dateCaptor.getValue().toString());
     assertEquals(hours, hoursCaptor.getValue());
   }
+
+  @Test
+  void postMethodWithInvalidDateFormatShouldThrowBadRequest() throws Exception {
+    String date = "2003/12/12";
+    Hours hours = new Hours(12d);
+    TimeCardRequestDto dto = new TimeCardRequestDto(date, hours);
+
+    mockMvc.perform(post(URL, ID)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(dto)))
+        .andExpect(status().isBadRequest());
+
+    verify(this.service, times(0)).addOrUpdateTimeCard(any(), any(), any());
+  }
+
+  @Test
+  void postMethodWithInvalidDateFormatShouldThrowBadRequest2() throws Exception {
+    String date = "15-12-2003";
+    Hours hours = new Hours(12d);
+    TimeCardRequestDto dto = new TimeCardRequestDto(date, hours);
+
+    mockMvc.perform(post(URL, ID)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(dto)))
+        .andExpect(status().isBadRequest());
+
+    verify(this.service, times(0)).addOrUpdateTimeCard(any(), any(), any());
+  }
+
+  @Test
+  void postMethodWithNullDateShouldThrowBadRequest() throws Exception {
+    Hours hours = new Hours(12d);
+    TimeCardRequestDto dto = new TimeCardRequestDto(null, hours);
+
+    mockMvc.perform(post(URL, ID)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(dto)))
+        .andExpect(status().isBadRequest());
+
+    verify(this.service, times(0)).addOrUpdateTimeCard(any(), any(), any());
+  }
+
+  @Test
+  void postMethodWithNullHoursShouldThrowBadRequest() throws Exception {
+    String date = "2003/12/12";
+    TimeCardRequestDto dto = new TimeCardRequestDto(date, null);
+
+    mockMvc.perform(post(URL, ID)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(dto)))
+        .andExpect(status().isBadRequest());
+
+    verify(this.service, times(0)).addOrUpdateTimeCard(any(), any(), any());
+  }
 }
